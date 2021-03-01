@@ -1,0 +1,35 @@
+spring:
+  profiles:
+    active: local
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+
+---
+spring:
+  profiles: local
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+  h2:
+    console:
+      enabled: true
+
+
+---
+spring:
+  profiles: set1
+  include: real-db
+
+server:
+  port: 8081
+
+---
+spring:
+  profiles: set2
+  include: real-db
+
+server:
+  port: 8082
