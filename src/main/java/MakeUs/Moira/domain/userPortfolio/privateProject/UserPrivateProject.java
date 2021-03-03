@@ -9,6 +9,7 @@ import javax.persistence.*;
 public class UserPrivateProject {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne

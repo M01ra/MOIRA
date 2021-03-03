@@ -8,6 +8,7 @@ import javax.persistence.*;
 public class UserPoolOffer {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne

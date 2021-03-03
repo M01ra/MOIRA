@@ -1,12 +1,10 @@
 package MakeUs.Moira.domain.userReview;
 
 import MakeUs.Moira.domain.user.User;
+import MakeUs.Moira.domain.user.UserProject;
 import MakeUs.Moira.domain.userReview.UseReviewComplimentMark;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.List;
 
 
@@ -14,9 +12,13 @@ import java.util.List;
 public class UserReview {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany
+    @ManyToOne
+    private UserProject userProject;
+
+    @OneToMany(mappedBy = "userReview")
     private List<UseReviewComplimentMark> complimentMarkList;
 
     private int mannerPoint;

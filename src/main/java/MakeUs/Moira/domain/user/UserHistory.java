@@ -7,10 +7,7 @@ import MakeUs.Moira.domain.report.Report;
 import MakeUs.Moira.domain.userPool.UserPoolLike;
 import lombok.Getter;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import java.util.List;
 
 @Getter
@@ -18,30 +15,31 @@ import java.util.List;
 public class UserHistory {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @OneToOne(mappedBy = "userHistory")
     private User user;
 
-    @OneToMany
+    @OneToMany(mappedBy = "userHistory")
     private List<UserHashtag> userHashtags;
 
-    @OneToMany
+    @OneToMany(mappedBy = "userHistory")
     private List<UserProject> userProjects;
 
-    @OneToMany
+    @OneToMany(mappedBy = "userHistory")
     private List<ProjectLike> projectLikes;
 
-    @OneToMany
+    @OneToMany(mappedBy = "userHistory")
     private List<UserPoolLike> userPoolLikes;
 
-    @OneToMany
+    @OneToMany(mappedBy = "userHistory")
     private List<ClubLike> clubLikes;
 
-    @OneToMany
+    @OneToMany(mappedBy = "userHistory")
     private List<Report> reports;
 
-    @OneToMany
+    @OneToMany(mappedBy = "userHistory")
     private List<Inquiry> inquiries;
 
     private int participationCount;

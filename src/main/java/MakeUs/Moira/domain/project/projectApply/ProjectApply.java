@@ -11,6 +11,7 @@ import java.util.List;
 public class ProjectApply {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
@@ -19,13 +20,13 @@ public class ProjectApply {
     @ManyToOne
     private User applicant;
 
-    @OneToMany
+    @OneToMany(mappedBy = "projectApply")
     private List<ProjectApplyAnswer> projectApplyAnswerList;
 
     @ManyToOne
     private Position position;
 
-    @OneToMany
+    @OneToMany(mappedBy = "projectApply")
     private List<OptionalApplyInfo> optionalApplyInfoList;
 
     @Enumerated(EnumType.STRING)

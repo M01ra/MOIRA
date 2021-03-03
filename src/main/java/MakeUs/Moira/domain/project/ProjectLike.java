@@ -2,14 +2,13 @@ package MakeUs.Moira.domain.project;
 
 import MakeUs.Moira.domain.user.UserHistory;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity
 public class ProjectLike {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne

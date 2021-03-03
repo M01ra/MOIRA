@@ -9,6 +9,7 @@ import javax.persistence.*;
 public class OptionalApplyInfo {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne

@@ -11,12 +11,13 @@ import java.util.List;
 public class UserProject {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    private UserHistory user;
+    private UserHistory userHistory;
 
-    @OneToMany
+    @OneToMany(mappedBy = "userProject")
     private List<UserReview> reviews;
 
     @ManyToOne
