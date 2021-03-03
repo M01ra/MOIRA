@@ -17,6 +17,9 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
   h2:
     console:
       enabled: true
@@ -31,6 +34,14 @@ spring:
   config:
     activate:
       on-profile: set1
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+
 
 server:
   port: 8081
@@ -40,7 +51,13 @@ spring:
   config:
     activate:
       on-profile: set2
-
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
 server:
   port: 8082
 
