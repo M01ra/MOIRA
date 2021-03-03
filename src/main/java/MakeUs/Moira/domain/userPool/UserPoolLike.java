@@ -2,18 +2,17 @@ package MakeUs.Moira.domain.userPool;
 
 import MakeUs.Moira.domain.user.UserHistory;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity
 public class UserPoolLike {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    private UserHistory user;
+    private UserHistory userHistory;
 
     @ManyToOne
     private UserPool userPool;

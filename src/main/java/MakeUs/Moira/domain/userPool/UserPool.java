@@ -11,9 +11,10 @@ import java.util.List;
 public class UserPool {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @OneToOne(mappedBy = "userPool")
     private User user;
 
     private String shortComment;
@@ -21,10 +22,10 @@ public class UserPool {
     @ManyToOne
     private Position position;
 
-    @OneToMany
+    @OneToMany(mappedBy = "userPool")
     private List<UserPoolOptionalInfo> userPoolOptionalInfoList;
 
-    @OneToMany
+    @OneToMany(mappedBy = "userPool")
     private List<UserPoolOffer> userPoolOfferList;
 
 

@@ -2,14 +2,13 @@ package MakeUs.Moira.domain.userReview;
 
 import MakeUs.Moira.domain.complimentMark.ComplimentMarkInfo;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity
 public class UseReviewComplimentMark {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne

@@ -1,14 +1,18 @@
 spring:
   profiles:
     active: local
-  jpa:
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+    group:
+      set1: real-db
+      set2: real-db
 
+logging:
+  level:
+    root: info
 ---
 spring:
-  profiles: local
+  config:
+    activate:
+      on-profile: local
   jpa:
     show-sql: true
     hibernate:
@@ -16,20 +20,27 @@ spring:
   h2:
     console:
       enabled: true
-
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:moira;
+    username: sa
+    password:
 
 ---
 spring:
-  profiles: set1
-  include: real-db
+  config:
+    activate:
+      on-profile: set1
 
 server:
   port: 8081
 
 ---
 spring:
-  profiles: set2
-  include: real-db
+  config:
+    activate:
+      on-profile: set2
 
 server:
   port: 8082
+

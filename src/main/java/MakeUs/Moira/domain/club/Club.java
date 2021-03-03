@@ -10,11 +10,12 @@ import java.util.List;
 public class Club {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String clubName;
 
-    @OneToMany
+    @OneToMany(mappedBy = "club")
     private List<ClubImage> clubImageList;
 
     @Enumerated(EnumType.STRING)

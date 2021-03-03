@@ -10,21 +10,22 @@ import java.util.List;
 public class ProjectDetail {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @OneToOne(mappedBy = "projectDetail")
     private Project project;
 
-    @OneToMany
+    @OneToMany(mappedBy = "projectDetail")
     private List<ProjectComment> projectCommentList;
 
-    @OneToMany
+    @OneToMany(mappedBy = "projectDetail")
     private List<ProjectApply> projectApplyList;
 
-    @OneToMany
+    @OneToMany(mappedBy = "projectDetail")
     private List<ProjectQuestion> projectQuestionList;
 
-    @OneToMany
+    @OneToMany(mappedBy = "projectDetail")
     private List<ProjectPosition> projectPositionList;
 
     private String projectContent;

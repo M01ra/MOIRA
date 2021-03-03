@@ -2,14 +2,13 @@ package MakeUs.Moira.domain.project.projectApply;
 
 import MakeUs.Moira.domain.project.projectApply.ProjectApply;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity
 public class ProjectApplyAnswer {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne

@@ -9,6 +9,7 @@ import java.time.Period;
 public class UserCareer {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  Long id;
 
     @ManyToOne

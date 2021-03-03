@@ -2,16 +2,14 @@ package MakeUs.Moira.domain.chat;
 
 import MakeUs.Moira.domain.user.User;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.List;
 
 @Entity
 public class ChatRoom {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
@@ -20,6 +18,6 @@ public class ChatRoom {
     @ManyToOne
     private User userB;
 
-    @OneToMany
+    @OneToMany(mappedBy = "chatRoom")
     private List<ChatMessage> chatMessageList;
 }

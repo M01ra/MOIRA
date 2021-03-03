@@ -1,18 +1,17 @@
 package MakeUs.Moira.domain.position;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.List;
 
 @Entity
 public class PositionCategory {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String categoryName;
 
-    @OneToMany
+    @OneToMany(mappedBy = "positionCategory")
     private List<Position> positionList;
 }

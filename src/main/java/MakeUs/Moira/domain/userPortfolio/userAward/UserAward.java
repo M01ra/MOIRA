@@ -2,14 +2,13 @@ package MakeUs.Moira.domain.userPortfolio.userAward;
 
 import MakeUs.Moira.domain.userPortfolio.UserPortfolio;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity
 public class UserAward {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne

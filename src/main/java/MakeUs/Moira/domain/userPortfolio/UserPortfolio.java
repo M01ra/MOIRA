@@ -8,37 +8,35 @@ import MakeUs.Moira.domain.userPortfolio.userLicense.UserLicense;
 import MakeUs.Moira.domain.userPortfolio.userLink.UserLink;
 import MakeUs.Moira.domain.userPortfolio.userSchool.UserSchool;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.List;
 
 @Entity
 public class UserPortfolio {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
     private User user;
 
-    @OneToMany
+    @OneToMany(mappedBy = "userPortfolio")
     private List<UserSchool> userSchoolList;
 
-    @OneToMany
+    @OneToMany(mappedBy = "userPortfolio")
     private List<UserCareer> userCareerList;
 
-    @OneToMany
+    @OneToMany(mappedBy = "userPortfolio")
     private List<UserLicense> userLicenseList;
 
-    @OneToMany
+    @OneToMany(mappedBy = "userPortfolio")
     private List<UserAward> userAwardList;
 
-    @OneToMany
+    @OneToMany(mappedBy = "userPortfolio")
     private List<UserLink> userLinkList;
 
-    @OneToMany
+    @OneToMany(mappedBy = "userPortfolio")
     private List<UserPrivateProject> userPrivateProjectList;
 
 }

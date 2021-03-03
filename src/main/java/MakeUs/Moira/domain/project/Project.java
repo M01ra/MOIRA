@@ -10,15 +10,16 @@ import java.util.List;
 public class Project {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany
+    @OneToMany(mappedBy = "project")
     private List<ProjectHashtag> projectHashtagList;
 
-    @OneToMany
+    @OneToMany(mappedBy = "project")
     private List<UserProject> userProjectList;
 
-    @OneToMany
+    @OneToMany(mappedBy = "project")
     private List<ProjectImage> projectImageList;
 
     private String projectTitle;
