@@ -8,6 +8,17 @@ spring:
 logging:
   level:
     root: info
+
+cloud:
+  aws:
+    s3:
+      bucket: moira-springboot
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+    credentials:
+      instanceProfile: true
 ---
 spring:
   config:

@@ -27,6 +27,8 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	compile("org.springframework.boot:spring-boot-starter-actuator")
 	compile("org.mariadb.jdbc:mariadb-java-client")
+	compile('org.springframework.cloud:spring-cloud-starter-aws')
+	implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-aws', version: '2.2.6.RELEASE'
 }
 
 test {
