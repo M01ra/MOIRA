@@ -36,3 +36,6 @@ build/
 ### logback ###
 .log
 /log
+
+### SQL ###
+*.sql

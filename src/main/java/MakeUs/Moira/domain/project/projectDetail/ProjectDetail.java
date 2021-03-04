@@ -33,4 +33,7 @@ public class ProjectDetail {
     @Enumerated(EnumType.STRING)
     private ProjectDuration projectDuration;
 
+    @Enumerated(EnumType.STRING)
+    private ProjectLocalType projectLocalType;
+
 }
