@@ -1,9 +1,11 @@
 package MakeUs.Moira.service;
 
 import com.amazonaws.AmazonServiceException;
+import com.amazonaws.annotation.SdkTestInternalApi;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.auth.InstanceProfileCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
@@ -24,16 +26,16 @@ import java.util.UUID;
 public class S3Service {
     private AmazonS3 s3Client;
 
-    @Value("${cloud.aws.credentials.accessKey}")
+    @Value(value = "${S3_ACCESS_KEY}")
     private String accessKey;
 
-    @Value("${cloud.aws.credentials.secretKey}")
+    @Value(value = "${S3_SECRET_KEY}")
     private String secretKey;
 
-    @Value("${cloud.aws.s3.bucket}")
+    @Value(value = "${cloud.aws.s3.bucket}")
     private String bucket;
 
-    @Value("${cloud.aws.region.static}")
+    @Value(value = "${cloud.aws.region.static}")
     private String region;
 
     @PostConstruct
@@ -52,7 +54,6 @@ public class S3Service {
         try {
             ObjectMetadata objMeta = new ObjectMetadata();
             objMeta.setContentLength(file.getBytes().length);
-            System.out.println(file.getBytes().length);
             s3Client.putObject(new PutObjectRequest(bucket, key, file.getInputStream(), objMeta)
                     .withCannedAcl(CannedAccessControlList.PublicRead));
         } catch (IOException e) {
