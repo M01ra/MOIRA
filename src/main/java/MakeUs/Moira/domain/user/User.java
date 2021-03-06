@@ -2,13 +2,15 @@ package MakeUs.Moira.domain.user;
 
 import MakeUs.Moira.domain.userPool.UserPool;
 import MakeUs.Moira.domain.userPortfolio.UserPortfolio;
-import MakeUs.Moira.domain.userSecurity.UserSecurity;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Entity
+@NoArgsConstructor
 @Getter
+@Entity
 public class User {
 
     @Id
@@ -22,16 +24,33 @@ public class User {
     private UserPortfolio userPortfolio;
 
     @OneToOne
-    private UserSecurity userSecurity;
-
-    @OneToOne
     private UserPool userPool;
 
-    private String realName;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserRole userRole;
 
     private String email;
+
+    private String realName;
 
     private String nickname;
 
     private String profileImage;
+
+    @Builder
+    public User(UserHistory userHistory, UserPortfolio userPortfolio, UserPool userPool, UserRole userRole, String email, String realName, String nickname, String profileImage) {
+        this.userHistory = userHistory;
+        this.userPortfolio = userPortfolio;
+        this.userPool = userPool;
+        this.userRole = userRole;
+        this.email = email;
+        this.realName = realName;
+        this.nickname = nickname;
+        this.profileImage = profileImage;
+    }
+
+    public void RegisterUser(){
+        this.userRole = UserRole.USER;
+    }
 }
