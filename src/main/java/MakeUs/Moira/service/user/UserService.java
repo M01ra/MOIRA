@@ -14,8 +14,8 @@ public class UserService {
     private final UserRepo userRepo;
 
     @Transactional
-    public Long save(UserSaveRequestDto userSaveRequestDto){
-        User entity = userSaveRequestDto.toEntity();
+    public Long save(UserSaveRequestDto userSaveDto){
+        User entity = userSaveDto.toEntity();
         entity.RegisterUser();
         return userRepo.save(entity).getId();
     }
