@@ -3,6 +3,7 @@ package MakeUs.Moira.controller.userSecurity;
 import MakeUs.Moira.domain.userSecurity.UserSecurity;
 import MakeUs.Moira.domain.userSecurity.UserSecurityRepository;
 import MakeUs.Moira.response.ResponseService;
+import MakeUs.Moira.response.model.SingleResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -23,11 +24,12 @@ public class userSecurityController {
 
     @ApiOperation(value = "회원 가입 정보 등록", notes = "회원 가입 정보를 등록합니다.")
     @PostMapping("")
-    public UserSecurity securityRegister(@ApiParam(value = "회원정보 제공사", required = true) @RequestParam String provider) {
+    public SingleResult<UserSecurity> securityRegister(@ApiParam(value = "회원정보 제공사", required = true) @RequestParam String provider) {
 
         UserSecurity userSecurity = UserSecurity.builder()
                 .provider(provider)
                 .build();
-        return userSecurityRepository.save(userSecurity);
+        UserSecurity savedUserSecurity = userSecurityRepository.save(userSecurity);
+        return responseService.mappingSingleResult(savedUserSecurity);
     }
 }
