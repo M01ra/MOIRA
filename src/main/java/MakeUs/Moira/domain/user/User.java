@@ -2,6 +2,7 @@ package MakeUs.Moira.domain.user;
 
 import MakeUs.Moira.domain.userPool.UserPool;
 import MakeUs.Moira.domain.userPortfolio.UserPortfolio;
+import MakeUs.Moira.domain.userSecurity.UserSecurity;
 import lombok.Getter;
 
 import javax.persistence.*;
