@@ -30,6 +30,6 @@ public class userSecurityController {
                 .provider(provider)
                 .build();
         UserSecurity savedUserSecurity = userSecurityRepository.save(userSecurity);
-        return responseService.mappingSingleResult(savedUserSecurity);
+        return responseService.mappingSingleResult(savedUserSecurity, "유저 등록 성공");
     }
 }
