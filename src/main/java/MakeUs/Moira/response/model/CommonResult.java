@@ -11,7 +11,7 @@ import lombok.Setter;
 public class CommonResult {
 
     @ApiModelProperty(value = "응답 성공여부 : true/false")
-    private boolean success;
+    private boolean isSucceed;
 
     @ApiModelProperty(value = "응답 메시지")
     private String msg;

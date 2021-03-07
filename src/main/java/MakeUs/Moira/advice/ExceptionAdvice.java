@@ -1,6 +1,6 @@
 package MakeUs.Moira.advice;
 
-import MakeUs.Moira.advice.exception.UserSecurityException;
+import MakeUs.Moira.advice.exception.UserException;
 import MakeUs.Moira.response.ResponseService;
 import MakeUs.Moira.response.model.CommonResult;
 import lombok.RequiredArgsConstructor;
@@ -25,9 +25,9 @@ public class ExceptionAdvice {
 //    }
 
 
-    @ExceptionHandler(UserSecurityException.class)
+    @ExceptionHandler(UserException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    protected CommonResult UserSecurityException(HttpServletRequest request, UserSecurityException e) {
+    protected CommonResult UserException(HttpServletRequest request, UserException e) {
         return responseService.mappingFailCommonResultOnly(e.getMessage());
     }
 

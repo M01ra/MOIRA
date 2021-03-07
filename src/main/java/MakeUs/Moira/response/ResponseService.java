@@ -12,7 +12,7 @@ public class ResponseService {
 
     // 공통 결과를 처리하는 메소드
     private void setCommonResult(CommonResult result, boolean isSuccess, String msg) {
-        result.setSuccess(isSuccess);
+        result.setSucceed(isSuccess);
         result.setMsg(msg);
     }
 
