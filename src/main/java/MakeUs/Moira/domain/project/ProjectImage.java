@@ -1,8 +1,13 @@
 package MakeUs.Moira.domain.project;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
 @Entity
+@Getter
+@NoArgsConstructor
 public class ProjectImage {
 
     @Id
@@ -13,4 +18,9 @@ public class ProjectImage {
     private Project project;
 
     private String projectImageUrl;
+
+    public ProjectImage(Project project, String projectImageUrl){
+        this.project = project;
+        this.projectImageUrl = projectImageUrl;
+    }
 }

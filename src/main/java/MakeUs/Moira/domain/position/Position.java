@@ -1,7 +1,5 @@
 package MakeUs.Moira.domain.position;
 
-
-
 import javax.persistence.*;
 
 @Entity
