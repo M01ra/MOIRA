@@ -1,4 +1,4 @@
-package MakeUs.Moira.domain.user.dto;
+package MakeUs.Moira.controller.user.dto;
 
 import MakeUs.Moira.domain.user.User;
 import lombok.Getter;
