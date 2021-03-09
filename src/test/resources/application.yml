@@ -1,14 +1,72 @@
-# Test
 spring:
   profiles:
-    active: local # 기본 환경 선택
-  jpa:
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
-# local 환경
+    active: local
+    group:
+      set1: real-db
+      set2: real-db
+
+logging:
+  level:
+    root: info
+
+cloud:
+  aws:
+    s3:
+      bucket: moira-springboot
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
 ---
 spring:
-  profiles: local
+  config:
+    activate:
+      on-profile: local
   jpa:
     show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+  h2:
+    console:
+      enabled: true
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:moira;
+    username: sa
+    password:
+
+---
+spring:
+  config:
+    activate:
+      on-profile: set1
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+
+
+server:
+  port: 8081
+
+---
+spring:
+  config:
+    activate:
+      on-profile: set2
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+server:
+  port: 8082
+

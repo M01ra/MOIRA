@@ -1,5 +1,6 @@
 package MakeUs.Moira.domain.user;
 
+import MakeUs.Moira.domain.position.Position;
 import MakeUs.Moira.domain.userPool.UserPool;
 import MakeUs.Moira.domain.userPortfolio.UserPortfolio;
 import lombok.Builder;
@@ -8,9 +9,9 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@NoArgsConstructor
 @Getter
 @Entity
+@NoArgsConstructor
 public class User {
 
     @Id
@@ -37,6 +38,9 @@ public class User {
     private String nickname;
 
     private String profileImage;
+
+    @ManyToOne
+    private Position position;
 
     @Builder
     public User(UserHistory userHistory, UserPortfolio userPortfolio, UserPool userPool, UserRole userRole, String email, String realName, String nickname, String profileImage) {

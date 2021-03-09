@@ -8,17 +8,23 @@ import org.springframework.boot.context.config.ConfigDataResourceNotFoundExcepti
 @SpringBootApplication
 public class MoiraApplication {
 
-	public static final String APPLICATION_LOCATIONS = "spring.config.location="
+	public static final String LOCAL_LOCATION = "spring.config.location="
+			+ "classpath:application.yml,"
+			+ "classpath:aws.yml";
+
+	public static final String PROD_LOCATION = "spring.config.location="
 			+ "classpath:application.yml,"
 			+ "/home/ec2-user/app/config/real-application.yml";
 
 	public static void main(String[] args) {
 		try{
 			new SpringApplicationBuilder(MoiraApplication.class)
-					.properties(APPLICATION_LOCATIONS)
+					.properties(LOCAL_LOCATION)
 					.run(args);
 		} catch (ConfigDataResourceNotFoundException e){
-			SpringApplication.run(MoiraApplication.class, args);
+			new SpringApplicationBuilder(MoiraApplication.class)
+					.properties(PROD_LOCATION)
+					.run(args);
 		}
 	}
 }

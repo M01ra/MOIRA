@@ -40,3 +40,6 @@ build/
 
 ### SQL ###
 *.sql
+
+### AWS ###
+aws.yml

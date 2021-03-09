@@ -2,11 +2,18 @@ package MakeUs.Moira.domain.project.projectDetail;
 
 import MakeUs.Moira.domain.project.*;
 import MakeUs.Moira.domain.project.projectApply.ProjectApply;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
 public class ProjectDetail {
 
     @Id
@@ -36,4 +43,12 @@ public class ProjectDetail {
     @Enumerated(EnumType.STRING)
     private ProjectLocalType projectLocalType;
 
+    public ProjectDetail(Project project, List<ProjectComment> projectCommentList, List<ProjectApply> projectApplyList, String projectContent, ProjectDuration projectDuration, ProjectLocalType projectLocalType) {
+        this.project = project;
+        this.projectCommentList = projectCommentList;
+        this.projectApplyList = projectApplyList;
+        this.projectContent = projectContent;
+        this.projectDuration = projectDuration;
+        this.projectLocalType = projectLocalType;
+    }
 }
