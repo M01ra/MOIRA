@@ -1,5 +1,7 @@
 package MakeUs.Moira.advice;
 
+import MakeUs.Moira.advice.exception.ProjectException;
+import MakeUs.Moira.advice.exception.S3Exception;
 import MakeUs.Moira.advice.exception.UserException;
 import MakeUs.Moira.response.ResponseService;
 import MakeUs.Moira.response.model.CommonResult;
@@ -28,6 +30,18 @@ public class ExceptionAdvice {
     @ExceptionHandler(UserException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     protected CommonResult UserException(HttpServletRequest request, UserException e) {
+        return responseService.mappingFailCommonResultOnly(e.getMessage());
+    }
+
+    @ExceptionHandler(ProjectException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    protected CommonResult ProjectException(ProjectException e) {
+        return responseService.mappingFailCommonResultOnly(e.getMessage());
+    }
+
+    @ExceptionHandler(S3Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    protected CommonResult S3Exception(S3Exception e) {
         return responseService.mappingFailCommonResultOnly(e.getMessage());
     }
 

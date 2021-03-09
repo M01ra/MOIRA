@@ -1,10 +1,10 @@
-package MakeUs.Moira.repository;
+package MakeUs.Moira.domain.project;
 
 import MakeUs.Moira.domain.project.ProjectHashtag;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ProjectHashtagRepository extends JpaRepository<ProjectHashtag, Long> {
+public interface ProjectHashtagRepo extends JpaRepository<ProjectHashtag, Long> {
 
 }

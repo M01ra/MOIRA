@@ -1,5 +1,6 @@
 package MakeUs.Moira.service;
 
+import MakeUs.Moira.advice.exception.S3Exception;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -16,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -45,16 +45,14 @@ public class S3Service {
                 .build();
     }
 
-    public String upload(MultipartFile file){
-        String key = UUID.randomUUID().toString() + "-" + file.getOriginalFilename();
-
+    public String upload(MultipartFile file, String key){
         try {
             ObjectMetadata objMeta = new ObjectMetadata();
             objMeta.setContentLength(file.getBytes().length);
             s3Client.putObject(new PutObjectRequest(bucket, key, file.getInputStream(), objMeta)
                     .withCannedAcl(CannedAccessControlList.PublicRead));
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new S3Exception("파일 입출력 에러");
         }
         return s3Client.getUrl(bucket, key).toString();
     }
@@ -64,6 +62,9 @@ public class S3Service {
         boolean isExistObject = s3Client.doesObjectExist(bucket, key);
         if (isExistObject == true) {
             s3Client.deleteObject(bucket, key);
+        }
+        else{
+            throw new S3Exception("존재하지 않는 파일 혹은 이미지");
         }
     }
 }
