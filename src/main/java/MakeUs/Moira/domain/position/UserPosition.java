@@ -3,7 +3,7 @@ package MakeUs.Moira.domain.position;
 import javax.persistence.*;
 
 @Entity
-public class Position {
+public class UserPosition {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

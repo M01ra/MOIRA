@@ -1,6 +1,6 @@
 package MakeUs.Moira.domain.project.projectApply;
 
-import MakeUs.Moira.domain.position.Position;
+import MakeUs.Moira.domain.position.UserPosition;
 import MakeUs.Moira.domain.project.projectDetail.ProjectDetail;
 import MakeUs.Moira.domain.user.User;
 
@@ -24,7 +24,7 @@ public class ProjectApply {
     private List<ProjectApplyAnswer> projectApplyAnswerList;
 
     @ManyToOne
-    private Position position;
+    private UserPosition userPosition;
 
     @OneToMany(mappedBy = "projectApply")
     private List<OptionalApplyInfo> optionalApplyInfoList;

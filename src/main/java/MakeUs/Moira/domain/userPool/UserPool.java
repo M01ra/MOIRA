@@ -1,6 +1,6 @@
 package MakeUs.Moira.domain.userPool;
 
-import MakeUs.Moira.domain.position.Position;
+import MakeUs.Moira.domain.position.UserPosition;
 import MakeUs.Moira.domain.user.User;
 
 import javax.persistence.*;
@@ -20,7 +20,7 @@ public class UserPool {
     private String shortComment;
 
     @ManyToOne
-    private Position position;
+    private UserPosition userPosition;
 
     @OneToMany(mappedBy = "userPool")
     private List<UserPoolOptionalInfo> userPoolOptionalInfoList;

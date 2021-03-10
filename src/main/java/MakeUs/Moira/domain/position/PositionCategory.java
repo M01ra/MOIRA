@@ -13,5 +13,5 @@ public class PositionCategory {
     private String categoryName;
 
     @OneToMany(mappedBy = "positionCategory")
-    private List<Position> positionList;
+    private List<UserPosition> userPositionList;
 }

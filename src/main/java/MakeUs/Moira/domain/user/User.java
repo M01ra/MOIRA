@@ -1,6 +1,6 @@
 package MakeUs.Moira.domain.user;
 
-import MakeUs.Moira.domain.position.Position;
+import MakeUs.Moira.domain.position.UserPosition;
 import MakeUs.Moira.domain.userPool.UserPool;
 import MakeUs.Moira.domain.userPortfolio.UserPortfolio;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -14,7 +14,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 @Getter
 @Entity
@@ -51,7 +50,7 @@ public class User implements UserDetails {
     private String profileImage;
 
     @ManyToOne
-    private Position position;
+    private UserPosition userPosition;
 
     @Builder
     public User(UserHistory userHistory, UserPortfolio userPortfolio, UserPool userPool, String socialProvider, String socialId, UserRole userRole, String email, String realName, String nickname, String profileImage) {
