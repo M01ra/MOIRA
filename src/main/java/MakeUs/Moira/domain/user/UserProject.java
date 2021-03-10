@@ -4,12 +4,14 @@ import MakeUs.Moira.domain.position.Position;
 import MakeUs.Moira.domain.project.Project;
 import MakeUs.Moira.domain.userReview.UserReview;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
+@Getter
 @NoArgsConstructor
 public class UserProject {
 

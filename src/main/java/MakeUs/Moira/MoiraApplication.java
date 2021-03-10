@@ -1,11 +1,12 @@
 package MakeUs.Moira;
 
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @SpringBootApplication
+@EnableJpaAuditing
 public class MoiraApplication {
 
 	public static final String LOCAL_LOCATION = "spring.config.location="
