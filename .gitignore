@@ -4,9 +4,9 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 ### key ###
+application-aws.yml
 application-jwt.yml
 application-kakao.yml
-aws.yml
 
 ### STS ###
 .apt_generated

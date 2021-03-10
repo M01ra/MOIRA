@@ -16,9 +16,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@NoArgsConstructor
 @Getter
 @Entity
+@NoArgsConstructor
 public class User implements UserDetails {
 
     @Id

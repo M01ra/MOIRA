@@ -1,17 +1,17 @@
 package MakeUs.Moira.service;
 
 import MakeUs.Moira.advice.exception.ProjectException;
+import MakeUs.Moira.config.security.JwtTokenProvider;
 import MakeUs.Moira.domain.hashtag.Hashtag;
 import MakeUs.Moira.domain.hashtag.HashtagRepo;
 import MakeUs.Moira.domain.position.Position;
 import MakeUs.Moira.domain.position.PositionRepo;
 import MakeUs.Moira.domain.project.*;
-import MakeUs.Moira.domain.project.dto.ProjectsResponseDTO;
+import MakeUs.Moira.controller.project.dto.ProjectsResponseDTO;
 import MakeUs.Moira.domain.project.projectDetail.*;
 import MakeUs.Moira.domain.user.*;
-import MakeUs.Moira.domain.project.dto.ProjectDTO;
-import MakeUs.Moira.domain.project.dto.ProjectPositonDTO;
-import jdk.vm.ci.meta.Local;
+import MakeUs.Moira.controller.project.dto.ProjectRequestDTO;
+import MakeUs.Moira.controller.project.dto.ProjectPositonDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
@@ -44,18 +44,19 @@ public class ProjectService {
     private final ProjectPositonRepo projectPositonRepo;
     private final PositionRepo positionRepo;
     private final S3Service s3Service;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Transactional
-    public Long createProject(ProjectDTO projectDTO) {
+    public Long createProject(ProjectRequestDTO projectRequestDTO, String token) {
         Project project = new Project();
-        BeanUtils.copyProperties(projectDTO, project);
+        BeanUtils.copyProperties(projectRequestDTO, project);
         project.setLikeCount(0);
         project.setHitCount(0);
         project.setProjectStatus(ProjectStatus.RECRUITING);
         project = projectRepo.save(project);
-        if(projectDTO.getProjectHashtagList() != null) {
+        if(projectRequestDTO.getProjectHashtagList() != null) {
             List<ProjectHashtag> projectHashtagList = new ArrayList<>();
-            for (String hashtag : projectDTO.getProjectHashtagList()) {
+            for (String hashtag : projectRequestDTO.getProjectHashtagList()) {
                 Optional<Hashtag> optionalHashtag = hashtagRepo.findHashtagByHashtagName(hashtag);
                 if(!optionalHashtag.isPresent()){
                     throw new ProjectException("존재하지 않는 태그");
@@ -68,38 +69,35 @@ public class ProjectService {
         }
         else project.setProjectHashtagList(new ArrayList<>());
 
-        if(projectDTO.getUserId() != null) {
-            Optional<User> optionalUser = userRepo.findById(projectDTO.getUserId());
-            if(!optionalUser.isPresent()){
-                throw new ProjectException("유효하지 않은 JWT 토큰");
-            }
-            User user = optionalUser.get();
-            List<UserProject> userProjectList = new ArrayList<>();
-            Optional<UserHistory> optionalUserHistory = userHistoryRepo.findByUser(user);
-            if(!optionalUserHistory.isPresent()){
-                throw new ProjectException("유효하지 않은 유저");
-            }
-            UserProject userProject = new UserProject(optionalUserHistory.get(), project, UserProjectRoleType.LEADER, user.getPosition(), UserProjectStatus.PROGRESS);
-            userProjectList.add(userProjectRepo.save(userProject));
-            project.setUserProjectList(userProjectList);
+        Optional<User> optionalUser = userRepo.findById(Long.valueOf(jwtTokenProvider.getUserPk(token)));
+        if(!optionalUser.isPresent()){
+            throw new ProjectException("유효하지 않는 유저");
         }
-        else project.setUserProjectList(new ArrayList<>());
+        User user = optionalUser.get();
+        List<UserProject> userProjectList = new ArrayList<>();
+        Optional<UserHistory> optionalUserHistory = userHistoryRepo.findByUser(user);
+        if(!optionalUserHistory.isPresent()){
+            throw new ProjectException("유효하지 않은 유저");
+        }
+        UserProject userProject = new UserProject(optionalUserHistory.get(), project, UserProjectRoleType.LEADER, user.getPosition(), UserProjectStatus.PROGRESS);
+        userProjectList.add(userProjectRepo.save(userProject));
+        project.setUserProjectList(userProjectList);
 
-        ProjectDetail projectDetail = new ProjectDetail(project, new ArrayList<>(), new ArrayList<>(), projectDTO.getProjectContent(), projectDTO.getProjectDuration(), projectDTO.getProjectLocalType());
+        ProjectDetail projectDetail = new ProjectDetail(project, new ArrayList<>(), new ArrayList<>(), projectRequestDTO.getProjectContent(), projectRequestDTO.getProjectDuration(), projectRequestDTO.getProjectLocalType());
         projectDetail = projectDetailRepo.save(projectDetail);
 
-        if(projectDTO.getProjectQuestionList() != null){
+        if(projectRequestDTO.getProjectQuestionList() != null){
             List<ProjectQuestion> projectQuestionList = new ArrayList<>();
-            for (String question : projectDTO.getProjectQuestionList()) {
+            for (String question : projectRequestDTO.getProjectQuestionList()) {
                 projectQuestionList.add(projectQuestionRepo.save(new ProjectQuestion(projectDetail, question)));
             }
             projectDetail.setProjectQuestionList(projectQuestionList);
         }
         else projectDetail.setProjectQuestionList(new ArrayList<>());
 
-        if(projectDTO.getProjectPositionList() != null){
+        if(projectRequestDTO.getProjectPositionList() != null){
             List<ProjectPosition> projectPositionList = new ArrayList<>();
-            for (ProjectPositonDTO projectPositonDTO : projectDTO.getProjectPositionList()) {
+            for (ProjectPositonDTO projectPositonDTO : projectRequestDTO.getProjectPositionList()) {
                 Optional<Position> optionalPosition = positionRepo.findByPositionName(projectPositonDTO.getPositionName());
                 if(!optionalPosition.isPresent()){
                     throw new ProjectException("존재하지 않은 포지션");

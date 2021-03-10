@@ -40,8 +40,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/signup", "/h2-console/**").permitAll() // 가입 및 인증 주소는 누구나 접근가능
                 .antMatchers(HttpMethod.GET, "helloworld/**").permitAll() // hellowworld로 시작하는 GET요청 리소스는 누구나 접근가능
-                //.anyRequest().hasRole(UserRole.USER.name()) // 그외 나머지 요청은 모두 인증된 회원만 접근 가능
-                .anyRequest().permitAll()
+//                .anyRequest().hasRole(UserRole.USER.name()) // 그외 나머지 요청은 모두 인증된 회원만 접근 가능
+                .anyRequest().permitAll() // 그외 나머지 요청은 모두 인증된 회원만 접근 가능
+
 
                 // jwt token 필터를 id/password 인증 필터(UsernamePasswordAuthenticationFilter) 전에 넣는다
                 .and()

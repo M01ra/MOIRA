@@ -11,7 +11,7 @@
         <!-- log file path -->
         <property name="LOG_PATH" value="/home/ec2-user/app/log"/>
         <!-- log file name -->
-        <property name="LOG_FILE_NAME" value="local_log"/>
+        <property name="LOG_FILE_NAME" value="prod_log"/>
     </springProfile>
 
     <!--Environment 내의 프로퍼티들을 개별적으로 설정할 수도 있다.-->

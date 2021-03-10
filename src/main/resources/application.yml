@@ -2,13 +2,17 @@ spring:
   profiles:
     active: local
     group:
-      local: jwt
+      local: jwt, aws
       set1: real-db, jwt
       set2: real-db, jwt
 
 logging:
   level:
     root: info
+    com:
+      amazonaws:
+        util:
+          EC2MetadataUtils: error
 
 cloud:
   aws:
