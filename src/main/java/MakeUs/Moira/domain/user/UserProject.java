@@ -3,11 +3,16 @@ package MakeUs.Moira.domain.user;
 import MakeUs.Moira.domain.position.Position;
 import MakeUs.Moira.domain.project.Project;
 import MakeUs.Moira.domain.userReview.UserReview;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
+@Getter
+@NoArgsConstructor
 public class UserProject {
 
     @Id
@@ -32,5 +37,12 @@ public class UserProject {
     @Enumerated(EnumType.STRING)
     private UserProjectStatus userProjectStatus;
 
+    public UserProject(UserHistory userHistory, Project project, UserProjectRoleType roleType, Position position, UserProjectStatus userProjectStatus){
+        this.userHistory = userHistory;
+        this.project = project;
+        this.roleType = roleType;
+        this.position = position;
+        this.userProjectStatus = userProjectStatus;
+    }
 
 }

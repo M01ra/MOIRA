@@ -3,6 +3,10 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+### key ###
+application-jwt.yml
+application-kakao.yml
+aws.yml
 
 ### STS ###
 .apt_generated
@@ -16,6 +20,7 @@ target/
 ### IntelliJ IDEA ###
 .gradle
 .idea
+/out
 *.iws
 *.iml
 *.ipr
@@ -36,3 +41,7 @@ build/
 ### logback ###
 .log
 /log
+
+### SQL ###
+*.sql
+

@@ -12,6 +12,6 @@ public class TestController {
     @GetMapping("/test")
     public String getTest(){
         logger.info("INFO");
-        return "testtesttest";
+        return "test";
     }
 }

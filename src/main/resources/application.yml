@@ -2,12 +2,22 @@ spring:
   profiles:
     active: local
     group:
-      set1: real-db
-      set2: real-db
+      local: jwt
+      set1: real-db, jwt
+      set2: real-db, jwt
 
 logging:
   level:
     root: info
+
+cloud:
+  aws:
+    s3:
+      bucket: moira-springboot
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
 ---
 spring:
   config:
@@ -17,6 +27,10 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+
   h2:
     console:
       enabled: true
@@ -25,12 +39,19 @@ spring:
     url: jdbc:h2:mem:moira;
     username: sa
     password:
-
 ---
 spring:
   config:
     activate:
       on-profile: set1
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+
 
 server:
   port: 8081
@@ -40,7 +61,13 @@ spring:
   config:
     activate:
       on-profile: set2
-
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
 server:
   port: 8082
 
