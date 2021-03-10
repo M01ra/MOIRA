@@ -1,5 +1,6 @@
 package MakeUs.Moira.domain.user;
 
+import MakeUs.Moira.domain.position.Position;
 import MakeUs.Moira.domain.userPool.UserPool;
 import MakeUs.Moira.domain.userPortfolio.UserPortfolio;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -48,6 +49,9 @@ public class User implements UserDetails {
     private String nickname;
 
     private String profileImage;
+
+    @ManyToOne
+    private Position position;
 
     @Builder
     public User(UserHistory userHistory, UserPortfolio userPortfolio, UserPool userPool, String socialProvider, String socialId, UserRole userRole, String email, String realName, String nickname, String profileImage) {

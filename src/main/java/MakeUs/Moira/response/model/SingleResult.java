@@ -1,6 +1,5 @@
 package MakeUs.Moira.response.model;
 
-import MakeUs.Moira.response.model.CommonResult;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -9,6 +9,15 @@ spring:
 logging:
   level:
     root: info
+
+cloud:
+  aws:
+    s3:
+      bucket: moira-springboot
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
 ---
 spring:
   config:
@@ -21,6 +30,7 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
   h2:
     console:
       enabled: true
@@ -29,7 +39,6 @@ spring:
     url: jdbc:h2:mem:moira;
     username: sa
     password:
-
 ---
 spring:
   config:
