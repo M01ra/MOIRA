@@ -1,6 +1,7 @@
 package MakeUs.Moira.advice;
 
 import MakeUs.Moira.advice.exception.EmailSignInFailedException;
+import MakeUs.Moira.advice.exception.TokenProviderInvalidException;
 import MakeUs.Moira.advice.exception.UserException;
 import MakeUs.Moira.response.ResponseService;
 import MakeUs.Moira.response.model.CommonResult;
@@ -28,14 +29,24 @@ public class ExceptionAdvice {
 
     @ExceptionHandler(UserException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    protected CommonResult UserException(HttpServletRequest request, UserException e) {
+    protected CommonResult userException(HttpServletRequest request, UserException e) {
         return responseService.mappingFailCommonResultOnly(e.getMessage());
     }
 
     @ExceptionHandler(EmailSignInFailedException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    protected CommonResult emailSignalFailed(HttpServletRequest request, UserException e) {
+    protected CommonResult emailSignalFailed(HttpServletRequest request, EmailSignInFailedException e) {
         return responseService.mappingFailCommonResultOnly(e.getMessage());
     }
 
-}
+    @ExceptionHandler(TokenProviderInvalidException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    protected CommonResult tokenProviderInvalidException(HttpServletRequest request, TokenProviderInvalidException e) {
+        return responseService.mappingFailCommonResultOnly(e.getMessage());
+    }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    protected CommonResult Exception(HttpServletRequest request, Exception e) {
+        return responseService.mappingFailCommonResultOnly(e.getMessage());
+    }}

@@ -33,6 +33,10 @@ public class User implements UserDetails {
     @OneToOne
     private UserPool userPool;
 
+    private String socialProvider;
+
+    private int socialId;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private UserRole userRole;
@@ -46,10 +50,12 @@ public class User implements UserDetails {
     private String profileImage;
 
     @Builder
-    public User(UserHistory userHistory, UserPortfolio userPortfolio, UserPool userPool, UserRole userRole, String email, String realName, String nickname, String profileImage) {
+    public User(UserHistory userHistory, UserPortfolio userPortfolio, UserPool userPool, String socialProvider, int socialId, UserRole userRole, String email, String realName, String nickname, String profileImage) {
         this.userHistory = userHistory;
         this.userPortfolio = userPortfolio;
         this.userPool = userPool;
+        this.socialProvider = socialProvider;
+        this.socialId = socialId;
         this.userRole = userRole;
         this.email = email;
         this.realName = realName;
