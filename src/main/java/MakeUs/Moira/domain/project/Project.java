@@ -1,5 +1,6 @@
 package MakeUs.Moira.domain.project;
 
+import MakeUs.Moira.domain.AuditorEntity;
 import MakeUs.Moira.domain.project.projectDetail.ProjectDetail;
 import MakeUs.Moira.domain.user.UserProject;
 import lombok.AllArgsConstructor;
@@ -14,7 +15,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Project {
+public class Project extends AuditorEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

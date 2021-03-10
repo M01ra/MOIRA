@@ -1,6 +1,5 @@
-package MakeUs.Moira.domain.project;
+package MakeUs.Moira.domain.position;
 
-import MakeUs.Moira.domain.position.Position;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

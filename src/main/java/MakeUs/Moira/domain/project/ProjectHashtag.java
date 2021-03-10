@@ -1,11 +1,13 @@
 package MakeUs.Moira.domain.project;
 
 import MakeUs.Moira.domain.hashtag.Hashtag;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
+@Getter
 @NoArgsConstructor
 public class ProjectHashtag {
 
