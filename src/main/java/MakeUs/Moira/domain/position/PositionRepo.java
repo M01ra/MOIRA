@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface PositionRepo extends JpaRepository<Position, Long> {
-    public Optional<Position>findByPositionName(String positionName);
+public interface PositionRepo extends JpaRepository<UserPosition, Long> {
+    public Optional<UserPosition>findByPositionName(String positionName);
 }

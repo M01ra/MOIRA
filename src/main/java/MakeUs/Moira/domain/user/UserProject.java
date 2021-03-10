@@ -1,9 +1,8 @@
 package MakeUs.Moira.domain.user;
 
-import MakeUs.Moira.domain.position.Position;
+import MakeUs.Moira.domain.position.UserPosition;
 import MakeUs.Moira.domain.project.Project;
 import MakeUs.Moira.domain.userReview.UserReview;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -32,16 +31,16 @@ public class UserProject {
     private UserProjectRoleType roleType;
 
     @ManyToOne
-    private Position position;
+    private UserPosition userPosition;
 
     @Enumerated(EnumType.STRING)
     private UserProjectStatus userProjectStatus;
 
-    public UserProject(UserHistory userHistory, Project project, UserProjectRoleType roleType, Position position, UserProjectStatus userProjectStatus){
+    public UserProject(UserHistory userHistory, Project project, UserProjectRoleType roleType, UserPosition userPosition, UserProjectStatus userProjectStatus){
         this.userHistory = userHistory;
         this.project = project;
         this.roleType = roleType;
-        this.position = position;
+        this.userPosition = userPosition;
         this.userProjectStatus = userProjectStatus;
     }
 

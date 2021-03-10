@@ -1,7 +1,6 @@
 package MakeUs.Moira.domain.project.projectDetail;
 
-import MakeUs.Moira.domain.position.Position;
-import MakeUs.Moira.domain.project.projectDetail.ProjectDetail;
+import MakeUs.Moira.domain.position.UserPosition;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -20,13 +19,13 @@ public class ProjectPosition {
     private ProjectDetail projectDetail;
 
     @ManyToOne
-    private Position recruitPosition;
+    private UserPosition recruitUserPosition;
 
     private int recruitPositionCount;
 
-    public ProjectPosition(ProjectDetail projectDetail, Position recruitPosition, int recruitPositionCount){
+    public ProjectPosition(ProjectDetail projectDetail, UserPosition recruitUserPosition, int recruitPositionCount){
         this.projectDetail = projectDetail;
-        this.recruitPosition = recruitPosition;
+        this.recruitUserPosition = recruitUserPosition;
         this.recruitPositionCount = recruitPositionCount;
     }
 }

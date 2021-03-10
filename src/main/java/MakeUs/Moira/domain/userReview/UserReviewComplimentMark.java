@@ -5,7 +5,7 @@ import MakeUs.Moira.domain.complimentMark.ComplimentMarkInfo;
 import javax.persistence.*;
 
 @Entity
-public class UseReviewComplimentMark {
+public class UserReviewComplimentMark {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

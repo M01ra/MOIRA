@@ -4,7 +4,7 @@ import MakeUs.Moira.advice.exception.ProjectException;
 import MakeUs.Moira.config.security.JwtTokenProvider;
 import MakeUs.Moira.domain.hashtag.Hashtag;
 import MakeUs.Moira.domain.hashtag.HashtagRepo;
-import MakeUs.Moira.domain.position.Position;
+import MakeUs.Moira.domain.position.UserPosition;
 import MakeUs.Moira.domain.position.PositionRepo;
 import MakeUs.Moira.domain.project.*;
 import MakeUs.Moira.controller.project.dto.ProjectsResponseDTO;
@@ -79,7 +79,7 @@ public class ProjectService {
         if(!optionalUserHistory.isPresent()){
             throw new ProjectException("유효하지 않은 유저");
         }
-        UserProject userProject = new UserProject(optionalUserHistory.get(), project, UserProjectRoleType.LEADER, user.getPosition(), UserProjectStatus.PROGRESS);
+        UserProject userProject = new UserProject(optionalUserHistory.get(), project, UserProjectRoleType.LEADER, user.getUserPosition(), UserProjectStatus.PROGRESS);
         userProjectList.add(userProjectRepo.save(userProject));
         project.setUserProjectList(userProjectList);
 
@@ -98,7 +98,7 @@ public class ProjectService {
         if(projectRequestDTO.getProjectPositionList() != null){
             List<ProjectPosition> projectPositionList = new ArrayList<>();
             for (ProjectPositonDTO projectPositonDTO : projectRequestDTO.getProjectPositionList()) {
-                Optional<Position> optionalPosition = positionRepo.findByPositionName(projectPositonDTO.getPositionName());
+                Optional<UserPosition> optionalPosition = positionRepo.findByPositionName(projectPositonDTO.getPositionName());
                 if(!optionalPosition.isPresent()){
                     throw new ProjectException("존재하지 않은 포지션");
                 }
