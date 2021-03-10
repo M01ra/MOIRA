@@ -2,7 +2,7 @@ spring:
   profiles:
     active: local
     group:
-      local: jwt
+      local: jwt, aws
       set1: real-db, jwt
       set2: real-db, jwt
 
