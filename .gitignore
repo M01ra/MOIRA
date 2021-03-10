@@ -6,7 +6,7 @@ target/
 ### key ###
 application-jwt.yml
 application-kakao.yml
-
+aws.yml
 
 ### STS ###
 .apt_generated
@@ -45,5 +45,3 @@ build/
 ### SQL ###
 *.sql
 
-### AWS ###
-aws.yml
