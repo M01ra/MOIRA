@@ -1,25 +1,17 @@
 package MakeUs.Moira.controller.security;
 
 import MakeUs.Moira.config.security.JwtTokenProvider;
-import MakeUs.Moira.controller.security.dto.requestJwtDto;
-import MakeUs.Moira.domain.user.User;
-import MakeUs.Moira.domain.user.UserRepo;
 import MakeUs.Moira.domain.user.UserRole;
 import MakeUs.Moira.response.ResponseService;
-import MakeUs.Moira.response.model.CommonResult;
 import MakeUs.Moira.response.model.SingleResult;
-import MakeUs.Moira.advice.exception.EmailSignInFailedException;
 import MakeUs.Moira.service.security.TokenService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Optional;
 
 @Api(tags = {"로그인"})
 @RequiredArgsConstructor
@@ -47,14 +39,12 @@ public class LoginController {
 
          */
 
-        Long userPk = 0L;
-        int socialId = tokenService.getUserSocialId(providerName, accessToken);
-        Optional<User> user = tokenService.searchUserBySocialId(socialId, providerName);
+        String socialId = tokenService.getUserSocialId(providerName, accessToken);
+        Long userPk = tokenService.findBySocialIdAndSocialProvider(socialId, providerName).getUserPk();
 
-        if (!user.isPresent()){ // 신규 가입이면 -> 회원 등록시킨 후
+        if (userPk == -1L){ // 신규 가입이면 -> 회원 등록시킨 후
             userPk = tokenService.save(socialId, providerName);
         }
-
         // jwt 발급
         String newJwtToken = jwtTokenProvider.createToken(String.valueOf(userPk), UserRole.USER.name());
 

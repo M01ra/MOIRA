@@ -35,7 +35,7 @@ public class User implements UserDetails {
 
     private String socialProvider;
 
-    private int socialId;
+    private String socialId;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -50,7 +50,7 @@ public class User implements UserDetails {
     private String profileImage;
 
     @Builder
-    public User(UserHistory userHistory, UserPortfolio userPortfolio, UserPool userPool, String socialProvider, int socialId, UserRole userRole, String email, String realName, String nickname, String profileImage) {
+    public User(UserHistory userHistory, UserPortfolio userPortfolio, UserPool userPool, String socialProvider, String socialId, UserRole userRole, String email, String realName, String nickname, String profileImage) {
         this.userHistory = userHistory;
         this.userPortfolio = userPortfolio;
         this.userPool = userPool;

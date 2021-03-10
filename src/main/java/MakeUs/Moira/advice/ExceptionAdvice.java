@@ -49,4 +49,5 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     protected CommonResult Exception(HttpServletRequest request, Exception e) {
         return responseService.mappingFailCommonResultOnly(e.getMessage());
-    }}
+    }
+}
