@@ -13,8 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class MoiraApplication {
 
 	public static final String LOCAL_LOCATION = "spring.config.location="
-			+ "classpath:application.yml,"
-			+ "classpath:aws.yml";
+			+ "classpath:application.yml";
 
 	public static final String PROD_LOCATION = "spring.config.location="
 			+ "classpath:application.yml,"
@@ -23,11 +22,11 @@ public class MoiraApplication {
 	public static void main(String[] args) {
 		try{
 			new SpringApplicationBuilder(MoiraApplication.class)
-					.properties(LOCAL_LOCATION)
+					.properties(PROD_LOCATION)
 					.run(args);
 		} catch (ConfigDataResourceNotFoundException e){
 			new SpringApplicationBuilder(MoiraApplication.class)
-					.properties(PROD_LOCATION)
+					.properties(LOCAL_LOCATION)
 					.run(args);
 		}
 	}
