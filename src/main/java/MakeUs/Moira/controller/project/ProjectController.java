@@ -1,21 +1,24 @@
-package MakeUs.Moira.controller;
+package MakeUs.Moira.controller.project;
 
 import MakeUs.Moira.domain.project.ProjectStatus;
-import MakeUs.Moira.domain.project.dto.ProjectDTO;
-import MakeUs.Moira.domain.project.dto.ProjectsResponseDTO;
+import MakeUs.Moira.controller.project.dto.ProjectRequestDTO;
+import MakeUs.Moira.controller.project.dto.ProjectsResponseDTO;
 import MakeUs.Moira.response.ResponseService;
 import MakeUs.Moira.response.model.CommonResult;
 import MakeUs.Moira.response.model.ListResult;
 import MakeUs.Moira.response.model.SingleResult;
 import MakeUs.Moira.service.ProjectService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+@Api(tags = {"프로젝트(팀)"})
 @RestController
 @RequiredArgsConstructor
 public class ProjectController {
@@ -25,8 +28,8 @@ public class ProjectController {
 
     @ApiOperation(value = "프로젝트(팀) 생성", notes = "성공시 생성된 프로젝트(팀)의 ID를 반환합니다")
     @PostMapping("/project")
-    public SingleResult<Long> createProject(@RequestBody ProjectDTO projectDTO) {
-        Long projectId = projectService.createProject(projectDTO);
+    public SingleResult<Long> createProject(@RequestBody ProjectRequestDTO projectRequestDTO, HttpServletRequest req) {
+        Long projectId = projectService.createProject(projectRequestDTO, req.getHeaders("X-AUTH-TOKEN").toString());
         return responseService.mappingSingleResult(projectId, "프로젝트 생성 성공");
     }
 

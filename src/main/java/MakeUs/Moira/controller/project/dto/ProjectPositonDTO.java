@@ -1,4 +1,4 @@
-package MakeUs.Moira.domain.project.dto;
+package MakeUs.Moira.controller.project.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
