@@ -1,5 +1,6 @@
 package MakeUs.Moira.controller.project;
 
+import MakeUs.Moira.controller.project.dto.ProjectResponseDTO;
 import MakeUs.Moira.domain.project.ProjectStatus;
 import MakeUs.Moira.controller.project.dto.ProjectRequestDTO;
 import MakeUs.Moira.controller.project.dto.ProjectsResponseDTO;
@@ -52,6 +53,13 @@ public class ProjectController {
     public ListResult<ProjectsResponseDTO> getProjects(@ApiParam(value = "정렬 방식(최신 순: modifiedDate, 조회순: hitCount, 좋아요순: likeCount") @RequestParam(name = "sort", required = false, defaultValue = "modifiedDate") String sort, @ApiParam(value = "페이지") @RequestParam(name = "page", required = false, defaultValue = "0") int page){
         List<ProjectsResponseDTO> projectDTOList = projectService.getProjects(sort, page);
         return responseService.mappingListResult(projectDTOList, "프로젝트 조회 성공");
+    }
+
+    @ApiOperation(value = "프로젝트(팀) 세부 조회", notes = "프로젝트(팀)의 세부 정보를 조회합니다. 조회시 해당 프로젝트(팀)의 조회수가 1 증가합니다")
+    @GetMapping("/project/{projectId}")
+    public SingleResult<ProjectResponseDTO> getProject(@ApiParam(value = "프로젝트(팀) ID", required = true) @PathVariable Long projectId){
+        ProjectResponseDTO projectResponseDTO = projectService.getProject(projectId);
+        return responseService.mappingSingleResult(projectResponseDTO, "프로젝트 세부 정보 조회 성공");
     }
 
 }

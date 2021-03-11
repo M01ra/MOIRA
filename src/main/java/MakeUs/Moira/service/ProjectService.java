@@ -2,6 +2,7 @@ package MakeUs.Moira.service;
 
 import MakeUs.Moira.advice.exception.ProjectException;
 import MakeUs.Moira.config.security.JwtTokenProvider;
+import MakeUs.Moira.controller.project.dto.ProjectResponseDTO;
 import MakeUs.Moira.domain.hashtag.Hashtag;
 import MakeUs.Moira.domain.hashtag.HashtagRepo;
 import MakeUs.Moira.domain.position.UserPosition;
@@ -70,6 +71,7 @@ public class ProjectService {
         else project.setProjectHashtagList(new ArrayList<>());
 
         Optional<User> optionalUser = userRepo.findById(Long.valueOf(jwtTokenProvider.getUserPk(token)));
+//        Optional<User> optionalUser = userRepo.findById(1L);
         if(!optionalUser.isPresent()){
             throw new ProjectException("유효하지 않는 유저");
         }
@@ -155,43 +157,9 @@ public class ProjectService {
 
         List<ProjectsResponseDTO> projectsResponseDTOList = new ArrayList<>();
         for(Project project : projectList){
-            String writer = null;
-            for(UserProject userProject : project.getUserProjectList()){
-                if(userProject.getRoleType() == UserProjectRoleType.LEADER){
-                    Optional<User> optionalUser = userRepo.findById(userProject.getUserHistory().getUser().getId());
-                    if(!optionalUser.isPresent()){
-                        throw new ProjectException("존재하지 않는 유저");
-                    }
-                    writer = optionalUser.get().getNickname();
-                    break;
-                }
-            }
-
-            List<String> hashtagList = new ArrayList<>();
-            for(ProjectHashtag projectHashtag : project.getProjectHashtagList()){
-                hashtagList.add(projectHashtag.getProjectHashtag().getHashtagName());
-            }
-
-            String time = null;
-            LocalDateTime localDateTime = project.getModifiedDate();
-            if(ChronoUnit.YEARS.between(localDateTime, LocalDateTime.now()) >= 1){
-                time = Long.toString(ChronoUnit.YEARS.between(localDateTime, LocalDateTime.now())) + "년 전";
-            }
-            else if(ChronoUnit.MONTHS.between(localDateTime, LocalDateTime.now()) >= 1){
-                time = Long.toString(ChronoUnit.MONTHS.between(localDateTime, LocalDateTime.now())) + "개월 전";
-            }
-            else if(ChronoUnit.DAYS.between(localDateTime, LocalDateTime.now()) >= 1){
-                time = Long.toString(ChronoUnit.DAYS.between(localDateTime, LocalDateTime.now())) + "일 전";
-            }
-            else if(ChronoUnit.HOURS.between(localDateTime, LocalDateTime.now()) >= 1){
-                time = Long.toString(ChronoUnit.HOURS.between(localDateTime, LocalDateTime.now())) + "시간 전";
-            }
-            else if(ChronoUnit.MINUTES.between(localDateTime, LocalDateTime.now()) >= 1){
-                time = Long.toString(ChronoUnit.MINUTES.between(localDateTime, LocalDateTime.now())) + "분 전";
-            }
-            else {
-                time = "방금 전";
-            }
+            String writer = getWriter(project.getUserProjectList());
+            List<String> hashtagList = getHashtagList(project.getProjectHashtagList());
+            String time = getTime(project.getModifiedDate());
 
             String imageUrl = null;
             if(!project.getProjectImageList().isEmpty()){
@@ -204,4 +172,83 @@ public class ProjectService {
 
         return projectsResponseDTOList;
     }
+
+    @Transactional
+    public ProjectResponseDTO getProject(Long projectId){
+        Optional<Project> optionalProject = projectRepo.findById(projectId);
+        if(!optionalProject.isPresent()){
+            throw new ProjectException("존재하지 않는 프로젝트 ID");
+        }
+        Project project = optionalProject.get();
+
+        String writer = getWriter(project.getUserProjectList());
+        List<String> hashtagList = getHashtagList(project.getProjectHashtagList());
+        List<String> imageUrlList = getImageUrlList(project.getProjectImageList());
+        String duration = project.getProjectDetail().getProjectDuration().toString();
+        String location = project.getProjectDetail().getProjectLocalType().toString();
+        List<ProjectPositonDTO> projectPositonDTOList = new ArrayList<>();
+        for(ProjectPosition projectPosition: project.getProjectDetail().getProjectPositionList()){
+            projectPositonDTOList.add(new ProjectPositonDTO(projectPosition.getRecruitUserPosition().getPositionName(), projectPosition.getRecruitPositionCount()));
+        }
+        String time = getTime(project.getModifiedDate());
+
+        project.setHitCount(project.getHitCount() + 1);
+        projectRepo.save(project);
+        return new ProjectResponseDTO(writer, project.getProjectTitle(), hashtagList, imageUrlList, project.getHitCount(), project.getLikeCount(), duration, location, projectPositonDTOList, time);
+    }
+
+    private String getWriter(List<UserProject> userProjectList){
+        String writer = null;
+        for(UserProject userProject : userProjectList){
+            if(userProject.getRoleType() == UserProjectRoleType.LEADER){
+                Optional<User> optionalUser = userRepo.findById(userProject.getUserHistory().getUser().getId());
+                if(!optionalUser.isPresent()){
+                    throw new ProjectException("존재하지 않는 유저");
+                }
+                writer = optionalUser.get().getNickname();
+                break;
+            }
+        }
+        return writer;
+    }
+
+    private List<String> getHashtagList(List<ProjectHashtag> projectHashtagList){
+        List<String> hashtagList = new ArrayList<>();
+        for(ProjectHashtag projectHashtag : projectHashtagList){
+            hashtagList.add(projectHashtag.getProjectHashtag().getHashtagName());
+        }
+        return hashtagList;
+    }
+
+    private List<String> getImageUrlList(List<ProjectImage> projectImageList){
+        List<String> imageUrlList = new ArrayList<>();
+        for(ProjectImage projectImage : projectImageList){
+            imageUrlList.add(projectImage.getProjectImageUrl());
+        }
+        return imageUrlList;
+    }
+
+    private String getTime(LocalDateTime localDateTime){
+        String time = null;
+        if(ChronoUnit.YEARS.between(localDateTime, LocalDateTime.now()) >= 1){
+            time = Long.toString(ChronoUnit.YEARS.between(localDateTime, LocalDateTime.now())) + "년 전";
+        }
+        else if(ChronoUnit.MONTHS.between(localDateTime, LocalDateTime.now()) >= 1){
+            time = Long.toString(ChronoUnit.MONTHS.between(localDateTime, LocalDateTime.now())) + "개월 전";
+        }
+        else if(ChronoUnit.DAYS.between(localDateTime, LocalDateTime.now()) >= 1){
+            time = Long.toString(ChronoUnit.DAYS.between(localDateTime, LocalDateTime.now())) + "일 전";
+        }
+        else if(ChronoUnit.HOURS.between(localDateTime, LocalDateTime.now()) >= 1){
+            time = Long.toString(ChronoUnit.HOURS.between(localDateTime, LocalDateTime.now())) + "시간 전";
+        }
+        else if(ChronoUnit.MINUTES.between(localDateTime, LocalDateTime.now()) >= 1){
+            time = Long.toString(ChronoUnit.MINUTES.between(localDateTime, LocalDateTime.now())) + "분 전";
+        }
+        else {
+            time = "방금 전";
+        }
+        return time;
+    }
+
 }
