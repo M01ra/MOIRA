@@ -72,7 +72,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(this.userRole.name());
+        SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(this.userRole.getKey());
         ArrayList<SimpleGrantedAuthority> simpleGrantedAuthorities = new ArrayList<>();
         simpleGrantedAuthorities.add(simpleGrantedAuthority);
         return simpleGrantedAuthorities;
@@ -81,7 +81,7 @@ public class User implements UserDetails {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Override
     public String getUsername() {
-        return this.email;
+        return this.id.toString();
     }
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
