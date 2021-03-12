@@ -2,17 +2,14 @@ package MakeUs.Moira.service;
 
 import MakeUs.Moira.advice.exception.ProjectException;
 import MakeUs.Moira.config.security.JwtTokenProvider;
-import MakeUs.Moira.controller.project.dto.ProjectResponseDTO;
+import MakeUs.Moira.controller.project.dto.*;
 import MakeUs.Moira.domain.hashtag.Hashtag;
 import MakeUs.Moira.domain.hashtag.HashtagRepo;
 import MakeUs.Moira.domain.position.UserPosition;
 import MakeUs.Moira.domain.position.PositionRepo;
 import MakeUs.Moira.domain.project.*;
-import MakeUs.Moira.controller.project.dto.ProjectsResponseDTO;
 import MakeUs.Moira.domain.project.projectDetail.*;
 import MakeUs.Moira.domain.user.*;
-import MakeUs.Moira.controller.project.dto.ProjectRequestDTO;
-import MakeUs.Moira.controller.project.dto.ProjectPositonDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
@@ -44,19 +41,19 @@ public class ProjectService {
     private final ProjectDetailRepo projectDetailRepo;
     private final ProjectPositonRepo projectPositonRepo;
     private final PositionRepo positionRepo;
+    private final ProjectLikeRepo projectLikeRepo;
+    private final ProjectCommentRepo projectCommentRepo;
     private final S3Service s3Service;
     private final JwtTokenProvider jwtTokenProvider;
 
     @Transactional
     public Long createProject(ProjectRequestDTO projectRequestDTO, String token) {
         Project project = new Project();
-        BeanUtils.copyProperties(projectRequestDTO, project);
-        project.setLikeCount(0);
-        project.setHitCount(0);
-        project.setProjectStatus(ProjectStatus.RECRUITING);
+        project.setProjectTitle(projectRequestDTO.getProjectTitle());
         project = projectRepo.save(project);
+
+        List<ProjectHashtag> projectHashtagList = new ArrayList<>();
         if(projectRequestDTO.getProjectHashtagList() != null) {
-            List<ProjectHashtag> projectHashtagList = new ArrayList<>();
             for (String hashtag : projectRequestDTO.getProjectHashtagList()) {
                 Optional<Hashtag> optionalHashtag = hashtagRepo.findHashtagByHashtagName(hashtag);
                 if(!optionalHashtag.isPresent()){
@@ -66,12 +63,12 @@ public class ProjectService {
                         new ProjectHashtag(project, optionalHashtag.get())
                 ));
             }
-            project.setProjectHashtagList(projectHashtagList);
         }
-        else project.setProjectHashtagList(new ArrayList<>());
+        project.setProjectHashtagList(projectHashtagList);
+        project = projectRepo.save(project);
 
-        Optional<User> optionalUser = userRepo.findById(Long.valueOf(jwtTokenProvider.getUserPk(token)));
-        //Optional<User> optionalUser = userRepo.findById(1L);
+        //Optional<User> optionalUser = userRepo.findById(Long.valueOf(jwtTokenProvider.getUserPk(token)));
+        Optional<User> optionalUser = userRepo.findById(1L);
         if(!optionalUser.isPresent()){
             throw new ProjectException("유효하지 않는 유저");
         }
@@ -81,24 +78,25 @@ public class ProjectService {
         if(!optionalUserHistory.isPresent()){
             throw new ProjectException("유효하지 않은 유저");
         }
-        UserProject userProject = new UserProject(optionalUserHistory.get(), project, UserProjectRoleType.LEADER, user.getUserPosition(), UserProjectStatus.PROGRESS);
+        UserHistory userHistory = optionalUserHistory.get();
+        UserProject userProject = new UserProject(userHistory, project, UserProjectRoleType.LEADER, user.getUserPosition(), UserProjectStatus.PROGRESS);
         userProjectList.add(userProjectRepo.save(userProject));
         project.setUserProjectList(userProjectList);
+        userHistory.addUserProject(userProject);
 
-        ProjectDetail projectDetail = new ProjectDetail(project, new ArrayList<>(), new ArrayList<>(), projectRequestDTO.getProjectContent(), projectRequestDTO.getProjectDuration(), projectRequestDTO.getProjectLocalType());
+        ProjectDetail projectDetail = new ProjectDetail(project, projectRequestDTO.getProjectContent(), projectRequestDTO.getProjectDuration(), projectRequestDTO.getProjectLocalType());
         projectDetail = projectDetailRepo.save(projectDetail);
 
+        List<ProjectQuestion> projectQuestionList = new ArrayList<>();
         if(projectRequestDTO.getProjectQuestionList() != null){
-            List<ProjectQuestion> projectQuestionList = new ArrayList<>();
             for (String question : projectRequestDTO.getProjectQuestionList()) {
                 projectQuestionList.add(projectQuestionRepo.save(new ProjectQuestion(projectDetail, question)));
             }
-            projectDetail.setProjectQuestionList(projectQuestionList);
         }
-        else projectDetail.setProjectQuestionList(new ArrayList<>());
+        projectDetail.setProjectQuestionList(projectQuestionList);
 
+        List<ProjectPosition> projectPositionList = new ArrayList<>();
         if(projectRequestDTO.getProjectPositionList() != null){
-            List<ProjectPosition> projectPositionList = new ArrayList<>();
             for (ProjectPositonDTO projectPositonDTO : projectRequestDTO.getProjectPositionList()) {
                 Optional<UserPosition> optionalPosition = positionRepo.findByPositionName(projectPositonDTO.getPositionName());
                 if(!optionalPosition.isPresent()){
@@ -108,7 +106,6 @@ public class ProjectService {
             }
             projectDetail.setProjectPositionList(projectPositionList);
         }
-        else projectDetail.setProjectPositionList(new ArrayList<>());
         project.setProjectDetail(projectDetail);
         return projectRepo.save(project).getId();
     }
@@ -134,7 +131,7 @@ public class ProjectService {
             throw new ProjectException("존재하지 않은 프로젝트 ID");
         }
         Project project = optionalProject.get();
-        project.setProjectStatus(status);
+        project.changeProjectStatus(status);
     }
 
     @Transactional
@@ -175,7 +172,7 @@ public class ProjectService {
     }
 
     @Transactional
-    public ProjectResponseDTO getProject(Long projectId){
+    public ProjectResponseDTO getProject(Long projectId, String token){
         Optional<Project> optionalProject = projectRepo.findById(projectId);
         if(!optionalProject.isPresent()){
             throw new ProjectException("존재하지 않는 프로젝트 ID");
@@ -190,9 +187,99 @@ public class ProjectService {
         List<ProjectPositonDTO> projectPositonDTOList = getProjectPositionList(project.getProjectDetail().getProjectPositionList());
         String time = getTime(project.getModifiedDate());
 
-        project.setHitCount(project.getHitCount() + 1);
+        //Optional<User> optionalUser = userRepo.findById(Long.valueOf(jwtTokenProvider.getUserPk(token)));
+        Optional<User> optionalUser = userRepo.findById(1L);
+        if(!optionalUser.isPresent()){
+            throw new ProjectException("유효하지 않는 유저");
+        }
+        User user = optionalUser.get();
+        Optional<UserHistory> optionalUserHistory = userHistoryRepo.findByUser(user);
+        if(!optionalUserHistory.isPresent()){
+            throw new ProjectException("유효하지 않는 유저");
+        }
+        UserHistory userHistory = optionalUserHistory.get();
+        Optional<ProjectLike> optionalProjectLike = projectLikeRepo.findByUserHistoryAndProject(userHistory, project);
+        boolean isLike = false;
+        if(optionalProjectLike.isPresent()){
+            ProjectLike projectLike = optionalProjectLike.get();
+            if(projectLike.isProjectLiked()){
+                isLike = true;
+            }
+        }
+
+        project.addHit();
         projectRepo.save(project);
-        return new ProjectResponseDTO(writer, project.getProjectTitle(), hashtagList, imageUrlList, project.getHitCount(), project.getLikeCount(), duration, location, projectPositonDTOList, time);
+        return new ProjectResponseDTO(writer, project.getProjectTitle(), hashtagList, imageUrlList, project.getHitCount(), project.getLikeCount(), duration, location, projectPositonDTOList, time, isLike);
+    }
+
+    @Transactional
+    public void changeProjectLike(Long projectId, String token){
+        Optional<Project> optionalProject = projectRepo.findById(projectId);
+        if(!optionalProject.isPresent()){
+            throw new ProjectException("존재하지 않는 프로젝트 ID");
+        }
+        Project project = optionalProject.get();
+
+        //Optional<User> optionalUser = userRepo.findById(Long.valueOf(jwtTokenProvider.getUserPk(token)));
+        Optional<User> optionalUser = userRepo.findById(1L);
+        if(!optionalUser.isPresent()){
+            throw new ProjectException("유효하지 않는 유저");
+        }
+        User user = optionalUser.get();
+        Optional<UserHistory> optionalUserHistory = userHistoryRepo.findByUser(user);
+        if(!optionalUserHistory.isPresent()){
+            throw new ProjectException("유효하지 않는 유저");
+        }
+        UserHistory userHistory = optionalUserHistory.get();
+        Optional<ProjectLike> optionalProjectLike = projectLikeRepo.findByUserHistoryAndProject(userHistory, project);
+        if(optionalProjectLike.isPresent()){
+            ProjectLike projectLike = optionalProjectLike.get();
+            if(projectLike.isProjectLiked()){
+                project.cancelLike();
+            }
+            else{
+                project.addLike();
+                userHistory.addProjectLike(projectLike);
+            }
+            projectLike.changeProjectLiked();
+        }
+        else{
+            ProjectLike projectLike = new ProjectLike(userHistory, project);
+            projectLikeRepo.save(projectLike);
+            project.addLike();
+            userHistory.addProjectLike(projectLike);
+        }
+    }
+
+    @Transactional
+    public Long createProjectComment(ProjectCommentRequestDTO projectCommentRequestDTO, Long projectId, Long parentId, String token) {
+        Optional<Project> optionalProject = projectRepo.findById(projectId);
+        if(!optionalProject.isPresent()){
+            throw new ProjectException("존재하지 않는 프로젝트 ID");
+        }
+        Project project = optionalProject.get();
+        ProjectDetail projectDetail = project.getProjectDetail();
+
+        //Optional<User> optionalUser = userRepo.findById(Long.valueOf(jwtTokenProvider.getUserPk(token)));
+        Optional<User> optionalUser = userRepo.findById(1L);
+        if(!optionalUser.isPresent()){
+            throw new ProjectException("유효하지 않는 유저");
+        }
+        User writer = optionalUser.get();
+
+        ProjectComment parentProjectComment = null;
+        if(parentId != null){
+            Optional<ProjectComment> optionalProjectComment = projectCommentRepo.findById(parentId);
+            if(!optionalProjectComment.isPresent()){
+                throw new ProjectException("존재하지 않는 부모 댓글 ID");
+            }
+            parentProjectComment = optionalProjectComment.get();
+        }
+
+        ProjectComment projectComment = new ProjectComment(projectDetail, writer, projectCommentRequestDTO.getContent(), parentProjectComment);
+        projectComment = projectCommentRepo.save(projectComment);
+        projectDetail.addComment(projectComment);
+        return projectComment.getId();
     }
 
     private String getWriter(List<UserProject> userProjectList){

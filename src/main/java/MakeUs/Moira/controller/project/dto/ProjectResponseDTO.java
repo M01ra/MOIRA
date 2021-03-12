@@ -1,5 +1,6 @@
 package MakeUs.Moira.controller.project.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,4 +34,7 @@ public class ProjectResponseDTO {
     private List<ProjectPositonDTO> positionList;
     @ApiModelProperty(value = "생성 시간", example = "방금전")
     private String time;
+    @ApiModelProperty(value = "좋아요 여부", example = "true")
+    @JsonProperty("isLike")
+    private boolean isLike;
 }

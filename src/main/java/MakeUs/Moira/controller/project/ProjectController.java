@@ -1,5 +1,6 @@
 package MakeUs.Moira.controller.project;
 
+import MakeUs.Moira.controller.project.dto.ProjectCommentRequestDTO;
 import MakeUs.Moira.controller.project.dto.ProjectResponseDTO;
 import MakeUs.Moira.domain.project.ProjectStatus;
 import MakeUs.Moira.controller.project.dto.ProjectRequestDTO;
@@ -57,9 +58,23 @@ public class ProjectController {
 
     @ApiOperation(value = "프로젝트(팀) 세부 조회", notes = "프로젝트(팀)의 세부 정보를 조회합니다. 조회시 해당 프로젝트(팀)의 조회수가 1 증가합니다")
     @GetMapping("/project/{projectId}")
-    public SingleResult<ProjectResponseDTO> getProject(@ApiParam(value = "프로젝트(팀) ID", required = true) @PathVariable Long projectId){
-        ProjectResponseDTO projectResponseDTO = projectService.getProject(projectId);
+    public SingleResult<ProjectResponseDTO> getProject(@ApiParam(value = "프로젝트(팀) ID", required = true) @PathVariable Long projectId, HttpServletRequest req){
+        ProjectResponseDTO projectResponseDTO = projectService.getProject(projectId, req.getHeaders("X-AUTH-TOKEN").toString());
         return responseService.mappingSingleResult(projectResponseDTO, "프로젝트 세부 정보 조회 성공");
+    }
+
+    @ApiOperation(value = "프로젝트(팀)의 좋아요 변경", notes = "유저가 프로젝트(팀)의 좋아요를 추가하거나 이미 추가되었다면 취소합니다")
+    @PutMapping("/project/{projectId}/like")
+    public CommonResult addProjectLike(@ApiParam(value = "프로젝트(팀) ID", required = true) @PathVariable Long projectId, HttpServletRequest req){
+        projectService.changeProjectLike(projectId, req.getHeaders("X-AUTH-TOKEN").toString());
+        return responseService.mappingSuccessCommonResultOnly("프로젝트에 좋아요 변경 성공");
+    }
+
+    @ApiOperation(value = "프로젝트(팀) 댓글 생성", notes = "프로젝트(팀)의 댓글을 추가합니다")
+    @PostMapping("/project/{projectId}/comment")
+    public SingleResult<Long> createProjectComment(@RequestBody ProjectCommentRequestDTO projectCommentRequestDTO, @ApiParam(value = "프로젝트(팀) ID", required = true) @PathVariable Long projectId, @ApiParam(value = "부모 댓글 ID") @RequestParam(name = "parent", required = false) Long parentId, HttpServletRequest req){
+        Long commentId = projectService.createProjectComment(projectCommentRequestDTO, projectId, parentId, req.getHeaders("X-AUTH-TOKEN").toString());
+        return responseService.mappingSingleResult(commentId, "프로젝트 댓글 추가 성공");
     }
 
 }
