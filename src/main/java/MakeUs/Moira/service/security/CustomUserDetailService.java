@@ -5,6 +5,7 @@ import MakeUs.Moira.domain.user.UserRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -13,7 +14,8 @@ public class CustomUserDetailService implements UserDetailsService {
 
     private final UserRepo userRepo;
 
-    public UserDetails loadUserByUsername(String userPk) {
+    @Override
+    public UserDetails loadUserByUsername(String userPk) throws UsernameNotFoundException {
         return userRepo.findById(Long.valueOf(userPk)).orElseThrow(UserException::new);
     }
 }
