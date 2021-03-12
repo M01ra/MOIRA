@@ -48,10 +48,10 @@ public class ProjectController {
         return responseService.mappingSuccessCommonResultOnly("프로젝트 상태 변경 성공");
     }
 
-    @ApiOperation(value = "프로젝트(팀)들 조회", notes = "프로젝트(팀)들을 정렬 방식(sort)과 Page에 따라 10개씩 조회합니다")
+    @ApiOperation(value = "프로젝트(팀)들 조회", notes = "프로젝트(팀)들을 태그(tag), 정렬 방식(sort), Page에 따라 10개씩 조회합니다.\n태그, 정렬 방식, Page는 모두 필수가 아니며 미입력시 기본 값이 적용됩니다")
     @GetMapping("/projects")
-    public ListResult<ProjectsResponseDTO> getProjects(@ApiParam(value = "정렬 방식(최신 순: modifiedDate, 조회순: hitCount, 좋아요순: likeCount") @RequestParam(name = "sort", required = false, defaultValue = "modifiedDate") String sort, @ApiParam(value = "페이지") @RequestParam(name = "page", required = false, defaultValue = "0") int page){
-        List<ProjectsResponseDTO> projectDTOList = projectService.getProjects(sort, page);
+    public ListResult<ProjectsResponseDTO> getProjects(@ApiParam(value = "태그, 여러개 입력시 ,로 구분.\nex) tag=AOS,IOS,WEB") @RequestParam(name = "tag", required = false) String tag, @ApiParam(value = "정렬 방식(최신 순(기본 값): modifiedDate, 조회순: hitCount, 좋아요순: likeCount)") @RequestParam(name = "sort", required = false, defaultValue = "modifiedDate") String sort, @ApiParam(value = "페이지(기본 값 : 0)") @RequestParam(name = "page", required = false, defaultValue = "0") int page){
+        List<ProjectsResponseDTO> projectDTOList = projectService.getProjects(tag, sort, page);
         return responseService.mappingListResult(projectDTOList, "프로젝트 조회 성공");
     }
 

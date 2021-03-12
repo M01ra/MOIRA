@@ -71,7 +71,7 @@ public class ProjectService {
         else project.setProjectHashtagList(new ArrayList<>());
 
         Optional<User> optionalUser = userRepo.findById(Long.valueOf(jwtTokenProvider.getUserPk(token)));
-//        Optional<User> optionalUser = userRepo.findById(1L);
+        //Optional<User> optionalUser = userRepo.findById(1L);
         if(!optionalUser.isPresent()){
             throw new ProjectException("유효하지 않는 유저");
         }
@@ -138,38 +138,39 @@ public class ProjectService {
     }
 
     @Transactional
-    public List<ProjectsResponseDTO> getProjects(String sort, int page){
+    public List<ProjectsResponseDTO> getProjects(String tag, String sort, int page) {
+        if(sort.equals("modifiedDate") && sort.equals("hitCount") && sort.equals("likeCount")){
+            throw new ProjectException("유효하지 않는 정렬 방식");
+        }
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sort).descending());
-        List<Project> projectList = null;
-        projectList = projectRepo.findProjectsByProjectStatusEquals(ProjectStatus.RECRUITING, pageable);
-//        else{
-//            String[] tags = tag.split("\\,");
-//            List<Hashtag> hashtagList = new ArrayList<>();
-//            for(String str : tags){
-//                Optional<Hashtag> optionalHashtag = hashtagRepo.findHashtagByHashtagName(str);
-//                if(!optionalHashtag.isPresent()){
-//                    throw new ProjectException("존재하지 않는 태그");
-//                }
-//                hashtagList.add(optionalHashtag.get());
-//            }
-//            projectList = projectRepo.findProjectsByProjectStatusEqualsAndProjectHashtagListIn(ProjectStatus.RECRUITING, hashtagList, pageable);
-//        }
-
-        List<ProjectsResponseDTO> projectsResponseDTOList = new ArrayList<>();
-        for(Project project : projectList){
-            String writer = getWriter(project.getUserProjectList());
-            List<String> hashtagList = getHashtagList(project.getProjectHashtagList());
-            String time = getTime(project.getModifiedDate());
-
-            String imageUrl = null;
-            if(!project.getProjectImageList().isEmpty()){
-                imageUrl = project.getProjectImageList().get(0).getProjectImageUrl();
+        List<ProjectRepo.ProjectsResponseInterface> projectsResponseInterfaceList = null;
+        if(tag != null) {
+            String[] tags = tag.split("\\,");
+            List<String> tagList = new ArrayList<>();
+            for (String t : tags) {
+                tagList.add(t);
+                if (!hashtagRepo.findHashtagByHashtagName(t).isPresent()) {
+                    throw new ProjectException("존재하지 않는 태그");
+                }
             }
-
-            ProjectsResponseDTO projectsResponseDTO = new ProjectsResponseDTO(project.getId(), writer, project.getProjectTitle(), hashtagList, imageUrl, project.getHitCount(), time);
+            projectsResponseInterfaceList = projectRepo.findProjectsByTagOrderPage(tagList, pageable);
+        }
+        else {
+            projectsResponseInterfaceList = projectRepo.findProjectsByOrderPage(pageable);
+        }
+        List<ProjectsResponseDTO> projectsResponseDTOList = new ArrayList<>();
+        for(ProjectRepo.ProjectsResponseInterface projectsResponseInterface : projectsResponseInterfaceList){
+            ProjectsResponseDTO projectsResponseDTO = new ProjectsResponseDTO();
+            BeanUtils.copyProperties(projectsResponseInterface, projectsResponseDTO);
+            Optional<Project> optionalProject = projectRepo.findById(projectsResponseDTO.getId());
+            if(!optionalProject.isPresent()){
+                continue;
+            }
+            Project project = optionalProject.get();
+            projectsResponseDTO.setHashtagList(getHashtagList(project.getProjectHashtagList()));
+            projectsResponseDTO.setTime(getTime(projectsResponseInterface.getModifiedDate()));
             projectsResponseDTOList.add(projectsResponseDTO);
         }
-
         return projectsResponseDTOList;
     }
 
@@ -186,10 +187,7 @@ public class ProjectService {
         List<String> imageUrlList = getImageUrlList(project.getProjectImageList());
         String duration = project.getProjectDetail().getProjectDuration().toString();
         String location = project.getProjectDetail().getProjectLocalType().toString();
-        List<ProjectPositonDTO> projectPositonDTOList = new ArrayList<>();
-        for(ProjectPosition projectPosition: project.getProjectDetail().getProjectPositionList()){
-            projectPositonDTOList.add(new ProjectPositonDTO(projectPosition.getRecruitUserPosition().getPositionName(), projectPosition.getRecruitPositionCount()));
-        }
+        List<ProjectPositonDTO> projectPositonDTOList = getProjectPositionList(project.getProjectDetail().getProjectPositionList());
         String time = getTime(project.getModifiedDate());
 
         project.setHitCount(project.getHitCount() + 1);
@@ -218,6 +216,14 @@ public class ProjectService {
             hashtagList.add(projectHashtag.getProjectHashtag().getHashtagName());
         }
         return hashtagList;
+    }
+
+    private List<ProjectPositonDTO> getProjectPositionList(List<ProjectPosition> projectPositionList){
+        List<ProjectPositonDTO> projectPositonDTOList = new ArrayList<>();
+        for(ProjectPosition projectPosition: projectPositionList){
+            projectPositonDTOList.add(new ProjectPositonDTO(projectPosition.getRecruitUserPosition().getPositionName(), projectPosition.getRecruitPositionCount()));
+        }
+        return projectPositonDTOList;
     }
 
     private List<String> getImageUrlList(List<ProjectImage> projectImageList){
