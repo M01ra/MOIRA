@@ -11,8 +11,9 @@ import java.util.List;
 public class ResponseService {
 
     // 공통 결과를 처리하는 메소드
-    private void setCommonResult(CommonResult result, boolean isSuccess, String msg) {
+    private void setCommonResult(CommonResult result, boolean isSuccess, int code, String msg) {
         result.setSucceed(isSuccess);
+        result.setCode(code);
         result.setMsg(msg);
     }
 
@@ -20,27 +21,27 @@ public class ResponseService {
     public <T> SingleResult<T> mappingSingleResult(T data, String msg) {
         SingleResult<T> result = new SingleResult<>();
         result.setData(data);
-        setCommonResult(result, true, msg);
+        setCommonResult(result, true, 200, msg);
         return result;
     }
     // 다중건 결과를 처리하는 메소드
     public <T> ListResult<T> mappingListResult(List<T> list, String msg) {
         ListResult<T> result = new ListResult<>();
         result.setList(list);
-        setCommonResult(result, true, msg);
+        setCommonResult(result, true, 200, msg);
         return result;
     }
     // 결과만 처리하는 메소드 - 성공
     public CommonResult mappingSuccessCommonResultOnly(String msg) {
         CommonResult result = new CommonResult();
-        setCommonResult(result, true, msg);
+        setCommonResult(result, true, 200, msg);
         return result;
     }
 
     // 결과만 처리하는 메소드 - 실패
-    public CommonResult mappingFailCommonResultOnly(String msg) {
+    public CommonResult mappingFailCommonResultOnly(int errorcode, String msg) {
         CommonResult result = new CommonResult();
-        setCommonResult(result, false, msg);
+        setCommonResult(result, false, errorcode, msg);
         return result;
     }
 }
