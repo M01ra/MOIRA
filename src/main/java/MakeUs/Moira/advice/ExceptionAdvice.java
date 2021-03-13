@@ -22,7 +22,7 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     protected CommonResult defaultException(HttpServletRequest request, Exception e) {
         // 아무데서도 안 거르면, 여기서 거른다. -> 데이터가 없는 리스폰스
-        return responseService.mappingFailCommonResultOnly(e.getMessage());
+        return responseService.mappingFailCommonResultOnly(-100, e.getMessage());
     }
 
 
