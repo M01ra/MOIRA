@@ -5,9 +5,7 @@ import MakeUs.Moira.domain.user.UserRole;
 import MakeUs.Moira.response.ResponseService;
 import MakeUs.Moira.response.model.SingleResult;
 import MakeUs.Moira.service.security.TokenService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,7 +20,11 @@ public class LoginController {
     private final ResponseService responseService;
     private final JwtTokenProvider jwtTokenProvider;
 
-    @ApiOperation(value = "Jwt토큰 발급", notes = "AccessToken을 전달받아, Jwt 토큰 발급")
+//    @ApiImplicitParams({@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 JWT_TOKEN", required = true, dataType = "String", paramType = "header")})
+    @ApiOperation(
+            value = "Jwt토큰 발급",
+            notes = "파라미터로 provider, AccessToken 값을 받은 후에 Jwt 토큰을 리턴"
+    )
     @PostMapping(value = "/signup")
     public SingleResult<String> getToken(@ApiParam(value = "AccessToken", required = true) @RequestParam String token, //
                                          @ApiParam(value = "kakao or apple", required = true) @RequestParam String provider) {
