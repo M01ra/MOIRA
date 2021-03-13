@@ -282,6 +282,47 @@ public class ProjectService {
         return projectComment.getId();
     }
 
+    @Transactional
+    public List<ProjectCommentResponseDTO> getProjectComments(Long projectId, String token) {
+        Optional<Project> optionalProject = projectRepo.findById(projectId);
+        if(!optionalProject.isPresent()){
+            throw new ProjectException("존재하지 않는 프로젝트 ID");
+        }
+        Project project = optionalProject.get();
+        ProjectDetail projectDetail = project.getProjectDetail();
+        List<ProjectComment> projectCommentList = projectCommentRepo.findAllByProjectDetailOrderByCreatedDate(projectDetail);
+        List<ProjectCommentResponseDTO> projectCommentResponseDTOList = new ArrayList<>();
+        for(ProjectComment projectComment : projectCommentList){
+            User writer = projectComment.getWriter();
+            Long parentId = null;
+            if(projectComment.getParentComment() != null){
+                parentId = projectComment.getParentComment().getId();
+            }
+            boolean isDeletable = false;
+            //if(Long.valueOf(jwtTokenProvider.getUserPk(token)) == writer.getId()){
+            if(Long.valueOf(1L) == writer.getId()){
+                isDeletable = true;
+            }
+            ProjectCommentResponseDTO projectCommentResponseDTO = new ProjectCommentResponseDTO(projectComment.getId(), writer.getId(),parentId, writer.getNickname(), writer.getProfileImage(), projectComment.getComment(), getTime(projectComment.getCreatedDate()), isDeletable);
+            projectCommentResponseDTOList.add(projectCommentResponseDTO);
+        }
+        return projectCommentResponseDTOList;
+    }
+
+    @Transactional
+    public void deleteProjectComment(Long commentId, String token){
+        Optional<ProjectComment> optionalProjectComment = projectCommentRepo.findById(commentId);
+        if(!optionalProjectComment.isPresent()){
+            throw new ProjectException("존재하지 않은 댓글 ID");
+        }
+        ProjectComment projectComment = optionalProjectComment.get();
+//        if(projectComment.getWriter().getId() != Long.valueOf(jwtTokenProvider.getUserPk(token))){
+        if(projectComment.getWriter().getId() != Long.valueOf(1L)){
+            throw new ProjectException("로그인한 유저가 쓴 댓글이 아님");
+        }
+        projectCommentRepo.delete(optionalProjectComment.get());
+    }
+
     private String getWriter(List<UserProject> userProjectList){
         String writer = null;
         for(UserProject userProject : userProjectList){
