@@ -1,4 +1,4 @@
-package MakeUs.Moira.domain.hashtag.dto;
+package MakeUs.Moira.controller.user.dto;
 
 import lombok.Builder;
 import lombok.Getter;
