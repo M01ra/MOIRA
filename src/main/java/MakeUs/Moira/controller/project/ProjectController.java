@@ -36,15 +36,15 @@ public class ProjectController {
 
     @ApiOperation(value = "프로젝트(팀)에 이미지 추가", notes = "프로젝트(팀)에 이미지를 추가합니다")
     @PostMapping("/project/{projectId}/image")
-    public CommonResult uploadImage(@ApiParam(value = "파일 리스트", required = true) @RequestPart List<MultipartFile> files, @ApiParam(value = "프로젝트(팀) ID", required = true) @PathVariable Long projectId){
-        projectService.uploadImages(files, projectId);
+    public CommonResult uploadImage(@ApiParam(value = "파일 리스트", required = true) @RequestPart List<MultipartFile> files, @ApiParam(value = "프로젝트(팀) ID", required = true) @PathVariable Long projectId, HttpServletRequest req){
+        projectService.uploadImages(files, projectId, jwtTokenProvider.resolveToken(req));
         return responseService.mappingSuccessCommonResultOnly("프로젝트에 이미지 추가 성공");
     }
 
     @ApiOperation(value = "프로젝트(팀)의 상태 변경", notes = "프로젝트(팀)의 상태를 RECRUITING, PROGRESSING, COMPLETED로 변경합니다")
     @PutMapping("/project/{projectId}")
-    public CommonResult changeProjectStatus(@ApiParam(value = "프로젝트(팀) ID", required = true) @PathVariable Long projectId, @ApiParam(value = "변경할 상태", required = true) @RequestParam ProjectStatus status){
-        projectService.changeProjectStatus(projectId, status);
+    public CommonResult changeProjectStatus(@ApiParam(value = "프로젝트(팀) ID", required = true) @PathVariable Long projectId, @ApiParam(value = "변경할 상태", required = true) @RequestParam ProjectStatus status, HttpServletRequest req){
+        projectService.changeProjectStatus(projectId, status, jwtTokenProvider.resolveToken(req));
         return responseService.mappingSuccessCommonResultOnly("프로젝트 상태 변경 성공");
     }
 

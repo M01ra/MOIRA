@@ -67,8 +67,8 @@ public class ProjectService {
         project.setProjectHashtagList(projectHashtagList);
         project = projectRepo.save(project);
 
-        //Optional<User> optionalUser = userRepo.findById(Long.valueOf(jwtTokenProvider.getUserPk(token)));
-        Optional<User> optionalUser = userRepo.findById(1L);
+        Optional<User> optionalUser = userRepo.findById(Long.valueOf(jwtTokenProvider.getUserPk(token)));
+        //Optional<User> optionalUser = userRepo.findById(1L);
         if(!optionalUser.isPresent()){
             throw new ProjectException("유효하지 않는 유저");
         }
@@ -111,12 +111,26 @@ public class ProjectService {
     }
 
     @Transactional
-    public void uploadImages(List<MultipartFile> files, Long projectId) throws NoSuchElementException{
+    public void uploadImages(List<MultipartFile> files, Long projectId, String token) throws NoSuchElementException{
+        Long userId = Long.valueOf(jwtTokenProvider.getUserPk(token));
+        Optional<User> optionalUser = userRepo.findById(userId);
+        if(!optionalUser.isPresent()){
+            throw new ProjectException("유효하지 않는 유저");
+        }
         Optional<Project> optionalProject = projectRepo.findById(projectId);
         if(!optionalProject.isPresent()){
             throw new ProjectException("존재하지 않은 프로젝트 ID");
         }
         Project project = optionalProject.get();
+
+        for(UserProject userProject : project.getUserProjectList()){
+            if(userProject.getRoleType() == UserProjectRoleType.LEADER){
+                if(userProject.getUserHistory().getUser().getId() != userId){
+                    throw new ProjectException("권한이 없는 유저");
+                }
+                break;
+            }
+        }
         List<ProjectImage> projectImageList = new ArrayList<>();
         for (MultipartFile file : files) {
             projectImageList.add(projectImageRepo.save(new ProjectImage(project, s3Service.upload(file, "project-" + projectId + "-" + file.getOriginalFilename()))));
@@ -125,12 +139,25 @@ public class ProjectService {
     }
 
     @Transactional
-    public void changeProjectStatus(Long projectId, ProjectStatus status){
+    public void changeProjectStatus(Long projectId, ProjectStatus status, String token){
+        Long userId = Long.valueOf(jwtTokenProvider.getUserPk(token));
+        Optional<User> optionalUser = userRepo.findById(userId);
+        if(!optionalUser.isPresent()){
+            throw new ProjectException("유효하지 않는 유저");
+        }
         Optional<Project> optionalProject = projectRepo.findById(projectId);
         if(!optionalProject.isPresent()){
             throw new ProjectException("존재하지 않은 프로젝트 ID");
         }
         Project project = optionalProject.get();
+        for(UserProject userProject : project.getUserProjectList()){
+            if(userProject.getRoleType() == UserProjectRoleType.LEADER){
+                if(userProject.getUserHistory().getUser().getId() != userId){
+                    throw new ProjectException("권한이 없는 유저");
+                }
+                break;
+            }
+        }
         project.changeProjectStatus(status);
     }
 
@@ -187,8 +214,8 @@ public class ProjectService {
         List<ProjectPositonDTO> projectPositonDTOList = getProjectPositionList(project.getProjectDetail().getProjectPositionList());
         String time = getTime(project.getModifiedDate());
 
-        //Optional<User> optionalUser = userRepo.findById(Long.valueOf(jwtTokenProvider.getUserPk(token)));
-        Optional<User> optionalUser = userRepo.findById(1L);
+        Optional<User> optionalUser = userRepo.findById(Long.valueOf(jwtTokenProvider.getUserPk(token)));
+        //Optional<User> optionalUser = userRepo.findById(1L);
         if(!optionalUser.isPresent()){
             throw new ProjectException("유효하지 않는 유저");
         }
@@ -220,8 +247,8 @@ public class ProjectService {
         }
         Project project = optionalProject.get();
 
-        //Optional<User> optionalUser = userRepo.findById(Long.valueOf(jwtTokenProvider.getUserPk(token)));
-        Optional<User> optionalUser = userRepo.findById(1L);
+        Optional<User> optionalUser = userRepo.findById(Long.valueOf(jwtTokenProvider.getUserPk(token)));
+        //Optional<User> optionalUser = userRepo.findById(1L);
         if(!optionalUser.isPresent()){
             throw new ProjectException("유효하지 않는 유저");
         }
@@ -260,8 +287,8 @@ public class ProjectService {
         Project project = optionalProject.get();
         ProjectDetail projectDetail = project.getProjectDetail();
 
-        //Optional<User> optionalUser = userRepo.findById(Long.valueOf(jwtTokenProvider.getUserPk(token)));
-        Optional<User> optionalUser = userRepo.findById(1L);
+        Optional<User> optionalUser = userRepo.findById(Long.valueOf(jwtTokenProvider.getUserPk(token)));
+        //Optional<User> optionalUser = userRepo.findById(1L);
         if(!optionalUser.isPresent()){
             throw new ProjectException("유효하지 않는 유저");
         }
@@ -299,8 +326,8 @@ public class ProjectService {
                 parentId = projectComment.getParentComment().getId();
             }
             boolean isDeletable = false;
-            //if(Long.valueOf(jwtTokenProvider.getUserPk(token)) == writer.getId()){
-            if(Long.valueOf(1L) == writer.getId()){
+            if(Long.valueOf(jwtTokenProvider.getUserPk(token)) == writer.getId()){
+            //if(Long.valueOf(1L) == writer.getId()){
                 isDeletable = true;
             }
             ProjectCommentResponseDTO projectCommentResponseDTO = new ProjectCommentResponseDTO(projectComment.getId(), writer.getId(),parentId, writer.getNickname(), writer.getProfileImage(), projectComment.getComment(), getTime(projectComment.getCreatedDate()), isDeletable);
@@ -316,8 +343,8 @@ public class ProjectService {
             throw new ProjectException("존재하지 않은 댓글 ID");
         }
         ProjectComment projectComment = optionalProjectComment.get();
-//        if(projectComment.getWriter().getId() != Long.valueOf(jwtTokenProvider.getUserPk(token))){
-        if(projectComment.getWriter().getId() != Long.valueOf(1L)){
+        if(projectComment.getWriter().getId() != Long.valueOf(jwtTokenProvider.getUserPk(token))){
+        //if(projectComment.getWriter().getId() != Long.valueOf(1L)){
             throw new ProjectException("로그인한 유저가 쓴 댓글이 아님");
         }
         projectCommentRepo.delete(optionalProjectComment.get());
