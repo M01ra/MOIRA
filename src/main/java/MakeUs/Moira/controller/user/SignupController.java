@@ -2,6 +2,7 @@ package MakeUs.Moira.controller.user;
 
 
 import MakeUs.Moira.domain.position.dto.PositionCategoryResponseDto;
+import MakeUs.Moira.domain.position.dto.PositionResponseDto;
 import MakeUs.Moira.response.ResponseService;
 import MakeUs.Moira.response.model.CommonResult;
 import MakeUs.Moira.response.model.ListResult;
@@ -10,6 +11,7 @@ import MakeUs.Moira.service.user.UserService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 
@@ -41,10 +43,21 @@ public class SignupController {
             value = "회원 가입 시 포지션 카테고리 목록",
             notes = "회원 가입 시 포지션 카테고리 목록을 불러옵니다. => id / name / image"
     )
-    @GetMapping(value = "/signup/category")
-    public ListResult<PositionCategoryResponseDto> findAllPositionCategory() {
+    @GetMapping(value = "/signup/categories")
+    public ListResult<PositionCategoryResponseDto> getAllPositionCategory() {
         List<PositionCategoryResponseDto> resultList = positionService.findAllPositionCategory();
         return responseService.mappingListResult(resultList, "포지션 카테고리 목록 불러오기 성공");
+    }
+
+
+    @ApiOperation(
+            value = "선택한 포지션 카테고리의 상세 포지션 목록",
+            notes = "선택한 포지션 카테고리의 상세 포지션 목록을 불러옵니다"
+    )
+    @GetMapping(value = "/signup/positions")
+    public ListResult<PositionResponseDto> getPosition(@ApiParam(value = "포지션 카테고리 id", required = true) @RequestParam Long positionCategoryId) {
+        List<PositionResponseDto> resultList = positionService.findAllPosition(positionCategoryId);
+        return responseService.mappingListResult(resultList, "선택한 포지션 카테고리의 상세 포지션 목록 불러오기 성공");
     }
 
     /*
@@ -56,9 +69,3 @@ public class SignupController {
 
 
 }
-
-
-
-
-
-

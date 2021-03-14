@@ -2,7 +2,9 @@ package MakeUs.Moira.service.position;
 
 import MakeUs.Moira.domain.position.PositionCategory;
 import MakeUs.Moira.domain.position.PositionCategoryRepo;
+import MakeUs.Moira.domain.position.PositionRepo;
 import MakeUs.Moira.domain.position.dto.PositionCategoryResponseDto;
+import MakeUs.Moira.domain.position.dto.PositionResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,7 @@ import java.util.stream.Collectors;
 public class PositionService {
 
     private final PositionCategoryRepo positionCategoryRepo;
+    private final PositionRepo positionRepo;
 
     public List<PositionCategoryResponseDto> findAllPositionCategory() {
         return positionCategoryRepo.findAll()
@@ -23,8 +26,16 @@ public class PositionService {
                         .id(entity.getId())
                         .positionCategoryName(entity.getCategoryName())
                         .positionCategoryImage(entity.getPositionCategoryImage())
-                        .build()
-                )
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    public List<PositionResponseDto> findAllPosition(Long positionCategoryId) {
+        return positionRepo.findAllByPositionCategory_Id(positionCategoryId).stream()
+                .map(entity -> PositionResponseDto.builder()
+                        .id(entity.getId())
+                        .positionName(entity.getPositionName())
+                        .build())
                 .collect(Collectors.toList());
     }
 }
