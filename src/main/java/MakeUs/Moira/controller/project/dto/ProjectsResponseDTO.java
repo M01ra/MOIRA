@@ -1,15 +1,11 @@
 package MakeUs.Moira.controller.project.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
-import jdk.vm.ci.meta.Local;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.joda.time.DateTime;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
