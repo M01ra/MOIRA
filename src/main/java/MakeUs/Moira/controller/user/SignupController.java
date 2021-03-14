@@ -1,11 +1,13 @@
 package MakeUs.Moira.controller.user;
 
 
+import MakeUs.Moira.domain.hashtag.dto.HashtagResponseDto;
 import MakeUs.Moira.domain.position.dto.PositionCategoryResponseDto;
 import MakeUs.Moira.domain.position.dto.PositionResponseDto;
 import MakeUs.Moira.response.ResponseService;
 import MakeUs.Moira.response.model.CommonResult;
 import MakeUs.Moira.response.model.ListResult;
+import MakeUs.Moira.service.hashtag.HashTagService;
 import MakeUs.Moira.service.position.PositionService;
 import MakeUs.Moira.service.user.UserService;
 import io.swagger.annotations.*;
@@ -22,6 +24,7 @@ public class SignupController {
 
     private final UserService userService;
     private final PositionService positionService;
+    private final HashTagService hashTagService;
     private final ResponseService responseService;
 
 
@@ -55,9 +58,20 @@ public class SignupController {
             notes = "선택한 포지션 카테고리의 상세 포지션 목록을 불러옵니다"
     )
     @GetMapping(value = "/signup/positions")
-    public ListResult<PositionResponseDto> getPosition(@ApiParam(value = "포지션 카테고리 id", required = true) @RequestParam Long positionCategoryId) {
+    public ListResult<PositionResponseDto> getAllPosition(@ApiParam(value = "포지션 카테고리 id", required = true) @RequestParam Long positionCategoryId) {
         List<PositionResponseDto> resultList = positionService.findAllPosition(positionCategoryId);
         return responseService.mappingListResult(resultList, "선택한 포지션 카테고리의 상세 포지션 목록 불러오기 성공");
+    }
+
+
+    @ApiOperation(
+            value = "모든 관심 태그 목록",
+            notes = "모든 관심 태그 목록을 불러옵니다."
+    )
+    @GetMapping(value = "/signup/hashtags")
+    public ListResult<HashtagResponseDto> getAllHashtag() {
+        List<HashtagResponseDto> resultList = hashTagService.getAllHashTag();
+        return responseService.mappingListResult(resultList, "모든 관심 태그 목록을 불러오기 성공");
     }
 
     /*
