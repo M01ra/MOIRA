@@ -1,7 +1,7 @@
 package MakeUs.Moira.service.user;
 
 
-import MakeUs.Moira.domain.user.User;
+
 import MakeUs.Moira.domain.user.UserRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
