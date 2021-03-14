@@ -113,4 +113,9 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    public User updateNickname(String nickname){
+        this.nickname = nickname;
+        return this;
+    }
 }

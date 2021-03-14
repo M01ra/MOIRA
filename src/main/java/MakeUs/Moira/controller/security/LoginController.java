@@ -25,19 +25,9 @@ public class LoginController {
             value = "Jwt토큰 발급",
             notes = "파라미터로 provider, AccessToken 값을 받은 후에 Jwt 토큰을 리턴"
     )
-    @PostMapping(value = "/signup")
+    @PostMapping(value = "/login")
     public SingleResult<String> getToken(@ApiParam(value = "AccessToken", required = true) @RequestParam String token, //
                                          @ApiParam(value = "kakao or apple", required = true) @RequestParam String provider) {
-        /*
-        1. AccessToken을 꺼냄
-        2. AccessToken이 해당 Provider에서 온 게 맞는지 확인 -> 인터페이스로 처리
-            a) 아니면 예외 발생시킴
-        3. TokenService 에서 AccessToken 으로 사용자 id 받아옴
-        4. 이미 가입된 사용자인지확인
-            a) 있으면(기존회원) -> jwt발급
-            b) 없으면(신규회원)-> 회원가입시켜줌
-         */
-
         String socialId = tokenService.getUserSocialId(provider, token);
         Long userPk = tokenService.findBySocialIdAndSocialProvider(socialId, provider).getUserPk();
 
