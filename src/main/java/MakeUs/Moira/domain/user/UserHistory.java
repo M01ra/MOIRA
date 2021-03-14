@@ -8,6 +8,7 @@ import MakeUs.Moira.domain.userPool.UserPoolLike;
 import lombok.Getter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -25,10 +26,10 @@ public class UserHistory {
     private List<UserHashtag> userHashtags;
 
     @OneToMany(mappedBy = "userHistory")
-    private List<UserProject> userProjects;
+    private List<UserProject> userProjects = new ArrayList<>();
 
     @OneToMany(mappedBy = "userHistory")
-    private List<ProjectLike> projectLikes;
+    private List<ProjectLike> projectLikes = new ArrayList<>();
 
     @OneToMany(mappedBy = "userHistory")
     private List<UserPoolLike> userPoolLikes;
@@ -45,6 +46,14 @@ public class UserHistory {
     private int participationCount;
 
     private int completionCount;
+
+    public void addUserProject(UserProject userProject){
+        userProjects.add(userProject);
+    }
+
+    public void addProjectLike(ProjectLike projectLike){
+        projectLikes.add(projectLike);
+    }
 
 
 

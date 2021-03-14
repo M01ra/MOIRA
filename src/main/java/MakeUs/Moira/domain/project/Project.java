@@ -2,6 +2,7 @@ package MakeUs.Moira.domain.project;
 
 import MakeUs.Moira.domain.AuditorEntity;
 import MakeUs.Moira.domain.project.projectDetail.ProjectDetail;
+import MakeUs.Moira.domain.user.User;
 import MakeUs.Moira.domain.user.UserProject;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,11 +10,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 public class Project extends AuditorEntity {
 
@@ -35,15 +36,15 @@ public class Project extends AuditorEntity {
     @OneToOne
     private ProjectDetail projectDetail;
 
-    private int likeCount;
+    private int likeCount = 0;
 
-    private int hitCount;
+    private int hitCount = 0;
 
 //    @Enumerated(EnumType.STRING)
 //    private ProjectType projectType;
 
     @Enumerated(EnumType.STRING)
-    private ProjectStatus projectStatus;
+    private ProjectStatus projectStatus = ProjectStatus.RECRUITING;
 
     public Project(List<ProjectHashtag> projectHashtagList, List<UserProject> userProjectList, List<ProjectImage> projectImageList, String projectTitle, ProjectDetail projectDetail, int likeCount, int hitCount, ProjectStatus projectStatus) {
         this.projectHashtagList = projectHashtagList;
@@ -54,5 +55,41 @@ public class Project extends AuditorEntity {
         this.likeCount = likeCount;
         this.hitCount = hitCount;
         this.projectStatus = projectStatus;
+    }
+
+    public void setProjectTitle(String projectTitle){
+        this.projectTitle = projectTitle;
+    }
+
+    public void setProjectHashtagList(List<ProjectHashtag> projectHashtagList){
+        this.projectHashtagList = projectHashtagList;
+    }
+
+    public void setProjectImageList(List<ProjectImage> projectImageList){
+        this.projectImageList = projectImageList;
+    }
+
+    public void setUserProjectList(List<UserProject> userProjectList){
+        this.userProjectList = userProjectList;
+    }
+
+    public void setProjectDetail(ProjectDetail projectDetail) {
+        this.projectDetail = projectDetail;
+    }
+
+    public void changeProjectStatus(ProjectStatus projectStatus){
+        this.projectStatus = projectStatus;
+    }
+
+    public void addLike(){
+        likeCount++;
+    }
+
+    public void cancelLike(){
+        likeCount--;
+    }
+
+    public void addHit(){
+        hitCount++;
     }
 }
