@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -22,7 +23,7 @@ public class UserProject {
     private UserHistory userHistory;
 
     @OneToMany(mappedBy = "userProject")
-    private List<UserReview> reviews;
+    private List<UserReview> reviews = new ArrayList<>();
 
     @ManyToOne
     private Project project;
