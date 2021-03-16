@@ -7,7 +7,6 @@ import MakeUs.Moira.domain.report.Report;
 import MakeUs.Moira.domain.userPool.UserPoolLike;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -53,5 +52,13 @@ public class UserHistory {
     public UserHistory updateUser(User user){
         this.user = user;
         return this;
+    }
+
+    public void addUserProject(UserProject userProject){
+        userProjects.add(userProject);
+    }
+
+    public void addProjectLike(ProjectLike projectLike){
+        projectLikes.add(projectLike);
     }
 }
