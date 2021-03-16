@@ -24,13 +24,13 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private UserHistory userHistory;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private UserPortfolio userPortfolio;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private UserPool userPool;
 
     private String socialProvider;
@@ -43,7 +43,7 @@ public class User implements UserDetails {
 
     private String email;
 
-    private String realName;
+    private String shortIntroduction;
 
     private String nickname;
 
@@ -53,21 +53,10 @@ public class User implements UserDetails {
     private UserPosition userPosition;
 
     @Builder
-    public User(UserHistory userHistory, UserPortfolio userPortfolio, UserPool userPool, String socialProvider, String socialId, UserRole userRole, String email, String realName, String nickname, String profileImage) {
-        this.userHistory = userHistory;
-        this.userPortfolio = userPortfolio;
-        this.userPool = userPool;
+    public User(String socialProvider, String socialId, UserRole userRole) {
         this.socialProvider = socialProvider;
         this.socialId = socialId;
         this.userRole = userRole;
-        this.email = email;
-        this.realName = realName;
-        this.nickname = nickname;
-        this.profileImage = profileImage;
-    }
-
-    public void RegisterUser() {
-        this.userRole = UserRole.USER;
     }
 
     @Override
@@ -114,8 +103,32 @@ public class User implements UserDetails {
         return true;
     }
 
+    public User updateUserHistory(UserHistory userHistory){
+        this.userHistory = userHistory;
+        userHistory.updateUser(this);
+        return this;
+    }
+
+    public User updateUserPortfolio(UserPortfolio userPortfolio){
+        this.userPortfolio = userPortfolio;
+        userPortfolio.updateUser(this);
+        return this;
+    }
+
+    public User updateUserPool(UserPool userPool){
+        this.userPool = userPool;
+        userPool.updateUser(this);
+        return this;
+    }
+
+
     public User updateNickname(String nickname){
         this.nickname = nickname;
+        return this;
+    }
+
+    public User updateUserPosition(UserPosition userPosition){
+        this.userPosition = userPosition;
         return this;
     }
 }

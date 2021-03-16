@@ -4,6 +4,7 @@ import MakeUs.Moira.domain.position.PositionCategoryRepo;
 import MakeUs.Moira.domain.position.PositionRepo;
 import MakeUs.Moira.controller.user.dto.PositionCategoryResponseDto;
 import MakeUs.Moira.controller.user.dto.PositionResponseDto;
+import MakeUs.Moira.domain.position.UserPosition;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,7 @@ public class PositionService {
 
     private final PositionCategoryRepo positionCategoryRepo;
     private final PositionRepo positionRepo;
+
 
     public List<PositionCategoryResponseDto> findAllPositionCategory() {
         return positionCategoryRepo.findAll()
@@ -32,7 +34,7 @@ public class PositionService {
     public List<PositionResponseDto> findAllPosition(Long positionCategoryId) {
         return positionRepo.findAllByPositionCategory_Id(positionCategoryId).stream()
                 .map(entity -> PositionResponseDto.builder()
-                        .id(entity.getId())
+                        .positionId(entity.getId())
                         .positionName(entity.getPositionName())
                         .build())
                 .collect(Collectors.toList());

@@ -4,13 +4,13 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class nicknameResponseDto {
-    private Long id;
+public class NicknameUpdateDto {
+    private Long userId;
     private String nickname;
 
     @Builder
-    public nicknameResponseDto(Long id, String nickname) {
-        this.id = id;
+    public NicknameUpdateDto(Long userId, String nickname) {
+        this.userId = userId;
         this.nickname = nickname;
     }
 }

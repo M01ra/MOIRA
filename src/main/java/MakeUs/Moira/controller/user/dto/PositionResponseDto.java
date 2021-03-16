@@ -5,12 +5,12 @@ import lombok.Getter;
 
 @Getter
 public class PositionResponseDto {
-    private Long id;
+    private Long positionId;
     private String positionName;
 
     @Builder
-    public PositionResponseDto(Long id, String positionName) {
-        this.id = id;
+    public PositionResponseDto(Long positionId, String positionName) {
+        this.positionId = positionId;
         this.positionName = positionName;
     }
 }

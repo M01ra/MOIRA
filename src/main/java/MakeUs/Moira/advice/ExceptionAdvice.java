@@ -29,7 +29,7 @@ public class ExceptionAdvice {
 //    @ExceptionHandler(UserException.class)
 //    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 //    protected CommonResult userException(HttpServletRequest request, UserException e) {
-//        return responseService.mappingFailCommonResultOnly(e.getMessage());
+//        return responseService.mappingFailCommonResultOnly(-101, e.getMessage());
 //    }
 //
 //    @ExceptionHandler(ProjectException.class)
