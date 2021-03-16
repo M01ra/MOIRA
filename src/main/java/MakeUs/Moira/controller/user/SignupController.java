@@ -38,7 +38,7 @@ public class SignupController {
     @GetMapping(value = "/signup/nickname")
     public CommonResult saveNickname(@ApiParam(value = "nickname", required = true) @RequestParam String nickname) {
         if(userService.isDuplicatedNickname(nickname)){
-            return responseService.mappingSuccessCommonResultOnly("중복된 닉네임");
+            return responseService.mappingFailCommonResultOnly(-100, "중복된 닉네임");
         } else {
             return responseService.mappingSuccessCommonResultOnly("사용 가능한 닉네임");
         }

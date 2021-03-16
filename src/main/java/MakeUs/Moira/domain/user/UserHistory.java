@@ -27,6 +27,7 @@ public class UserHistory {
     @OneToMany(mappedBy = "userHistory", cascade = CascadeType.ALL)
     private List<UserHashtag> userHashtags = new ArrayList<>();
 
+    @OneToMany(mappedBy = "userHistory")
     private List<UserProject> userProjects = new ArrayList<>();
 
     @OneToMany(mappedBy = "userHistory")

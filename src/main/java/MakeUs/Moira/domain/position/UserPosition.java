@@ -6,7 +6,6 @@ import javax.persistence.*;
 
 @Getter
 @Entity
-@Getter
 public class UserPosition {
 
     @Id
