@@ -7,10 +7,15 @@ import MakeUs.Moira.domain.userPortfolio.userCarrer.UserCareer;
 import MakeUs.Moira.domain.userPortfolio.userLicense.UserLicense;
 import MakeUs.Moira.domain.userPortfolio.userLink.UserLink;
 import MakeUs.Moira.domain.userPortfolio.userSchool.UserSchool;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
+@NoArgsConstructor
+@Getter
 @Entity
 public class UserPortfolio {
 
@@ -18,25 +23,29 @@ public class UserPortfolio {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @OneToOne(mappedBy = "userPortfolio")
     private User user;
 
     @OneToMany(mappedBy = "userPortfolio")
-    private List<UserSchool> userSchoolList;
+    private List<UserSchool> userSchoolList = new ArrayList<>();
 
     @OneToMany(mappedBy = "userPortfolio")
-    private List<UserCareer> userCareerList;
+    private List<UserCareer> userCareerList = new ArrayList<>();
 
     @OneToMany(mappedBy = "userPortfolio")
-    private List<UserLicense> userLicenseList;
+    private List<UserLicense> userLicenseList = new ArrayList<>();
 
     @OneToMany(mappedBy = "userPortfolio")
-    private List<UserAward> userAwardList;
+    private List<UserAward> userAwardList = new ArrayList<>();
 
     @OneToMany(mappedBy = "userPortfolio")
-    private List<UserLink> userLinkList;
+    private List<UserLink> userLinkList = new ArrayList<>();
 
     @OneToMany(mappedBy = "userPortfolio")
-    private List<UserPrivateProject> userPrivateProjectList;
+    private List<UserPrivateProject> userPrivateProjectList = new ArrayList<>();
 
+    public UserPortfolio updateUser(User user) {
+        this.user = user;
+        return this;
+    }
 }

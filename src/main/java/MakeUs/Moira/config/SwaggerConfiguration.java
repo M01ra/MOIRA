@@ -30,14 +30,9 @@ public class SwaggerConfiguration {
                 .apis(RequestHandlerSelectors.basePackage("MakeUs.Moira.controller"))
                 .paths(PathSelectors.any())
                 .build()
-                .securitySchemes(Arrays.asList(apiKey()))
                 .useDefaultResponseMessages(false); // 기본으로 세팅되는 200,401,403,404 메시지를 표시 하지 않음
     }
 
-
-    private ApiKey apiKey() {
-        return new ApiKey("Jwt 토큰", "X-AUTH-TOKEN", "header");
-    }
 
     private ApiInfo swaggerInfo() {
         return new ApiInfoBuilder().title("Moira API Documentation")
