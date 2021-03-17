@@ -2,10 +2,7 @@ package MakeUs.Moira.domain.project.projectDetail;
 
 import MakeUs.Moira.domain.project.*;
 import MakeUs.Moira.domain.project.projectApply.ProjectApply;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -23,17 +20,17 @@ public class ProjectDetail {
     @OneToOne(mappedBy = "projectDetail")
     private Project project;
 
-    @OneToMany(mappedBy = "projectDetail")
+    @OneToMany(mappedBy = "projectDetail", cascade = CascadeType.ALL)
     private List<ProjectComment> projectCommentList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "projectDetail")
+    @OneToMany(mappedBy = "projectDetail", cascade = CascadeType.ALL)
     private List<ProjectApply> projectApplyList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "projectDetail")
-    private List<ProjectQuestion> projectQuestionList;
+    @OneToMany(mappedBy = "projectDetail", cascade = CascadeType.ALL)
+    private List<ProjectQuestion> projectQuestionList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "projectDetail")
-    private List<ProjectPosition> projectPositionList;
+    @OneToMany(mappedBy = "projectDetail", cascade = CascadeType.ALL)
+    private List<ProjectPosition> projectPositionList = new ArrayList<>();
 
     private String projectContent;
 
@@ -43,24 +40,35 @@ public class ProjectDetail {
     @Enumerated(EnumType.STRING)
     private ProjectLocalType projectLocalType;
 
+    @Builder
     public ProjectDetail(Project project, String projectContent, ProjectDuration projectDuration, ProjectLocalType projectLocalType) {
         this.project = project;
-        this.projectCommentList = projectCommentList;
-        this.projectApplyList = projectApplyList;
         this.projectContent = projectContent;
         this.projectDuration = projectDuration;
         this.projectLocalType = projectLocalType;
     }
 
-    public void addComment(ProjectComment projectComment){
+    public void addProjectComment(ProjectComment projectComment){
         projectCommentList.add(projectComment);
     }
 
-    public void setProjectQuestionList(List<ProjectQuestion> projectQuestionList) {
+    public void addProjectApply(ProjectApply projectApply){
+        projectApplyList.add(projectApply);
+    }
+
+    public void addProjectQuestion(ProjectQuestion projectQuestion){
+        projectQuestionList.add(projectQuestion);
+    }
+
+    public void addProjectPosition(ProjectPosition projectPosition){
+        projectPositionList.add(projectPosition);
+    }
+
+    public void updateProjectQuestionList(List<ProjectQuestion> projectQuestionList) {
         this.projectQuestionList = projectQuestionList;
     }
 
-    public void setProjectPositionList(List<ProjectPosition> projectPositionList) {
+    public void updateProjectPositionList(List<ProjectPosition> projectPositionList) {
         this.projectPositionList = projectPositionList;
     }
 }

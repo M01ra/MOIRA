@@ -2,6 +2,7 @@ package MakeUs.Moira.controller.project.dto;
 
 import MakeUs.Moira.domain.project.projectDetail.ProjectDuration;
 import MakeUs.Moira.domain.project.projectDetail.ProjectLocalType;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

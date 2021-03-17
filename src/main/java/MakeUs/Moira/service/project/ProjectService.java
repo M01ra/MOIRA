@@ -1,7 +1,6 @@
 package MakeUs.Moira.service.project;
 
 import MakeUs.Moira.advice.exception.ProjectException;
-import MakeUs.Moira.config.security.JwtTokenProvider;
 import MakeUs.Moira.controller.project.dto.*;
 import MakeUs.Moira.domain.hashtag.Hashtag;
 import MakeUs.Moira.domain.hashtag.HashtagRepo;
@@ -12,7 +11,6 @@ import MakeUs.Moira.domain.project.projectDetail.*;
 import MakeUs.Moira.domain.user.*;
 import MakeUs.Moira.service.S3Service;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -24,256 +22,222 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ProjectService {
 
     private final HashtagRepo hashtagRepo;
-    private final ProjectHashtagRepo projectHashtagRepo;
     private final ProjectRepo projectRepo;
     private final UserRepo userRepo;
     private final UserHistoryRepo userHistoryRepo;
     private final UserProjectRepo userProjectRepo;
-    private final ProjectQuestionRepo projectQuestionRepo;
-    private final ProjectDetailRepo projectDetailRepo;
-    private final ProjectPositonRepo projectPositonRepo;
     private final PositionRepo positionRepo;
     private final ProjectLikeRepo projectLikeRepo;
     private final S3Service s3Service;
 
+
     @Transactional
     public Long createProject(ProjectRequestDTO projectRequestDTO, Long userId) {
-        Project project = new Project();
-        project.setProjectTitle(projectRequestDTO.getProjectTitle());
-        project = projectRepo.save(project);
+        User userEntity = getValidUser(userId);
+        UserHistory userHistoryEntity = getValidUserHistory(userId);
 
-        List<ProjectHashtag> projectHashtagList = new ArrayList<>();
-        if(projectRequestDTO.getProjectHashtagList() != null) {
-            for (String hashtag : projectRequestDTO.getProjectHashtagList()) {
-                Optional<Hashtag> optionalHashtag = hashtagRepo.findHashtagByHashtagName(hashtag);
-                if(!optionalHashtag.isPresent()){
-                    throw new ProjectException("존재하지 않는 태그");
-                }
-                projectHashtagList.add(projectHashtagRepo.save(
-                        new ProjectHashtag(project, optionalHashtag.get())
-                ));
-            }
-        }
-        project.setProjectHashtagList(projectHashtagList);
-        project = projectRepo.save(project);
+        Project projectEntity = new Project();
+        // 제목(이름)
+        projectEntity.updateProjectTitle(projectRequestDTO.getProjectTitle());
+        projectEntity = projectRepo.save(projectEntity);
 
-        Optional<User> optionalUser = userRepo.findById(userId);
-        //Optional<User> optionalUser = userRepo.findById(1L);
-        if(!optionalUser.isPresent()){
-            throw new ProjectException("유효하지 않는 유저");
+        // 태그
+        for(String hashtagName : projectRequestDTO.getProjectHashtagList()){
+            projectEntity.addProjectHashtagList(
+                    ProjectHashtag.builder()
+                            .projectHashtag(getValidHashtag(hashtagName))
+                            .project(projectEntity)
+                            .build()
+            );
         }
-        User user = optionalUser.get();
-        List<UserProject> userProjectList = new ArrayList<>();
-        Optional<UserHistory> optionalUserHistory = userHistoryRepo.findByUserId(userId);
-        if(!optionalUserHistory.isPresent()){
-            throw new ProjectException("유효하지 않은 유저");
-        }
-        UserHistory userHistory = optionalUserHistory.get();
-        UserProject userProject = new UserProject(userHistory, project, UserProjectRoleType.LEADER, user.getUserPosition(), UserProjectStatus.PROGRESS);
-        userProjectList.add(userProjectRepo.save(userProject));
-        project.setUserProjectList(userProjectList);
-        userHistory.addUserProject(userProject);
 
-        ProjectDetail projectDetail = new ProjectDetail(project, projectRequestDTO.getProjectContent(), projectRequestDTO.getProjectDuration(), projectRequestDTO.getProjectLocalType());
-        projectDetail = projectDetailRepo.save(projectDetail);
+        // ProjectDetail 생성
+        ProjectDetail projectDetailEntity = ProjectDetail.builder()
+                .project(projectEntity)
+                .projectContent(projectRequestDTO.getProjectContent())
+                .projectDuration(projectRequestDTO.getProjectDuration())
+                .projectLocalType(projectRequestDTO.getProjectLocalType())
+                .build();
 
-        List<ProjectQuestion> projectQuestionList = new ArrayList<>();
-        if(projectRequestDTO.getProjectQuestionList() != null){
-            for (String question : projectRequestDTO.getProjectQuestionList()) {
-                projectQuestionList.add(projectQuestionRepo.save(new ProjectQuestion(projectDetail, question)));
-            }
+        // 가입 질문 리스트
+        for (String projectQuestion : projectRequestDTO.getProjectQuestionList()) {
+            projectDetailEntity.addProjectQuestion(
+                    ProjectQuestion.builder()
+                            .projectQuestion(projectQuestion)
+                            .projectDetail(projectDetailEntity)
+                            .build()
+            );
         }
-        projectDetail.setProjectQuestionList(projectQuestionList);
 
-        List<ProjectPosition> projectPositionList = new ArrayList<>();
-        if(projectRequestDTO.getProjectPositionList() != null){
-            for (ProjectPositonDTO projectPositonDTO : projectRequestDTO.getProjectPositionList()) {
-                Optional<UserPosition> optionalPosition = positionRepo.findByPositionName(projectPositonDTO.getPositionName());
-                if(!optionalPosition.isPresent()){
-                    throw new ProjectException("존재하지 않은 포지션");
-                }
-                projectPositionList.add(projectPositonRepo.save(new ProjectPosition(projectDetail, optionalPosition.get(), projectPositonDTO.getCount())));
-            }
-            projectDetail.setProjectPositionList(projectPositionList);
+        // 프로젝트 포지션 리스트
+        for (ProjectPositonDTO projectPositonDTO : projectRequestDTO.getProjectPositionList()) {
+            UserPosition userPositionEntity = positionRepo.findByPositionName(projectPositonDTO.getPositionName())
+                    .orElseThrow(() -> new ProjectException("존재하지 않은 포지션"));
+
+            projectDetailEntity.addProjectPosition(
+                    ProjectPosition.builder()
+                            .projectDetail(projectDetailEntity)
+                            .recruitPositionCount(projectPositonDTO.getCount())
+                            .recruitUserPosition(userPositionEntity)
+                            .build()
+            );
         }
-        project.setProjectDetail(projectDetail);
-        return projectRepo.save(project).getId();
+
+        projectEntity.updateProjectDetail(projectDetailEntity);
+
+        // UserProject 양방향 추가
+        UserProject userProject = UserProject.builder()
+                .project(projectEntity)
+                .userProjectStatus(UserProjectStatus.PROGRESS)
+                .userHistory(userHistoryEntity)
+                .roleType(UserProjectRoleType.LEADER)
+                .userPosition(userEntity.getUserPosition())
+                .build();
+        projectEntity.addUserProjectList(userProject);
+        userHistoryEntity.addUserProject(userProject);
+
+        return projectEntity.getId();
     }
 
-    @Transactional
-    public void uploadImages(MultipartFile file, Long projectId, Long userId) throws NoSuchElementException{
-        Optional<User> optionalUser = userRepo.findById(userId);
-        if(!optionalUser.isPresent()){
-            throw new ProjectException("유효하지 않는 유저");
-        }
-        Optional<Project> optionalProject = projectRepo.findById(projectId);
-        if(!optionalProject.isPresent()){
-            throw new ProjectException("존재하지 않은 프로젝트 ID");
-        }
-        Project project = optionalProject.get();
 
-        for(UserProject userProject : project.getUserProjectList()){
-            if(userProject.getRoleType() == UserProjectRoleType.LEADER){
-                if(userProject.getUserHistory().getUser().getId() != userId){
-                    throw new ProjectException("권한이 없는 유저");
-                }
-                break;
-            }
-        }
+    @Transactional
+    public void uploadImage(MultipartFile file, Long projectId, Long userId) {
+        getValidUser(userId);
+        UserHistory userHistoryEntity = getValidUserHistory(userId);
+        Project projectEntity = getValidProject(projectId);
+        getAuthorizedUserProject(userHistoryEntity.getId(), projectId);
 
         if(file == null){
             throw new ProjectException("존재하지 않는 파일");
         }
-        String imageUrl = s3Service.upload(file, "project-" + projectId + "-" + file.getOriginalFilename());
-        project.changeProjectImageUrl(imageUrl);
+        // 기존에 존재했을 경우 삭제
+        if(projectEntity.getProjectImageUrl() != null){
+            s3Service.delete("project" + projectId);
+        }
+        String imageUrl = s3Service.upload(file, "project-" + projectId);
+        projectEntity.updateProjectImageUrl(imageUrl);
     }
+
 
     @Transactional
     public void changeProjectStatus(Long projectId, ProjectStatus status, Long userId){
-        Optional<User> optionalUser = userRepo.findById(userId);
-        if(!optionalUser.isPresent()){
-            throw new ProjectException("유효하지 않는 유저");
-        }
-        Optional<Project> optionalProject = projectRepo.findById(projectId);
-        if(!optionalProject.isPresent()){
-            throw new ProjectException("존재하지 않은 프로젝트 ID");
-        }
-        Project project = optionalProject.get();
-        for(UserProject userProject : project.getUserProjectList()){
-            if(userProject.getRoleType() == UserProjectRoleType.LEADER){
-                if(userProject.getUserHistory().getUser().getId() != userId){
-                    throw new ProjectException("권한이 없는 유저");
-                }
-                break;
-            }
-        }
-        project.changeProjectStatus(status);
+        getValidUser(userId);
+        UserHistory userHistoryEntity = getValidUserHistory(userId);
+        Project projectEntity = getValidProject(projectId);
+        getAuthorizedUserProject(userHistoryEntity.getId(), projectId);
+
+        projectEntity.updateProjectStatus(status);
     }
+
 
     @Transactional
-    public List<ProjectsResponseDTO> getProjects(String tag, String sort, int page) {
-        if(sort.equals("modifiedDate") && sort.equals("hitCount") && sort.equals("likeCount")){
-            throw new ProjectException("유효하지 않는 정렬 방식");
-        }
-        Pageable pageable = PageRequest.of(page, 10, Sort.by(sort).descending());
-        List<ProjectRepo.ProjectsResponseInterface> projectsResponseInterfaceList = null;
-        if(tag != null) {
-            String[] tags = tag.split("\\,");
-            List<String> tagList = new ArrayList<>();
-            for (String t : tags) {
-                tagList.add(t);
-                if (!hashtagRepo.findHashtagByHashtagName(t).isPresent()) {
-                    throw new ProjectException("존재하지 않는 태그");
-                }
-            }
-            projectsResponseInterfaceList = projectRepo.findProjectsByTagOrderPage(tagList, pageable);
-        }
-        else {
-            projectsResponseInterfaceList = projectRepo.findProjectsByOrderPage(pageable);
-        }
-        List<ProjectsResponseDTO> projectsResponseDTOList = new ArrayList<>();
-        for(ProjectRepo.ProjectsResponseInterface projectsResponseInterface : projectsResponseInterfaceList){
-            ProjectsResponseDTO projectsResponseDTO = new ProjectsResponseDTO();
-            BeanUtils.copyProperties(projectsResponseInterface, projectsResponseDTO);
-            Optional<Project> optionalProject = projectRepo.findById(projectsResponseDTO.getId());
-            if(!optionalProject.isPresent()){
-                continue;
-            }
-            Project project = optionalProject.get();
-            projectsResponseDTO.setHashtagList(getHashtagList(project.getProjectHashtagList()));
-            projectsResponseDTO.setTime(getTime(projectsResponseInterface.getModifiedDate()));
-            projectsResponseDTOList.add(projectsResponseDTO);
-        }
-        return projectsResponseDTOList;
+    public void changeProjectTitle(Long projectId, String title, Long userId){
+        getValidUser(userId);
+        UserHistory userHistoryEntity = getValidUserHistory(userId);
+        Project projectEntity = getValidProject(projectId);
+        getAuthorizedUserProject(userHistoryEntity.getId(), projectId);
+
+        projectEntity.updateProjectTitle(title);
     }
 
-    @Transactional
-    public ProjectResponseDTO getProject(Long projectId, Long userId){
-        Optional<Project> optionalProject = projectRepo.findById(projectId);
-        if(!optionalProject.isPresent()){
-            throw new ProjectException("존재하지 않는 프로젝트 ID");
-        }
-        Project project = optionalProject.get();
-
-        String writer = getWriter(project.getUserProjectList());
-        List<String> hashtagList = getHashtagList(project.getProjectHashtagList());
-        String imageUrl = project.getProjectImageUrl();
-        String duration = project.getProjectDetail().getProjectDuration().toString();
-        String location = project.getProjectDetail().getProjectLocalType().toString();
-        List<ProjectPositonDTO> projectPositonDTOList = getProjectPositionList(project.getProjectDetail().getProjectPositionList());
-        String time = getTime(project.getModifiedDate());
-
-        Optional<User> optionalUser = userRepo.findById(userId);
-        //Optional<User> optionalUser = userRepo.findById(1L);
-        if(!optionalUser.isPresent()){
-            throw new ProjectException("유효하지 않는 유저");
-        }
-        User user = optionalUser.get();
-        Optional<UserHistory> optionalUserHistory = userHistoryRepo.findByUserId(userId);
-        if(!optionalUserHistory.isPresent()){
-            throw new ProjectException("유효하지 않는 유저");
-        }
-        UserHistory userHistory = optionalUserHistory.get();
-        Optional<ProjectLike> optionalProjectLike = projectLikeRepo.findByUserHistoryAndProject(userHistory, project);
-        boolean isLike = false;
-        if(optionalProjectLike.isPresent()){
-            ProjectLike projectLike = optionalProjectLike.get();
-            if(projectLike.isProjectLiked()){
-                isLike = true;
-            }
-        }
-
-        project.addHit();
-        projectRepo.save(project);
-        return new ProjectResponseDTO(writer, project.getProjectTitle(), hashtagList, imageUrl, project.getHitCount(), project.getLikeCount(), duration, location, projectPositonDTOList, time, isLike);
-    }
 
     @Transactional
     public void changeProjectLike(Long projectId, Long userId){
-        Optional<Project> optionalProject = projectRepo.findById(projectId);
-        if(!optionalProject.isPresent()){
-            throw new ProjectException("존재하지 않는 프로젝트 ID");
-        }
-        Project project = optionalProject.get();
+        Project projectEntity = getValidProject(projectId);
+        getValidUser(userId);
+        UserHistory userHistoryEntity = getValidUserHistory(userId);
 
-        Optional<User> optionalUser = userRepo.findById(userId);
-        //Optional<User> optionalUser = userRepo.findById(1L);
-        if(!optionalUser.isPresent()){
-            throw new ProjectException("유효하지 않는 유저");
-        }
-        User user = optionalUser.get();
-        Optional<UserHistory> optionalUserHistory = userHistoryRepo.findByUserId(userId);
-        if(!optionalUserHistory.isPresent()){
-            throw new ProjectException("유효하지 않는 유저");
-        }
-        UserHistory userHistory = optionalUserHistory.get();
-        Optional<ProjectLike> optionalProjectLike = projectLikeRepo.findByUserHistoryAndProject(userHistory, project);
+        // 좋아요 상태 변경
+        Optional<ProjectLike> optionalProjectLike = projectLikeRepo.findByUserHistoryAndProject(userHistoryEntity, projectEntity);
         if(optionalProjectLike.isPresent()){
-            ProjectLike projectLike = optionalProjectLike.get();
-            if(projectLike.isProjectLiked()){
-                project.cancelLike();
-            }
-            else{
-                project.addLike();
-                userHistory.addProjectLike(projectLike);
-            }
-            projectLike.changeProjectLiked();
+            ProjectLike projectLikeEntity = optionalProjectLike.get();
+            projectLikeEntity.changeProjectLiked();
         }
         else{
-            ProjectLike projectLike = new ProjectLike(userHistory, project);
+            ProjectLike projectLike = ProjectLike.builder()
+                    .project(projectEntity)
+                    .userHistory(userHistoryEntity)
+                    .build();
             projectLikeRepo.save(projectLike);
-            project.addLike();
-            userHistory.addProjectLike(projectLike);
+            projectEntity.addLike();
+            userHistoryEntity.addProjectLike(projectLike);
         }
     }
+
+
+    @Transactional
+    public List<ProjectsResponseDTO> getProjects(String tag, String sort, int page) {
+        isValidSort(sort);
+        // 10개씩 page부터 sort 정렬방식
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(sort).descending());
+        List<ProjectRepo.ProjectsResponseInterface> projectsResponseInterfaceList;
+
+        // 검색 조건에 태그가 있을 경우
+        if(tag != null) {
+            String[] tags = tag.split("\\,");
+            for (String tagName : tags) {
+                getValidHashtag(tagName);
+            }
+            projectsResponseInterfaceList = projectRepo.findProjectsByTagOrderPage(tags, pageable);
+        }
+        // 검색 조건에 태그가 없을 경우
+        else {
+            projectsResponseInterfaceList = projectRepo.findProjectsByOrderPage(pageable);
+        }
+
+        return projectsResponseInterfaceList
+                .stream()
+                .map(projectsResponseDTO -> {
+                    Project projectEntity = getValidProject(projectsResponseDTO.getId());
+                    return ProjectsResponseDTO.builder()
+                            .id(projectsResponseDTO.getId())
+                            .title(projectsResponseDTO.getTitle())
+                            .writer(projectsResponseDTO.getWriter())
+                            .imageUrl(projectsResponseDTO.getImageUrl())
+                            .hitCount(projectsResponseDTO.getHitCount())
+                            .time(getTime(projectsResponseDTO.getModifiedDate()))
+                            .hashtagList(getHashtagList(projectEntity.getProjectHashtagList()))
+                            .build();
+                })
+                .collect(Collectors.toList());
+    }
+
+
+    @Transactional
+    public ProjectResponseDTO getProject(Long projectId, Long userId){
+        Project projectEntity = getValidProject(projectId);
+        getValidUser(userId);
+        UserHistory userHistoryEntity = getValidUserHistory(userId);
+
+        // 로그인한 유저가 좋아요를 눌렀는지 확인
+        boolean isLike = isUserLikeProject(userHistoryEntity, projectEntity);
+
+        // 조회수 증가
+        projectEntity.addHit();
+
+        return ProjectResponseDTO.builder()
+                .title(projectEntity.getProjectTitle())
+                .writer(getWriter(projectEntity.getUserProjectList()))
+                .projectHashtagList(getHashtagList(projectEntity.getProjectHashtagList()))
+                .imageUrl(projectEntity.getProjectImageUrl())
+                .hitCount(projectEntity.getHitCount())
+                .likeCount(projectEntity.getLikeCount())
+                .duration(projectEntity.getProjectDetail().getProjectDuration().toString())
+                .location(projectEntity.getProjectDetail().getProjectLocalType().toString())
+                .positionList(getProjectPositionList(projectEntity.getProjectDetail().getProjectPositionList()))
+                .time(getTime(projectEntity.getModifiedDate()))
+                .isLike(isLike)
+                .build();
+    }
+
 
     private List<String> getHashtagList(List<ProjectHashtag> projectHashtagList){
         List<String> hashtagList = new ArrayList<>();
@@ -283,6 +247,7 @@ public class ProjectService {
         return hashtagList;
     }
 
+
     private List<ProjectPositonDTO> getProjectPositionList(List<ProjectPosition> projectPositionList){
         List<ProjectPositonDTO> projectPositonDTOList = new ArrayList<>();
         for(ProjectPosition projectPosition: projectPositionList){
@@ -291,8 +256,9 @@ public class ProjectService {
         return projectPositonDTOList;
     }
 
+
     private String getTime(LocalDateTime localDateTime){
-        String time = null;
+        String time;
         if(ChronoUnit.YEARS.between(localDateTime, LocalDateTime.now()) >= 1){
             time = Long.toString(ChronoUnit.YEARS.between(localDateTime, LocalDateTime.now())) + "년 전";
         }
@@ -314,6 +280,7 @@ public class ProjectService {
         return time;
     }
 
+
     private String getWriter(List<UserProject> userProjectList){
         String writer = null;
         for(UserProject userProject : userProjectList){
@@ -327,6 +294,61 @@ public class ProjectService {
             }
         }
         return writer;
+    }
+
+
+    private User getValidUser(Long userId){
+        User userEntity = userRepo.findById(userId)
+                .orElseThrow(() -> new ProjectException("유효하지 않는 유저"));
+        return userEntity;
+    }
+
+
+    private UserHistory getValidUserHistory(Long userId){
+        UserHistory userHistoryEntity = userHistoryRepo.findByUserId(userId)
+                .orElseThrow(() -> new ProjectException("유효하지 않는 유저"));
+        return userHistoryEntity;
+    }
+
+
+    private Project getValidProject(Long projectId){
+        Project projectEntity = projectRepo.findById(projectId)
+                .orElseThrow(() -> new ProjectException("존재하지 않은 프로젝트 ID"));
+        return projectEntity;
+    }
+
+
+    private UserProject getAuthorizedUserProject(Long userHistoryId, Long projectId){
+        UserProject userProjectEntity = userProjectRepo.findByUserHistoryIdAndProjectId(userHistoryId, projectId)
+                .orElseThrow(() -> new ProjectException("프로젝트에 가입되지 않은 유저"));
+        if(userProjectEntity.getRoleType() != UserProjectRoleType.LEADER){
+            throw new ProjectException("권한이 없는 유저");
+        }
+        return userProjectEntity;
+    }
+
+
+    private Hashtag getValidHashtag(String hashtagName){
+        Hashtag hashtag = hashtagRepo.findHashtagByHashtagName(hashtagName)
+                .orElseThrow(() -> new ProjectException("존재하지 않는 태그"));
+        return hashtag;
+    }
+
+
+    private void isValidSort(String sort){
+        if(!sort.equals("modifiedDate") && !sort.equals("hitCount") && !sort.equals("likeCount")){
+            throw new ProjectException("유효하지 않는 정렬 방식");
+        }
+    }
+
+
+    private boolean isUserLikeProject(UserHistory userHistory, Project project){
+        Optional<ProjectLike> optionalProjectLike = projectLikeRepo.findByUserHistoryAndProject(userHistory, project);
+        if(optionalProjectLike.isPresent()) {
+            ProjectLike projectLike = optionalProjectLike.get();
+            return projectLike.isProjectLiked();
+        }
+        return false;
     }
 
 }

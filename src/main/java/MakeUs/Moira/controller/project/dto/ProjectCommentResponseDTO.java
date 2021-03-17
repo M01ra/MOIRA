@@ -3,12 +3,14 @@ package MakeUs.Moira.controller.project.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProjectCommentResponseDTO {
     @ApiModelProperty(value = "댓글 ID", example = "2")

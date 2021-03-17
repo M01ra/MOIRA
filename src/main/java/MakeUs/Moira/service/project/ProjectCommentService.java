@@ -16,91 +16,109 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ProjectCommentService {
+
     private final ProjectCommentRepo projectCommentRepo;
     private final ProjectRepo projectRepo;
     private final UserRepo userRepo;
 
+
     @Transactional
     public Long createProjectComment(ProjectCommentRequestDTO projectCommentRequestDTO, Long projectId, Long parentId, Long userId) {
-        Optional<Project> optionalProject = projectRepo.findById(projectId);
-        if(!optionalProject.isPresent()){
-            throw new ProjectException("존재하지 않는 프로젝트 ID");
-        }
-        Project project = optionalProject.get();
-        ProjectDetail projectDetail = project.getProjectDetail();
-
-        Optional<User> optionalUser = userRepo.findById(userId);
-        //Optional<User> optionalUser = userRepo.findById(1L);
-        if(!optionalUser.isPresent()){
-            throw new ProjectException("유효하지 않는 유저");
-        }
-        User writer = optionalUser.get();
+        Project projectEntity = getValidProject(projectId);
+        ProjectDetail projectDetailEntity = projectEntity.getProjectDetail();
+        User userEntity = getValidUser(userId);
 
         ProjectComment parentProjectComment = null;
+        // 부모 댓글 ID가 있을 경우
         if(parentId != null){
-            Optional<ProjectComment> optionalProjectComment = projectCommentRepo.findById(parentId);
-            if(!optionalProjectComment.isPresent()){
-                throw new ProjectException("존재하지 않는 부모 댓글 ID");
-            }
-            parentProjectComment = optionalProjectComment.get();
+            parentProjectComment = getValidProjectComment(parentId);
         }
 
-        ProjectComment projectComment = new ProjectComment(projectDetail, writer, projectCommentRequestDTO.getContent(), parentProjectComment);
+        ProjectComment projectComment = ProjectComment.builder()
+                .projectDetail(projectDetailEntity)
+                .writer(userEntity)
+                .comment(projectCommentRequestDTO.getContent())
+                .parentComment(parentProjectComment)
+                .build();
+
         projectComment = projectCommentRepo.save(projectComment);
-        projectDetail.addComment(projectComment);
+        projectDetailEntity.addProjectComment(projectComment);
         return projectComment.getId();
     }
 
+
     @Transactional
     public List<ProjectCommentResponseDTO> getProjectComments(Long projectId, Long userId) {
-        Optional<Project> optionalProject = projectRepo.findById(projectId);
-        if(!optionalProject.isPresent()){
-            throw new ProjectException("존재하지 않는 프로젝트 ID");
-        }
-        Project project = optionalProject.get();
-        ProjectDetail projectDetail = project.getProjectDetail();
-        List<ProjectComment> projectCommentList = projectCommentRepo.findAllByProjectDetailOrderByCreatedDate(projectDetail);
-        List<ProjectCommentResponseDTO> projectCommentResponseDTOList = new ArrayList<>();
-        for(ProjectComment projectComment : projectCommentList){
-            User writer = projectComment.getWriter();
-            Long parentId = null;
-            if(projectComment.getParentComment() != null){
-                parentId = projectComment.getParentComment().getId();
-            }
-            boolean isDeletable = false;
-            if(userId == writer.getId()){
-                //if(Long.valueOf(1L) == writer.getId()){
-                isDeletable = true;
-            }
-            ProjectCommentResponseDTO projectCommentResponseDTO = new ProjectCommentResponseDTO(projectComment.getId(), writer.getId(),parentId, writer.getNickname(), writer.getProfileImage(), projectComment.getComment(), getTime(projectComment.getCreatedDate()), isDeletable);
-            projectCommentResponseDTOList.add(projectCommentResponseDTO);
-        }
-        return projectCommentResponseDTOList;
+        Project projectEntity = getValidProject(projectId);
+        ProjectDetail projectDetailEntity = projectEntity.getProjectDetail();
+        List<ProjectComment> projectCommentList = projectCommentRepo.findAllByProjectDetailOrderByCreatedDate(projectDetailEntity);
+
+        return projectCommentList
+                .stream()
+                .map(projectComment -> {
+                    Long parentId = null;
+                    if (projectComment.getParentComment() != null) {
+                        parentId = projectComment.getParentComment().getId();
+                    }
+                    boolean isDeletable = false;
+                    if (userId == projectComment.getWriter().getId()) {
+                        isDeletable = true;
+                    }
+                    return ProjectCommentResponseDTO.builder()
+                            .id(projectComment.getId())
+                            .userId(projectComment.getWriter().getId())
+                            .parentId(parentId)
+                            .nickname(projectComment.getWriter().getNickname())
+                            .imageUrl(projectComment.getWriter().getProfileImage())
+                            .content(projectComment.getComment())
+                            .time(getTime(projectComment.getCreatedDate()))
+                            .isDeletable(isDeletable)
+                            .build();
+                })
+                .collect(Collectors.toList());
     }
+
 
     @Transactional
     public void deleteProjectComment(Long commentId, Long userId){
-        Optional<ProjectComment> optionalProjectComment = projectCommentRepo.findById(commentId);
-        if(!optionalProjectComment.isPresent()){
-            throw new ProjectException("존재하지 않은 댓글 ID");
-        }
-        ProjectComment projectComment = optionalProjectComment.get();
+        ProjectComment projectComment = getValidProjectComment(commentId);
         if(projectComment.getWriter().getId() != userId){
-            //if(projectComment.getWriter().getId() != Long.valueOf(1L)){
             throw new ProjectException("로그인한 유저가 쓴 댓글이 아님");
         }
-        projectCommentRepo.delete(optionalProjectComment.get());
+        projectCommentRepo.delete(projectComment);
     }
 
+    private User getValidUser(Long userId){
+        User userEntity = userRepo.findById(userId)
+                .orElseThrow(() -> new ProjectException("유효하지 않는 유저"));
+        return userEntity;
+    }
+
+    private Project getValidProject(Long projectId){
+        Project projectEntity = projectRepo.findById(projectId)
+                .orElseThrow(() -> new ProjectException("존재하지 않은 프로젝트 ID"));
+        return projectEntity;
+    }
+
+
+    private ProjectComment getValidProjectComment(Long projectCommentId){
+        Optional<ProjectComment> optionalProjectComment = projectCommentRepo.findById(projectCommentId);
+        if(!optionalProjectComment.isPresent()){
+            throw new ProjectException("존재하지 않는 댓글 ID");
+        }
+        return optionalProjectComment.get();
+    }
+
+
     private String getTime(LocalDateTime localDateTime){
-        String time = null;
+        String time;
         if(ChronoUnit.YEARS.between(localDateTime, LocalDateTime.now()) >= 1){
             time = Long.toString(ChronoUnit.YEARS.between(localDateTime, LocalDateTime.now())) + "년 전";
         }
