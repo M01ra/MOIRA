@@ -20,8 +20,8 @@ public class ProjectResponseDTO {
     private String title;
     @ApiModelProperty(value = "태그 리스트", example = "[\"서버\",\"IOS\",\"AOS\"]")
     private List<String> projectHashtagList;
-    @ApiModelProperty(value = "이미지 URL 리스트", example = "[\"https://moira-springboot.s3.ap-northeast-2.amazonaws.com/project-3-Sketchpad.png\"]")
-    private List<String> imageUrlList;
+    @ApiModelProperty(value = "이미지 URL", example = "https://moira-springboot.s3.ap-northeast-2.amazonaws.com/project-3-Sketchpad.png")
+    private String imageUrlList;
     @ApiModelProperty(value = "조회수", example = "3")
     private int hitCount;
     @ApiModelProperty(value = "좋아요수", example = "2")

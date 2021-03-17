@@ -28,8 +28,7 @@ public class Project extends AuditorEntity {
     @OneToMany(mappedBy = "project")
     private List<UserProject> userProjectList;
 
-    @OneToMany(mappedBy = "project")
-    private List<ProjectImage> projectImageList;
+    private String projectImageUrl;
 
     private String projectTitle;
 
@@ -46,10 +45,9 @@ public class Project extends AuditorEntity {
     @Enumerated(EnumType.STRING)
     private ProjectStatus projectStatus = ProjectStatus.RECRUITING;
 
-    public Project(List<ProjectHashtag> projectHashtagList, List<UserProject> userProjectList, List<ProjectImage> projectImageList, String projectTitle, ProjectDetail projectDetail, int likeCount, int hitCount, ProjectStatus projectStatus) {
+    public Project(List<ProjectHashtag> projectHashtagList, List<UserProject> userProjectList, String projectTitle, ProjectDetail projectDetail, int likeCount, int hitCount, ProjectStatus projectStatus) {
         this.projectHashtagList = projectHashtagList;
         this.userProjectList = userProjectList;
-        this.projectImageList = projectImageList;
         this.projectTitle = projectTitle;
         this.projectDetail = projectDetail;
         this.likeCount = likeCount;
@@ -65,10 +63,6 @@ public class Project extends AuditorEntity {
         this.projectHashtagList = projectHashtagList;
     }
 
-    public void setProjectImageList(List<ProjectImage> projectImageList){
-        this.projectImageList = projectImageList;
-    }
-
     public void setUserProjectList(List<UserProject> userProjectList){
         this.userProjectList = userProjectList;
     }
@@ -79,6 +73,10 @@ public class Project extends AuditorEntity {
 
     public void changeProjectStatus(ProjectStatus projectStatus){
         this.projectStatus = projectStatus;
+    }
+
+    public void changeProjectImageUrl(String projectImageUrl){
+        this.projectImageUrl = projectImageUrl;
     }
 
     public void addLike(){
