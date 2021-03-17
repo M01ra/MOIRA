@@ -1,6 +1,7 @@
 package MakeUs.Moira.controller.security;
 
 import MakeUs.Moira.config.security.JwtTokenProvider;
+import MakeUs.Moira.controller.user.dto.LoginDto;
 import MakeUs.Moira.domain.user.UserRole;
 import MakeUs.Moira.response.ResponseService;
 import MakeUs.Moira.response.model.SingleResult;
@@ -8,7 +9,7 @@ import MakeUs.Moira.service.security.LoginService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @Api(tags = {"로그인"})
@@ -23,11 +24,14 @@ public class LoginController {
 
     @ApiOperation(
             value = "Jwt토큰 발급",
-            notes = "파라미터로 provider, AccessToken 값을 받은 후에 Jwt 토큰을 리턴"
+            notes = "Post의 Body로 socialProvider, AccessToken 값을 받은 후에 Jwt 토큰을 리턴\n"
+                    + "socialProvider는 kakao, apple 를 입력받습니다."
     )
     @PostMapping(value = "/login")
-    public SingleResult<String> getToken(@ApiParam(value = "AccessToken", required = true) @RequestParam String token, //
-                                         @ApiParam(value = "kakao or apple", required = true) @RequestParam String provider) {
+    public SingleResult<String> getToken(@ApiParam(required = true) @RequestBody LoginDto loginDto) {
+
+        String provider = loginDto.getSocialProvider();
+        String token = loginDto.getAccessToken();
 
         String socialId = loginService.getUserSocialId(provider, token);
         Long userPk = loginService.findUserPkBySocialIdAndSocialProvider(socialId, provider);
