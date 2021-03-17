@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepo userRepo;
+    private final UserHistoryRepo userHistoryRepo;
     private final PositionRepo positionRepo;
     private final UserHashtagRepo userHashtagRepo;
     private final HashtagRepo hashtagRepo;
@@ -41,7 +42,7 @@ public class UserService {
 
 
     @Transactional
-    public SignupResponseDto finishSignup(Long userId, String nickname, Long positionId, List<Long> hashtagIdList) {
+    public SignupResponseDto Signup(Long userId, String nickname, Long positionId, List<Long> hashtagIdList) {
 
         // 1. 유저 엔티티
         User userEntity = findUserById(userId);
@@ -63,7 +64,6 @@ public class UserService {
                              .forEach(userHashtagRepo::delete);
             userHistoryEntity.getUserHashtags()
                              .clear();
-            userHashtagRepo.flush();
         }
 
         hashtagRepo.findAllByIdIn(hashtagIdList)

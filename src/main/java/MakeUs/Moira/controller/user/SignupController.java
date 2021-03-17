@@ -97,7 +97,7 @@ public class SignupController {
         Long positionId = signupRequestDto.getPositionId();
         List<Long> hashtagIdList = signupRequestDto.getHashtagIdList();
 
-        SignupResponseDto signupResponseDto = userService.finishSignup(userId, nickname, positionId, hashtagIdList);
+        SignupResponseDto signupResponseDto = userService.Signup(userId, nickname, positionId, hashtagIdList);
 
         return responseService.mappingSingleResult(signupResponseDto, "회원가입 성공");
     }
