@@ -1,6 +1,6 @@
 package MakeUs.Moira.controller.user.dto;
 
-import lombok.Builder;
+import MakeUs.Moira.domain.user.User;
 import lombok.Getter;
 
 @Getter
@@ -9,18 +9,17 @@ public class MyPageResponseDto {
     private String positionName;
     private String shortIntroduction;
     private String profileImageUrl;
-    private int writtenPostCount;
-    private int appliedPostCount;
-    private int likedPostCount;
+    private int    writtenPostCount;
+    private int    appliedPostCount;
+    private int    likedPostCount;
 
-    @Builder
 
-    public MyPageResponseDto(String nickname, String positionName, String shortIntroduction, String profileImageUrl,
-                             int writtenPostCount, int appliedPostCount, int likedPostCount) {
-        this.nickname = nickname;
-        this.positionName = positionName;
-        this.shortIntroduction = shortIntroduction;
-        this.profileImageUrl = profileImageUrl;
+    public MyPageResponseDto(User user, int writtenPostCount, int appliedPostCount, int likedPostCount) {
+        this.nickname = user.getNickname();
+        this.positionName = user.getUserPosition()
+                                .getPositionName();
+        this.shortIntroduction = user.getShortIntroduction();
+        this.profileImageUrl = user.getProfileImage();
         this.writtenPostCount = writtenPostCount;
         this.appliedPostCount = appliedPostCount;
         this.likedPostCount = likedPostCount;

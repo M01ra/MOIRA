@@ -1,25 +1,29 @@
 package MakeUs.Moira.controller.user.dto;
 
 
-import lombok.Builder;
+import MakeUs.Moira.domain.project.Project;
 import lombok.Getter;
 
 import java.time.LocalDate;
 
 @Getter
 public class WrittenProjectInfoResponseDto {
-    private String projectTitle;
+    private Long      projectId;
+    private String    projectTitle;
     private LocalDate writtenTime;
-    private int hitCount;
-    private String projectImageUrl;
-    private int applicantCount;
+    private int       hitCount;
+    private String    projectImageUrl;
+    private int       applicantCount;
 
-    @Builder
-    public WrittenProjectInfoResponseDto(String projectTitle, LocalDate writtenTime, int hitCount, String projectImageUrl, int applicantCount) {
-        this.projectTitle = projectTitle;
-        this.writtenTime = writtenTime;
-        this.hitCount = hitCount;
-        this.projectImageUrl = projectImageUrl;
-        this.applicantCount = applicantCount;
+    public WrittenProjectInfoResponseDto(Project writtenProject) {
+        this.projectId = writtenProject.getId();
+        this.projectTitle = writtenProject.getProjectTitle();
+        this.writtenTime = writtenProject.getCreatedDate()
+                                         .toLocalDate();
+        this.hitCount = writtenProject.getHitCount();
+        this.projectImageUrl = writtenProject.getProjectImageUrl();
+        this.applicantCount = writtenProject.getProjectDetail()
+                                            .getProjectApplyList()
+                                            .size();
     }
 }

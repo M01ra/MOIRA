@@ -2,10 +2,12 @@ package MakeUs.Moira.service.user;
 
 import MakeUs.Moira.advice.exception.InvalidUserIdException;
 
+import MakeUs.Moira.controller.user.dto.AppliedProjectInfoResponseDto;
 import MakeUs.Moira.controller.user.dto.MyPageResponseDto;
 
 import MakeUs.Moira.controller.user.dto.WrittenProjectInfoResponseDto;
 import MakeUs.Moira.domain.project.Project;
+import MakeUs.Moira.domain.project.projectApply.ProjectApply;
 import MakeUs.Moira.domain.project.projectApply.ProjectApplyRepo;
 import MakeUs.Moira.domain.user.*;
 import lombok.RequiredArgsConstructor;
@@ -20,67 +22,63 @@ import java.util.stream.Collectors;
 @Service
 public class MyPageService {
 
-    private final UserRepo userRepo;
-    private final UserHistoryRepo userHistoryRepo;
+
+    private final UserRepo         userRepo;
+    private final UserHistoryRepo  userHistoryRepo;
     private final ProjectApplyRepo projectApplyRepo;
+
 
     public MyPageResponseDto getMyPage(Long userId) {
 
         User userEntity = userRepo.findById(userId)
                                   .orElseThrow(() -> new InvalidUserIdException("유효하지 않은 userId"));
 
-        UserHistory userHistoryEntity = userEntity.getUserHistory();
-
-        int writtenPostCount = (int) userHistoryEntity.getUserProjects()
-                                                      .stream()
-                                                      .filter(userProject -> userProject.getRoleType() == UserProjectRoleType.LEADER)
-                                                      .count();
+        int writtenPostCount = (int) userEntity.getUserHistory()
+                                               .getUserProjects()
+                                               .stream()
+                                               .filter(userProject -> userProject.getRoleType() == UserProjectRoleType.LEADER)
+                                               .count();
 
         int likedPostCount = 0;
-        likedPostCount += userHistoryEntity.getProjectLikes()
-                                           .size();
-        likedPostCount += userHistoryEntity.getUserPoolLikes()
-                                           .size();
+        likedPostCount += userEntity.getUserHistory()
+                                    .getProjectLikes()
+                                    .size();
+        likedPostCount += userEntity.getUserHistory()
+                                    .getUserPoolLikes()
+                                    .size();
 
         int appliedPostCount = projectApplyRepo.countByApplicant_Id(userId);
 
-
-        return MyPageResponseDto.builder()
-                                .nickname(userEntity.getNickname())
-                                .positionName(userEntity.getUserPosition()
-                                                        .getPositionName())
-                                .shortIntroduction(userEntity.getShortIntroduction())
-                                .profileImageUrl(userEntity.getProfileImage())
-                                .writtenPostCount(writtenPostCount)
-                                .appliedPostCount(appliedPostCount)
-                                .likedPostCount(likedPostCount)
-                                .build();
+        return new MyPageResponseDto(userEntity, writtenPostCount, likedPostCount, appliedPostCount);
     }
 
 
-    public List<WrittenProjectInfoResponseDto> getWrittenPost(Long userId) {
-        User userEntity = userRepo.findById(userId)
-                                  .orElseThrow(() -> new InvalidUserIdException("유효하지 않은 userId"));
+    public List<WrittenProjectInfoResponseDto> getWrittenProjectList(Long userId) {
 
-        UserHistory userHistoryEntity = userEntity.getUserHistory();
+        UserHistory userHistoryEntity = userHistoryRepo.findByUserId(userId)
+                                                       .orElseThrow(() -> new InvalidUserIdException("유효하지 않은 userId"));
+
         List<Project> writtenProjectList = userHistoryEntity.getUserProjects()
-                                                      .stream()
-                                                      .filter(userProject -> userProject.getRoleType() == UserProjectRoleType.LEADER)
-                                                      .map(UserProject::getProject)
-                                                      .collect(Collectors.toList());
-
+                                                            .stream()
+                                                            .filter(userProject -> userProject.getRoleType() == UserProjectRoleType.LEADER)
+                                                            .map(UserProject::getProject)
+                                                            .collect(Collectors.toList());
 
         return writtenProjectList.stream()
-                                 .map((writtenProject) -> WrittenProjectInfoResponseDto.builder()
-                                                                                       .projectTitle(writtenProject.getProjectTitle())
-                                                                                       .writtenTime(writtenProject.getCreatedDate()
-                                                                                                                  .toLocalDate())
-                                                                                       .hitCount(writtenProject.getHitCount())
-                                                                                       .projectImageUrl(writtenProject.getProjectImageUrl())
-                                                                                       .applicantCount(writtenProject.getProjectDetail()
-                                                                                                                     .getProjectApplyList()
-                                                                                                                     .size())
-                                                                                       .build())
+                                 .map(WrittenProjectInfoResponseDto::new)
+                                 .collect(Collectors.toList());
+    }
+
+
+    public List<AppliedProjectInfoResponseDto> getAppliedProjectList(Long userId) {
+
+        List<ProjectApply> projectApplyList = projectApplyRepo.findAllByApplicant_Id(userId);
+        List<Project> appliedProjectList = projectApplyList.stream()
+                                                           .map(projectApply -> projectApply.getProjectDetail()
+                                                                                            .getProject())
+                                                           .collect(Collectors.toList());
+        return appliedProjectList.stream()
+                                 .map(AppliedProjectInfoResponseDto::new)
                                  .collect(Collectors.toList());
     }
 }

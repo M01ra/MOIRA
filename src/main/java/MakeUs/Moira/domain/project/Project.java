@@ -2,15 +2,10 @@ package MakeUs.Moira.domain.project;
 
 import MakeUs.Moira.domain.AuditorEntity;
 import MakeUs.Moira.domain.project.projectDetail.ProjectDetail;
-import MakeUs.Moira.domain.user.User;
 import MakeUs.Moira.domain.user.UserProject;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -55,15 +50,15 @@ public class Project extends AuditorEntity {
         this.projectStatus = projectStatus;
     }
 
-    public void setProjectTitle(String projectTitle){
+    public void setProjectTitle(String projectTitle) {
         this.projectTitle = projectTitle;
     }
 
-    public void setProjectHashtagList(List<ProjectHashtag> projectHashtagList){
+    public void setProjectHashtagList(List<ProjectHashtag> projectHashtagList) {
         this.projectHashtagList = projectHashtagList;
     }
 
-    public void setUserProjectList(List<UserProject> userProjectList){
+    public void setUserProjectList(List<UserProject> userProjectList) {
         this.userProjectList = userProjectList;
     }
 
@@ -71,23 +66,23 @@ public class Project extends AuditorEntity {
         this.projectDetail = projectDetail;
     }
 
-    public void changeProjectStatus(ProjectStatus projectStatus){
+    public void changeProjectStatus(ProjectStatus projectStatus) {
         this.projectStatus = projectStatus;
     }
 
-    public void changeProjectImageUrl(String projectImageUrl){
+    public void changeProjectImageUrl(String projectImageUrl) {
         this.projectImageUrl = projectImageUrl;
     }
 
-    public void addLike(){
+    public void addLike() {
         likeCount++;
     }
 
-    public void cancelLike(){
+    public void cancelLike() {
         likeCount--;
     }
 
-    public void addHit(){
+    public void addHit() {
         hitCount++;
     }
 }
