@@ -42,7 +42,7 @@ public class UserService {
 
 
     @Transactional
-    public SignupResponseDto Signup(Long userId, String nickname, Long positionId, List<Long> hashtagIdList) {
+    public SignupResponseDto signup(Long userId, String nickname, Long positionId, List<Long> hashtagIdList) {
 
         // 1. 유저 엔티티
         User userEntity = findUserById(userId);
@@ -58,7 +58,7 @@ public class UserService {
 
         // 4. UserHistory 가져오기 + hashtagId 로 hashtagList 가져오기 => UserHashtag 만들고 저장
         UserHistory userHistoryEntity = userEntity.getUserHistory();
-        if ( !userHistoryEntity.getUserHashtags().isEmpty()){
+        if (!userHistoryEntity.getUserHashtags().isEmpty()) {
 
             userHistoryEntity.getUserHashtags()
                              .forEach(userHashtagRepo::delete);
