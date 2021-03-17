@@ -2,6 +2,7 @@ package MakeUs.Moira.controller.user;
 
 import MakeUs.Moira.config.security.JwtTokenProvider;
 import MakeUs.Moira.controller.user.dto.AppliedProjectInfoResponseDto;
+import MakeUs.Moira.controller.user.dto.LikedProjectResponseDto;
 import MakeUs.Moira.controller.user.dto.MyPageResponseDto;
 import MakeUs.Moira.controller.user.dto.WrittenProjectInfoResponseDto;
 import MakeUs.Moira.response.ResponseService;
@@ -10,6 +11,7 @@ import MakeUs.Moira.service.user.MyPageService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.List;
 
@@ -83,5 +85,28 @@ public class MyPageController {
         List<AppliedProjectInfoResponseDto> appliedProjectInfoResponseDtoList = myPageService.getAppliedProjectList(userId);
 
         return responseService.mappingListResult(appliedProjectInfoResponseDtoList, "내가 지원한 글 목록 불러오기 성공");
+    }
+
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "X-AUTH-TOKEN",
+                    value = "로그인 성공 후 JWT_TOKEN",
+                    required = true, dataType = "String", paramType = "header")
+    })
+    @ApiOperation(
+            value = "마이페이지 - 내가 스크랩한 글 - 모집글",
+            notes = "마이페이지의 스크랩을 눌렀을 때 적용합니다.\n" +
+                    "비회원인 경우 에러가 발생합니다."
+    )
+    @GetMapping(value = "/mypage/like/project")
+    public CommonResult getLikedProject(@RequestHeader(value = "X-AUTH-TOKEN", required = true) String token,
+                                               @ApiParam(value = "포지션 카테고리 필터", required = true, allowableValues = "develop, director, designer") @RequestParam String positionCategory,
+                                               @ApiParam(value = "정렬 방식 필터", required = true, allowableValues = "date, hit") @RequestParam String sortby) {
+        // 권한 설정은 시큐리티에서 하자
+        Long userId = Long.parseLong(jwtTokenProvider.getUserPk(token));
+        List<LikedProjectResponseDto> likedProjectResponseDtoList = myPageService.getLikedProjectList(userId, positionCategory, sortby);
+
+        return responseService.mappingListResult(likedProjectResponseDtoList, "내가 스크랩한 글 목록 불러오기 성공");
     }
 }

@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @ApiModel(value = "로그인 입력 폼", description = "Social Login Provider / AccessToken")
 @Getter
-public class LoginDto {
+public class LoginRequestDto {
 
     @ApiModelProperty(value = "SocialProvider", required = true)
     private String socialProvider;

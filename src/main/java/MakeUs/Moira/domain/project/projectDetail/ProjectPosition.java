@@ -28,4 +28,8 @@ public class ProjectPosition {
         this.recruitUserPosition = recruitUserPosition;
         this.recruitPositionCount = recruitPositionCount;
     }
+
+    public String getRecruitingPositionCategoryName(){
+        return this.getRecruitUserPosition().getPositionCategory().getCategoryName();
+    }
 }

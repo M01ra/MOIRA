@@ -5,8 +5,10 @@ import MakeUs.Moira.domain.project.projectDetail.ProjectDetail;
 import MakeUs.Moira.domain.user.UserProject;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -40,7 +42,8 @@ public class Project extends AuditorEntity {
     @Enumerated(EnumType.STRING)
     private ProjectStatus projectStatus = ProjectStatus.RECRUITING;
 
-    public Project(List<ProjectHashtag> projectHashtagList, List<UserProject> userProjectList, String projectTitle, ProjectDetail projectDetail, int likeCount, int hitCount, ProjectStatus projectStatus) {
+    public Project(List<ProjectHashtag> projectHashtagList, List<UserProject> userProjectList, String projectTitle,
+                   ProjectDetail projectDetail, int likeCount, int hitCount, ProjectStatus projectStatus) {
         this.projectHashtagList = projectHashtagList;
         this.userProjectList = userProjectList;
         this.projectTitle = projectTitle;
@@ -84,5 +87,13 @@ public class Project extends AuditorEntity {
 
     public void addHit() {
         hitCount++;
+    }
+
+    public boolean isRecruitingPositionCategory(String positionCategoryName) {
+        return this.projectDetail.getProjectPositionList()
+                                 .stream()
+                                 .anyMatch(projectPosition -> projectPosition.getRecruitingPositionCategoryName()
+                                                                             .equals(positionCategoryName));
+
     }
 }

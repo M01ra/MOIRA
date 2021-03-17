@@ -1,7 +1,7 @@
 package MakeUs.Moira.controller.security;
 
 import MakeUs.Moira.config.security.JwtTokenProvider;
-import MakeUs.Moira.controller.user.dto.LoginDto;
+import MakeUs.Moira.controller.user.dto.LoginRequestDto;
 import MakeUs.Moira.domain.user.UserRole;
 import MakeUs.Moira.response.ResponseService;
 import MakeUs.Moira.response.model.SingleResult;
@@ -28,10 +28,10 @@ public class LoginController {
                     + "socialProvider는 kakao, apple 를 입력받습니다."
     )
     @PostMapping(value = "/login")
-    public SingleResult<String> getToken(@ApiParam(required = true) @RequestBody LoginDto loginDto) {
+    public SingleResult<String> getToken(@ApiParam(required = true) @RequestBody LoginRequestDto loginRequestDto) {
 
-        String provider = loginDto.getSocialProvider();
-        String token = loginDto.getAccessToken();
+        String provider = loginRequestDto.getSocialProvider();
+        String token = loginRequestDto.getAccessToken();
 
         String socialId = loginService.getUserSocialId(provider, token);
         Long userPk = loginService.findUserPkBySocialIdAndSocialProvider(socialId, provider);
