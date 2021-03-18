@@ -6,6 +6,7 @@ import MakeUs.Moira.domain.user.UserProject;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,9 +36,11 @@ public class Project extends AuditorEntity {
 
     private int hitCount = 0;
 
-    public void addProjectHashtagList(ProjectHashtag projectHashtag){ projectHashtagList.add(projectHashtag); }
+    public void addProjectHashtagList(ProjectHashtag projectHashtag) {
+        projectHashtagList.add(projectHashtag);
+    }
 
-    public void addUserProjectList(UserProject userProject){
+    public void addUserProjectList(UserProject userProject) {
         userProjectList.add(userProject);
     }
 
@@ -45,25 +48,28 @@ public class Project extends AuditorEntity {
         this.projectDetail = projectDetail;
     }
 
-    public void updateProjectStatus(ProjectStatus projectStatus){
+    public void updateProjectStatus(ProjectStatus projectStatus) {
         this.projectStatus = projectStatus;
     }
 
-    public void updateProjectImageUrl(String projectImageUrl){
+    public void updateProjectImageUrl(String projectImageUrl) {
         this.projectImageUrl = projectImageUrl;
     }
 
-    public Project updateProjectTitle(String projectTitle){ this.projectTitle = projectTitle; return this;}
+    public Project updateProjectTitle(String projectTitle) {
+        this.projectTitle = projectTitle;
+        return this;
+    }
 
-    public void addLike(){
+    public void addLike() {
         likeCount++;
     }
 
-    public void cancelLike(){
+    public void cancelLike() {
         likeCount--;
     }
 
-    public void addHit(){
+    public void addHit() {
         hitCount++;
     }
 
