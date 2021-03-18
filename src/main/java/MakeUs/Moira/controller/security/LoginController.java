@@ -1,7 +1,8 @@
 package MakeUs.Moira.controller.security;
 
 import MakeUs.Moira.config.security.JwtTokenProvider;
-import MakeUs.Moira.controller.user.dto.LoginRequestDto;
+import MakeUs.Moira.controller.security.dto.LoginRequestDto;
+import MakeUs.Moira.controller.security.dto.LoginResponseDto;
 import MakeUs.Moira.domain.user.UserRole;
 import MakeUs.Moira.response.ResponseService;
 import MakeUs.Moira.response.model.SingleResult;
@@ -17,8 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class LoginController {
 
-    private final LoginService loginService;
-    private final ResponseService responseService;
+    private final LoginService     loginService;
+    private final ResponseService  responseService;
     private final JwtTokenProvider jwtTokenProvider;
 
 
@@ -28,21 +29,23 @@ public class LoginController {
                     + "socialProvider는 kakao, apple 를 입력받습니다."
     )
     @PostMapping(value = "/login")
-    public SingleResult<String> getToken(@ApiParam(required = true) @RequestBody LoginRequestDto loginRequestDto) {
+    public SingleResult<LoginResponseDto> getToken( @ApiParam(required = true) @RequestBody LoginRequestDto loginRequestDto) {
 
         String provider = loginRequestDto.getSocialProvider();
         String token = loginRequestDto.getAccessToken();
+        boolean isFirstLogin = false;
 
         String socialId = loginService.getUserSocialId(provider, token);
         Long userPk = loginService.findUserPkBySocialIdAndSocialProvider(socialId, provider);
 
-        if (userPk == -1L){ // 신규 가입이면 -> 회원 등록시킨 후
+        if (userPk == -1L) { // 신규 가입이면 -> 회원 등록시킨 후
             userPk = loginService.save(socialId, provider);
+            isFirstLogin = true;
         }
         // jwt 발급
         String newJwtToken = jwtTokenProvider.createToken(String.valueOf(userPk), UserRole.USER.name());
 
-        return responseService.mappingSingleResult(newJwtToken, "Jwt 토큰 발급");
+        return responseService.mappingSingleResult(new LoginResponseDto(newJwtToken, isFirstLogin), "Jwt 토큰 발급");
     }
 }
 

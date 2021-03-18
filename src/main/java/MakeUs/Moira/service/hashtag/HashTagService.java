@@ -15,11 +15,12 @@ public class HashTagService {
     private final HashtagRepo hashtagRepo;
 
     public List<HashtagResponseDto> getAllHashTag() {
-        return hashtagRepo.findAll().stream()
-                .map(entity -> HashtagResponseDto.builder()
-                        .id(entity.getId())
-                        .hashtagName(entity.getHashtagName())
-                        .build())
-                .collect(Collectors.toList());
+        return hashtagRepo.findAll()
+                          .stream()
+                          .map(entity -> HashtagResponseDto.builder()
+                                                           .hashtagId(entity.getId())
+                                                           .hashtagName(entity.getHashtagName())
+                                                           .build())
+                          .collect(Collectors.toList());
     }
 }
