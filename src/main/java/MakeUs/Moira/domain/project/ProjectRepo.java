@@ -27,7 +27,7 @@ public interface ProjectRepo extends JpaRepository<Project, Long> {
                     "H.HASHTAG_NAME IN :tag\n",
             nativeQuery = true
     )
-    public List<ProjectsResponseInterface> findProjectsByTagOrderPage(@Param("tag") List<String> tag, Pageable pageable);
+    public List<ProjectsResponseInterface> findProjectsByTagOrderPage(@Param("tag") String[] tag, Pageable pageable);
 
     @Query(
             value = "SELECT DISTINCT P.ID AS id, P.PROJECT_TITLE AS title, P.PROJECT_IMAGE_URL AS imageUrl,  P.HIT_COUNT AS hitCount, P.LIKE_COUNT AS likeCount, P.MODIFIED_DATE AS modifiedDate, NICKNAME AS writer\n" +

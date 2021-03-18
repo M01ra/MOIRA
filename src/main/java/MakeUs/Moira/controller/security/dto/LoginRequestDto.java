@@ -1,4 +1,4 @@
-package MakeUs.Moira.controller.user.dto;
+package MakeUs.Moira.controller.security.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

@@ -2,6 +2,7 @@ package MakeUs.Moira.domain.project.projectDetail;
 
 import MakeUs.Moira.domain.AuditorEntity;
 import MakeUs.Moira.domain.user.User;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -28,6 +29,7 @@ public class ProjectComment extends AuditorEntity {
     @ManyToOne
     private ProjectComment parentComment;
 
+    @Builder
     public ProjectComment(ProjectDetail projectDetail, User writer, String comment, ProjectComment parentComment){
         this.projectDetail = projectDetail;
         this.writer = writer;

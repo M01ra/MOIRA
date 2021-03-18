@@ -3,10 +3,10 @@ package MakeUs.Moira.domain.project;
 import MakeUs.Moira.domain.AuditorEntity;
 import MakeUs.Moira.domain.project.projectDetail.ProjectDetail;
 import MakeUs.Moira.domain.user.UserProject;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,62 +19,46 @@ public class Project extends AuditorEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "project")
-    private List<ProjectHashtag> projectHashtagList;
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    private List<ProjectHashtag> projectHashtagList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "project")
-    private List<UserProject> userProjectList;
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    private List<UserProject> userProjectList = new ArrayList<>();
 
     private String projectImageUrl;
 
     private String projectTitle;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private ProjectDetail projectDetail;
 
     private int likeCount = 0;
 
     private int hitCount = 0;
 
-//    @Enumerated(EnumType.STRING)
-//    private ProjectType projectType;
-
-    @Enumerated(EnumType.STRING)
-    private ProjectStatus projectStatus = ProjectStatus.RECRUITING;
-
-    public Project(List<ProjectHashtag> projectHashtagList, List<UserProject> userProjectList, String projectTitle,
-                   ProjectDetail projectDetail, int likeCount, int hitCount, ProjectStatus projectStatus) {
-        this.projectHashtagList = projectHashtagList;
-        this.userProjectList = userProjectList;
-        this.projectTitle = projectTitle;
-        this.projectDetail = projectDetail;
-        this.likeCount = likeCount;
-        this.hitCount = hitCount;
-        this.projectStatus = projectStatus;
+    public void addProjectHashtagList(ProjectHashtag projectHashtag) {
+        projectHashtagList.add(projectHashtag);
     }
 
-    public void setProjectTitle(String projectTitle) {
-        this.projectTitle = projectTitle;
+    public void addUserProjectList(UserProject userProject) {
+        userProjectList.add(userProject);
     }
 
-    public void setProjectHashtagList(List<ProjectHashtag> projectHashtagList) {
-        this.projectHashtagList = projectHashtagList;
-    }
-
-    public void setUserProjectList(List<UserProject> userProjectList) {
-        this.userProjectList = userProjectList;
-    }
-
-    public void setProjectDetail(ProjectDetail projectDetail) {
+    public void updateProjectDetail(ProjectDetail projectDetail) {
         this.projectDetail = projectDetail;
     }
 
-    public void changeProjectStatus(ProjectStatus projectStatus) {
+    public void updateProjectStatus(ProjectStatus projectStatus) {
         this.projectStatus = projectStatus;
     }
 
-    public void changeProjectImageUrl(String projectImageUrl) {
+    public void updateProjectImageUrl(String projectImageUrl) {
         this.projectImageUrl = projectImageUrl;
+    }
+
+    public Project updateProjectTitle(String projectTitle) {
+        this.projectTitle = projectTitle;
+        return this;
     }
 
     public void addLike() {
@@ -88,6 +72,12 @@ public class Project extends AuditorEntity {
     public void addHit() {
         hitCount++;
     }
+
+    @Enumerated(EnumType.STRING)
+    private ProjectStatus projectStatus = ProjectStatus.RECRUITING;
+
+    //    @Enumerated(EnumType.STRING)
+    //    private ProjectType projectType;
 
     public boolean isRecruitingPositionCategory(String positionCategoryName) {
         return this.projectDetail.getProjectPositionList()

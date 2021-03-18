@@ -88,7 +88,7 @@ public class UserService {
                                                                     .getUserHashtags()
                                                                     .stream()
                                                                     .map(userHashtag -> HashtagResponseDto.builder()
-                                                                                                          .id(userHashtag.getHashtag()
+                                                                                                          .hashtagId(userHashtag.getHashtag()
                                                                                                                          .getId())
                                                                                                           .hashtagName(userHashtag.getHashtag()
                                                                                                                                   .getHashtagName())
