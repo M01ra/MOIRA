@@ -1,5 +1,5 @@
 package MakeUs.Moira.domain.project.projectDetail;
 
 public enum ProjectLocalType {
-    서울, 경기, 강원, 부산, 대구, 인천, 대전, 광주, 울산, 세종, 충청, 전라, 경상, 제주
+    서울_인천_경기, 대전_충북_충남_세종, 광주_전남_전북, 부산_울산_경남, 강원, 대구_경북, 제주, 온라인
 }

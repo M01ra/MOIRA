@@ -1,6 +1,7 @@
 package MakeUs.Moira.domain.project.projectDetail;
 
 import MakeUs.Moira.domain.position.UserPosition;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -23,6 +24,7 @@ public class ProjectPosition {
 
     private int recruitPositionCount;
 
+    @Builder
     public ProjectPosition(ProjectDetail projectDetail, UserPosition recruitUserPosition, int recruitPositionCount){
         this.projectDetail = projectDetail;
         this.recruitUserPosition = recruitUserPosition;

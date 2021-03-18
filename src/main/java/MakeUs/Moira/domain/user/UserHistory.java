@@ -58,7 +58,15 @@ public class UserHistory {
         userProjects.add(userProject);
     }
 
+    public void removeUserProject(UserProject userProject){
+        userProjects.remove(userProject);
+    }
+
     public void addProjectLike(ProjectLike projectLike){
         projectLikes.add(projectLike);
+    }
+
+    public void removeProjectLike(ProjectLike projectLike){
+        projectLikes.remove(projectLike);
     }
 }

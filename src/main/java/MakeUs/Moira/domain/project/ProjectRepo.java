@@ -12,11 +12,10 @@ import java.util.List;
 @Repository
 public interface ProjectRepo extends JpaRepository<Project, Long> {
     @Query(
-            value = "SELECT DISTINCT P.ID AS id, P.PROJECT_TITLE AS title, PI.PROJECT_IMAGE_URL AS imageUrl,  P.HIT_COUNT AS hitCount, P.LIKE_COUNT AS likeCount, P.MODIFIED_DATE AS modifiedDate, NICKNAME AS writer\n" +
+            value = "SELECT DISTINCT P.ID AS id, P.PROJECT_TITLE AS title, P.PROJECT_IMAGE_URL AS imageUrl,  P.HIT_COUNT AS hitCount, P.LIKE_COUNT AS likeCount, P.MODIFIED_DATE AS modifiedDate, NICKNAME AS writer\n" +
                     "FROM PROJECT as P\n" +
                     "INNER JOIN PROJECT_DETAIL AS PD ON P.PROJECT_DETAIL_ID = PD.ID\n" +
                     "INNER JOIN PROJECT_POSITION AS PP ON PD.ID = PP.PROJECT_DETAIL_ID\n" +
-                    "LEFT JOIN PROJECT_IMAGE AS PI ON P.ID = PI.PROJECT_ID\n" +
                     "INNER JOIN PROJECT_HASHTAG AS PH ON P.ID = PH.PROJECT_ID\n" +
                     "INNER JOIN HASHTAG AS H ON PH.PROJECT_HASHTAG_ID = H.ID\n" +
                     "INNER JOIN (SELECT DISTINCT NICKNAME, PROJECT_ID\n" +
@@ -28,14 +27,13 @@ public interface ProjectRepo extends JpaRepository<Project, Long> {
                     "H.HASHTAG_NAME IN :tag\n",
             nativeQuery = true
     )
-    public List<ProjectsResponseInterface> findProjectsByTagOrderPage(@Param("tag") List<String> tag, Pageable pageable);
+    public List<ProjectsResponseInterface> findProjectsByTagOrderPage(@Param("tag") String[] tag, Pageable pageable);
 
     @Query(
-            value = "SELECT DISTINCT P.ID AS id, P.PROJECT_TITLE AS title, PI.PROJECT_IMAGE_URL AS imageUrl,  P.HIT_COUNT AS hitCount, P.LIKE_COUNT AS likeCount, P.MODIFIED_DATE AS modifiedDate, NICKNAME AS writer\n" +
+            value = "SELECT DISTINCT P.ID AS id, P.PROJECT_TITLE AS title, P.PROJECT_IMAGE_URL AS imageUrl,  P.HIT_COUNT AS hitCount, P.LIKE_COUNT AS likeCount, P.MODIFIED_DATE AS modifiedDate, NICKNAME AS writer\n" +
                     "FROM PROJECT as P\n" +
                     "INNER JOIN PROJECT_DETAIL AS PD ON P.PROJECT_DETAIL_ID = PD.ID\n" +
                     "INNER JOIN PROJECT_POSITION AS PP ON PD.ID = PP.PROJECT_DETAIL_ID\n" +
-                    "LEFT JOIN PROJECT_IMAGE AS PI ON P.ID = PI.PROJECT_ID\n" +
                     "INNER JOIN PROJECT_HASHTAG AS PH ON P.ID = PH.PROJECT_ID\n" +
                     "INNER JOIN HASHTAG AS H ON PH.PROJECT_HASHTAG_ID = H.ID\n" +
                     "INNER JOIN (SELECT DISTINCT NICKNAME, PROJECT_ID\n" +
