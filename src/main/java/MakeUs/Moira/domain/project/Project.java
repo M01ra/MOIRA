@@ -2,13 +2,12 @@ package MakeUs.Moira.domain.project;
 
 import MakeUs.Moira.domain.AuditorEntity;
 import MakeUs.Moira.domain.project.projectDetail.ProjectDetail;
-import MakeUs.Moira.domain.user.User;
 import MakeUs.Moira.domain.user.UserProject;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -73,4 +72,12 @@ public class Project extends AuditorEntity {
 
     //    @Enumerated(EnumType.STRING)
     //    private ProjectType projectType;
+
+    public boolean isRecruitingPositionCategory(String positionCategoryName) {
+        return this.projectDetail.getProjectPositionList()
+                                 .stream()
+                                 .anyMatch(projectPosition -> projectPosition.getRecruitingPositionCategoryName()
+                                                                             .equals(positionCategoryName));
+
+    }
 }

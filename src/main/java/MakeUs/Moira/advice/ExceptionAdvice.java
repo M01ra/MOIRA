@@ -67,8 +67,8 @@ public class ExceptionAdvice {
 //        return responseService.mappingFailCommonResultOnly(e.getMessage());
 //    }
 //
-//    @ExceptionHandler(AccessDeniedException.class)
-//    public CommonResult AccessDeniedException(HttpServletRequest request, AccessDeniedException e) {
-//        return responseService.mappingFailCommonResultOnly(e.getMessage());
-//    }
+    @ExceptionHandler(AccessDeniedException.class)
+    public CommonResult AccessDeniedException(HttpServletRequest request, AccessDeniedException e) {
+        return responseService.mappingFailCommonResultOnly(-401,e.getMessage());
+    }
 }
