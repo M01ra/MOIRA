@@ -38,7 +38,7 @@ public class ProjectCommentController {
         return responseService.mappingSingleResult(commentId, "프로젝트 댓글 추가 성공");
     }
 
-    @ApiOperation(
+    @ApiOperation( 
             value = "프로젝트(팀) 댓글 조회",
             notes = "프로젝트(팀)의 댓글을 조회합니다. 프로젝트에 생성된 모든 댓글을 최신순으로 제공합니다")
     @GetMapping("/{projectId}")
