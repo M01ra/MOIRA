@@ -26,22 +26,22 @@ public class UserPortfolio {
     @OneToOne(mappedBy = "userPortfolio")
     private User user;
 
-    @OneToMany(mappedBy = "userPortfolio")
+    @OneToMany(mappedBy = "userPortfolio", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserSchool> userSchoolList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "userPortfolio")
+    @OneToMany(mappedBy = "userPortfolio", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserCareer> userCareerList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "userPortfolio")
+    @OneToMany(mappedBy = "userPortfolio", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserLicense> userLicenseList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "userPortfolio")
+    @OneToMany(mappedBy = "userPortfolio", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserAward> userAwardList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "userPortfolio")
+    @OneToMany(mappedBy = "userPortfolio", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserLink> userLinkList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "userPortfolio")
+    @OneToMany(mappedBy = "userPortfolio", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserPrivateProject> userPrivateProjectList = new ArrayList<>();
 
     public UserPortfolio updateUser(User user) {
