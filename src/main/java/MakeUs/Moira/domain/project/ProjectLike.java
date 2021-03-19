@@ -1,6 +1,7 @@
 package MakeUs.Moira.domain.project;
 
 import MakeUs.Moira.domain.user.UserHistory;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -23,6 +24,7 @@ public class ProjectLike {
 
     private boolean isProjectLiked;
 
+    @Builder
     public ProjectLike(UserHistory userHistory, Project project){
         this.userHistory = userHistory;
         this.project = project;
@@ -30,6 +32,14 @@ public class ProjectLike {
     }
 
     public void changeProjectLiked(){
+        if(isProjectLiked){
+            project.cancelLike();
+            userHistory.removeProjectLike(this);
+        }
+        else{
+            project.addLike();
+            userHistory.addProjectLike(this);
+        }
         isProjectLiked = !isProjectLiked;
     }
 

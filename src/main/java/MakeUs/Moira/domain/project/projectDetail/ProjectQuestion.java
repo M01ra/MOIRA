@@ -1,6 +1,6 @@
 package MakeUs.Moira.domain.project.projectDetail;
 
-import MakeUs.Moira.domain.project.projectDetail.ProjectDetail;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -20,6 +20,7 @@ public class ProjectQuestion {
 
     private String projectQuestion;
 
+    @Builder
     public ProjectQuestion(ProjectDetail projectDetail, String projectQuestion){
         this.projectDetail = projectDetail;
         this.projectQuestion = projectQuestion;

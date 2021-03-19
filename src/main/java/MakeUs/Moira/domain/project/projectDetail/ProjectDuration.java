@@ -1,5 +1,5 @@
 package MakeUs.Moira.domain.project.projectDetail;
 
 public enum ProjectDuration {
-    일주, 이주, 삼주, 한달, 두달, 세달, 여섯달
+    한달_미만, 세달_미만, 여섯달_미만, 여섯달_이상
 }

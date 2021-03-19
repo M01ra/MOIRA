@@ -53,7 +53,7 @@ public class S3Service {
      * S3에 파일을 업로드하는 함수
      * @param MultipartFile file : 저장할 파일
      * @param String key : S3에 저장할 파일 명
-     *                     ex) 도메인 + '-' + ID + '-' + 파일 명 = "project-2-abc.jpg"
+     *                     ex) 도메인 + '-' + ID + '-' + 파일 명 = "project-2.jpg"
      */
     public String upload(MultipartFile file, String key){
         try {

@@ -3,6 +3,7 @@ package MakeUs.Moira.domain.user;
 import MakeUs.Moira.domain.position.UserPosition;
 import MakeUs.Moira.domain.project.Project;
 import MakeUs.Moira.domain.userReview.UserReview;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -37,6 +38,7 @@ public class UserProject {
     @Enumerated(EnumType.STRING)
     private UserProjectStatus userProjectStatus;
 
+    @Builder
     public UserProject(UserHistory userHistory, Project project, UserProjectRoleType roleType, UserPosition userPosition, UserProjectStatus userProjectStatus){
         this.userHistory = userHistory;
         this.project = project;
