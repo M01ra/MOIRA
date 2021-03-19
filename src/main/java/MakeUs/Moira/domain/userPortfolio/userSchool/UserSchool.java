@@ -1,10 +1,12 @@
 package MakeUs.Moira.domain.userPortfolio.userSchool;
 
 import MakeUs.Moira.domain.userPortfolio.*;
+import lombok.Getter;
 
 import javax.persistence.*;
 
 @Entity
+@Getter
 public class UserSchool {
 
     @Id

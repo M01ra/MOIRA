@@ -1,11 +1,13 @@
 package MakeUs.Moira.domain.userPortfolio.userCarrer;
 
 import MakeUs.Moira.domain.userPortfolio.UserPortfolio;
+import lombok.Getter;
 
 import javax.persistence.*;
 import java.time.Period;
 
 @Entity
+@Getter
 public class UserCareer {
 
     @Id

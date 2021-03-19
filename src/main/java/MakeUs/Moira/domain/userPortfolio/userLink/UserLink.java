@@ -2,10 +2,12 @@ package MakeUs.Moira.domain.userPortfolio.userLink;
 
 import MakeUs.Moira.domain.userPortfolio.UserPortfolio;
 import MakeUs.Moira.domain.userPortfolio.userLink.LinkType;
+import lombok.Getter;
 
 import javax.persistence.*;
 
 @Entity
+@Getter
 public class UserLink {
 
     @Id

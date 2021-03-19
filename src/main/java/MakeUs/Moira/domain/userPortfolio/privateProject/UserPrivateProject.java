@@ -2,10 +2,12 @@ package MakeUs.Moira.domain.userPortfolio.privateProject;
 
 import MakeUs.Moira.domain.userPortfolio.UserPortfolio;
 import MakeUs.Moira.domain.userPortfolio.privateProject.PrivateProjectDuration;
+import lombok.Getter;
 
 import javax.persistence.*;
 
 @Entity
+@Getter
 public class UserPrivateProject {
 
     @Id

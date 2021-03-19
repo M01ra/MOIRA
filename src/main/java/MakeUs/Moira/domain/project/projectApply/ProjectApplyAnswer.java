@@ -1,10 +1,14 @@
 package MakeUs.Moira.domain.project.projectApply;
 
 import MakeUs.Moira.domain.project.projectApply.ProjectApply;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
+@Builder
+@NoArgsConstructor
 public class ProjectApplyAnswer {
 
     @Id
