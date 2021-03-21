@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Entity
-@Builder
 @NoArgsConstructor
 public class OptionalApplyInfo {
 
@@ -22,4 +21,11 @@ public class OptionalApplyInfo {
     private UserPortfolioType userPortfolioType;
 
     private Long UserSelectedPortfolioId;
+
+    @Builder
+    public OptionalApplyInfo(ProjectApply projectApply, UserPortfolioType userPortfolioType, Long userSelectedPortfolioId) {
+        this.projectApply = projectApply;
+        this.userPortfolioType = userPortfolioType;
+        this.UserSelectedPortfolioId = userSelectedPortfolioId;
+    }
 }

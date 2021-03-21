@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Entity
-@Builder
 @NoArgsConstructor
 public class ProjectApplyAnswer {
 
@@ -20,4 +19,9 @@ public class ProjectApplyAnswer {
 
     private String answer;
 
+    @Builder
+    public ProjectApplyAnswer(ProjectApply projectApply, String answer) {
+        this.projectApply = projectApply;
+        this.answer = answer;
+    }
 }

@@ -14,7 +14,6 @@ import java.util.List;
 
 @Entity
 @Getter
-@Builder
 @NoArgsConstructor
 public class ProjectApply extends AuditorEntity {
 
@@ -40,12 +39,24 @@ public class ProjectApply extends AuditorEntity {
     @Enumerated(EnumType.STRING)
     private ProjectApplyStatus projectApplyStatus;
 
+    @Builder
+    public ProjectApply(ProjectDetail projectDetail, User applicant, List<ProjectApplyAnswer> projectApplyAnswerList, UserPosition userPosition, List<OptionalApplyInfo> optionalApplyInfoList, ProjectApplyStatus projectApplyStatus) {
+        this.projectDetail = projectDetail;
+        this.applicant = applicant;
+        this.userPosition = userPosition;
+        this.projectApplyStatus = projectApplyStatus;
+    }
+
     public void addProjectApplyAnswer(ProjectApplyAnswer projectApplyAnswer){
         this.projectApplyAnswerList.add(projectApplyAnswer);
     }
 
     public void addOptionalApplyInfo(OptionalApplyInfo optionalApplyInfo){
         this.optionalApplyInfoList.add(optionalApplyInfo);
+    }
+
+    public void updateProjectApplyStatus(ProjectApplyStatus projectApplyStatus){
+        this.projectApplyStatus = projectApplyStatus;
     }
 }
 
