@@ -1,12 +1,13 @@
 package MakeUs.Moira.controller.user;
 
 import MakeUs.Moira.config.security.JwtTokenProvider;
-import MakeUs.Moira.controller.user.dto.AppliedProjectInfoResponseDto;
-import MakeUs.Moira.controller.user.dto.LikedProjectResponseDto;
-import MakeUs.Moira.controller.user.dto.MyPageResponseDto;
-import MakeUs.Moira.controller.user.dto.WrittenProjectInfoResponseDto;
+import MakeUs.Moira.controller.user.dto.myPage.AppliedProjectInfoResponseDto;
+import MakeUs.Moira.controller.user.dto.myPage.LikedProjectResponseDto;
+import MakeUs.Moira.controller.user.dto.myPage.MyPageResponseDto;
+import MakeUs.Moira.controller.user.dto.myPage.WrittenProjectInfoResponseDto;
 import MakeUs.Moira.response.ResponseService;
-import MakeUs.Moira.response.model.CommonResult;
+import MakeUs.Moira.response.model.ListResult;
+import MakeUs.Moira.response.model.SingleResult;
 import MakeUs.Moira.service.user.MyPageService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +37,7 @@ public class MyPageController {
                     "비회원인 경우 에러가 발생합니다."
     )
     @GetMapping(value = "/mypage")
-    public CommonResult getMyPage(@RequestHeader(value = "X-AUTH-TOKEN", required = true) String token) {
+    public SingleResult<MyPageResponseDto> getMyPage(@RequestHeader(value = "X-AUTH-TOKEN", required = true) String token) {
 //        if (token == null) throw new CustomAuthorizationException("로그인이 필요한 기능");
         // 권한 설정은 시큐리티에서 하자
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(token));
@@ -58,7 +59,7 @@ public class MyPageController {
                     "비회원인 경우 에러가 발생합니다."
     )
     @GetMapping(value = "/mypage/written")
-    public CommonResult getWrittenPost(@RequestHeader(value = "X-AUTH-TOKEN", required = true) String token) {
+    public ListResult<WrittenProjectInfoResponseDto> getWrittenPost(@RequestHeader(value = "X-AUTH-TOKEN", required = true) String token) {
         // 권한 설정은 시큐리티에서 하자
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(token));
         List<WrittenProjectInfoResponseDto> writtenProjectInfoResponseDtoList = myPageService.getWrittenProjectList(userId);
@@ -79,7 +80,7 @@ public class MyPageController {
                     "비회원인 경우 에러가 발생합니다."
     )
     @GetMapping(value = "/mypage/applied")
-    public CommonResult getAppliedPost(@RequestHeader(value = "X-AUTH-TOKEN", required = true) String token) {
+    public ListResult<AppliedProjectInfoResponseDto> getAppliedPost(@RequestHeader(value = "X-AUTH-TOKEN", required = true) String token) {
         // 권한 설정은 시큐리티에서 하자
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(token));
         List<AppliedProjectInfoResponseDto> appliedProjectInfoResponseDtoList = myPageService.getAppliedProjectList(userId);
@@ -100,9 +101,9 @@ public class MyPageController {
                     "비회원인 경우 에러가 발생합니다."
     )
     @GetMapping(value = "/mypage/like/project")
-    public CommonResult getLikedProject(@RequestHeader(value = "X-AUTH-TOKEN", required = true) String token,
-                                               @ApiParam(value = "포지션 카테고리 필터", required = true, allowableValues = "develop, director, designer") @RequestParam String positionCategory,
-                                               @ApiParam(value = "정렬 방식 필터", required = true, allowableValues = "date, hit") @RequestParam String sortby) {
+    public ListResult<LikedProjectResponseDto> getLikedProject(@RequestHeader(value = "X-AUTH-TOKEN", required = true) String token,
+                                                               @ApiParam(value = "포지션 카테고리 필터", required = true, allowableValues = "develop, director, designer") @RequestParam String positionCategory,
+                                                               @ApiParam(value = "정렬 방식 필터", required = true, allowableValues = "date, hit") @RequestParam String sortby) {
         // 권한 설정은 시큐리티에서 하자
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(token));
         List<LikedProjectResponseDto> likedProjectResponseDtoList = myPageService.getLikedProjectList(userId, positionCategory, sortby);

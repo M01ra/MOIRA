@@ -2,7 +2,11 @@ package MakeUs.Moira.controller.user;
 
 
 import MakeUs.Moira.config.security.JwtTokenProvider;
-import MakeUs.Moira.controller.user.dto.*;
+import MakeUs.Moira.controller.user.dto.signup.SignupRequestDto;
+import MakeUs.Moira.controller.user.dto.myPage.HashtagResponseDto;
+import MakeUs.Moira.controller.user.dto.signup.PositionCategoryResponseDto;
+import MakeUs.Moira.controller.user.dto.signup.PositionResponseDto;
+import MakeUs.Moira.controller.user.dto.signup.SignupResponseDto;
 import MakeUs.Moira.response.ResponseService;
 import MakeUs.Moira.response.model.CommonResult;
 import MakeUs.Moira.response.model.ListResult;
@@ -17,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 
-@Api(tags = {"회원가입"})
+@Api(tags = {"2. 회원가입"})
 @RequiredArgsConstructor
 @RestController
 public class SignupController {
@@ -36,7 +40,7 @@ public class SignupController {
                     + "성공 : 200\n"
                     + "실패: -100")
     @GetMapping(value = "/signup/nickname")
-    public CommonResult saveNickname(@ApiParam(value = "nickname", required = true) @RequestParam String nickname) {
+    public CommonResult isDuplicatedNickname(@ApiParam(value = "nickname", required = true) @RequestParam String nickname) {
         if(userService.isDuplicatedNickname(nickname)){
             return responseService.mappingFailCommonResultOnly(-100, "중복된 닉네임");
         } else {
@@ -101,13 +105,4 @@ public class SignupController {
 
         return responseService.mappingSingleResult(signupResponseDto, "회원가입 성공");
     }
-
-    /*
-        <다음 만들어야 하는 것>
-            - 포지션 + 태그들 => 유저 정보에 채우기
-            - User 객체에 포지션 넣기
-            - UserHistory에  객체에 태그 설정해서 넣기
-     */
-
-
 }

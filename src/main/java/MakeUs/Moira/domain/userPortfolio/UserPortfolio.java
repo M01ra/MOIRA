@@ -1,9 +1,9 @@
 package MakeUs.Moira.domain.userPortfolio;
 
 import MakeUs.Moira.domain.user.User;
-import MakeUs.Moira.domain.userPortfolio.privateProject.UserPrivateProject;
+import MakeUs.Moira.domain.userPortfolio.userPrivateProject.UserPrivateProject;
 import MakeUs.Moira.domain.userPortfolio.userAward.UserAward;
-import MakeUs.Moira.domain.userPortfolio.userCarrer.UserCareer;
+import MakeUs.Moira.domain.userPortfolio.userCareer.UserCareer;
 import MakeUs.Moira.domain.userPortfolio.userLicense.UserLicense;
 import MakeUs.Moira.domain.userPortfolio.userLink.UserLink;
 import MakeUs.Moira.domain.userPortfolio.userSchool.UserSchool;

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-@Api(tags = {"로그인"})
+@Api(tags = {"1. 로그인"})
 @RequiredArgsConstructor
 @RestController
 public class LoginController {

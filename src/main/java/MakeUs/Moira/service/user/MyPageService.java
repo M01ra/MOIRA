@@ -2,11 +2,10 @@ package MakeUs.Moira.service.user;
 
 import MakeUs.Moira.advice.exception.InvalidUserIdException;
 
-import MakeUs.Moira.controller.user.dto.AppliedProjectInfoResponseDto;
-import MakeUs.Moira.controller.user.dto.LikedProjectResponseDto;
-import MakeUs.Moira.controller.user.dto.MyPageResponseDto;
-
-import MakeUs.Moira.controller.user.dto.WrittenProjectInfoResponseDto;
+import MakeUs.Moira.controller.user.dto.myPage.AppliedProjectInfoResponseDto;
+import MakeUs.Moira.controller.user.dto.myPage.LikedProjectResponseDto;
+import MakeUs.Moira.controller.user.dto.myPage.MyPageResponseDto;
+import MakeUs.Moira.controller.user.dto.myPage.WrittenProjectInfoResponseDto;
 import MakeUs.Moira.domain.AuditorEntity;
 import MakeUs.Moira.domain.project.Project;
 import MakeUs.Moira.domain.project.ProjectLike;

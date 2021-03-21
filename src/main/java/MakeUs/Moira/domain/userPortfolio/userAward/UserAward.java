@@ -1,9 +1,15 @@
 package MakeUs.Moira.domain.userPortfolio.userAward;
 
 import MakeUs.Moira.domain.userPortfolio.UserPortfolio;
+import MakeUs.Moira.domain.userPortfolio.userCareer.UserCareer;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+@NoArgsConstructor
+@Getter
 @Entity
 public class UserAward {
 
@@ -18,4 +24,20 @@ public class UserAward {
 
     private String awardContent;
 
+    @Builder
+    public UserAward(String awardName, String awardContent) {
+        this.awardName = awardName;
+        this.awardContent = awardContent;
+    }
+
+    public UserAward updateUserPortfolio(UserPortfolio userPortfolio) {
+        if (this.userPortfolio != null) {
+            this.userPortfolio.getUserAwardList()
+                              .remove(this);
+        }
+        this.userPortfolio = userPortfolio;
+        userPortfolio.getUserAwardList()
+                     .add(this);
+        return this;
+    }
 }

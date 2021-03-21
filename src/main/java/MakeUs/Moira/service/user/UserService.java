@@ -3,9 +3,9 @@ package MakeUs.Moira.service.user;
 
 import MakeUs.Moira.advice.exception.DuplicatedNicknameException;
 import MakeUs.Moira.advice.exception.InvalidUserIdException;
-import MakeUs.Moira.controller.user.dto.HashtagResponseDto;
-import MakeUs.Moira.controller.user.dto.PositionResponseDto;
-import MakeUs.Moira.controller.user.dto.SignupResponseDto;
+import MakeUs.Moira.controller.user.dto.myPage.HashtagResponseDto;
+import MakeUs.Moira.controller.user.dto.signup.PositionResponseDto;
+import MakeUs.Moira.controller.user.dto.signup.SignupResponseDto;
 import MakeUs.Moira.domain.hashtag.HashtagRepo;
 import MakeUs.Moira.domain.position.PositionRepo;
 import MakeUs.Moira.domain.position.UserPosition;

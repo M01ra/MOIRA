@@ -2,9 +2,8 @@ package MakeUs.Moira.service.position;
 
 import MakeUs.Moira.domain.position.PositionCategoryRepo;
 import MakeUs.Moira.domain.position.PositionRepo;
-import MakeUs.Moira.controller.user.dto.PositionCategoryResponseDto;
-import MakeUs.Moira.controller.user.dto.PositionResponseDto;
-import MakeUs.Moira.domain.position.UserPosition;
+import MakeUs.Moira.controller.user.dto.signup.PositionCategoryResponseDto;
+import MakeUs.Moira.controller.user.dto.signup.PositionResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
