@@ -131,4 +131,9 @@ public class User implements UserDetails {
         this.userPosition = userPosition;
         return this;
     }
+
+    public User updateShorIntroduction(String shortIntroduction){
+        this.shortIntroduction = shortIntroduction;
+        return this;
+    }
 }

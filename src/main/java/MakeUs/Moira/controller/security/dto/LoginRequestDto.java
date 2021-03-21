@@ -8,7 +8,7 @@ import lombok.Getter;
 @Getter
 public class LoginRequestDto {
 
-    @ApiModelProperty(value = "SocialProvider", required = true)
+    @ApiModelProperty(value = "SocialProvider", required = true, allowableValues = "kakao, apple")
     private String socialProvider;
 
     @ApiModelProperty(value = "AccessToken", required = true)

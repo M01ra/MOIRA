@@ -8,6 +8,7 @@ import MakeUs.Moira.domain.userPool.UserPool;
 import MakeUs.Moira.domain.userPortfolio.UserPortfolio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @RequiredArgsConstructor
@@ -32,7 +33,7 @@ public class LoginService {
                        .orElse(-1L);
     }
 
-
+    @Transactional
     public Long save(String socialId, String providerName) {
 
         User userEntity = User.builder() //
