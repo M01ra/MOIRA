@@ -3,10 +3,12 @@ package MakeUs.Moira.domain.project.projectApply;
 import MakeUs.Moira.domain.position.UserPosition;
 import MakeUs.Moira.domain.project.projectDetail.ProjectDetail;
 import MakeUs.Moira.domain.user.User;
+import lombok.Getter;
 
 import javax.persistence.*;
 import java.util.List;
 
+@Getter
 @Entity
 public class ProjectApply {
 

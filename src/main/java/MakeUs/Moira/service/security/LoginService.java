@@ -5,11 +5,10 @@ import MakeUs.Moira.domain.security.token.TokenProvider;
 import MakeUs.Moira.domain.security.token.TokenProviderFactory;
 import MakeUs.Moira.domain.user.*;
 import MakeUs.Moira.domain.userPool.UserPool;
-import MakeUs.Moira.domain.userPool.UserPoolRepo;
 import MakeUs.Moira.domain.userPortfolio.UserPortfolio;
-import MakeUs.Moira.domain.userPortfolio.UserPortfolioRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @RequiredArgsConstructor
@@ -34,7 +33,7 @@ public class LoginService {
                        .orElse(-1L);
     }
 
-
+    @Transactional
     public Long save(String socialId, String providerName) {
 
         User userEntity = User.builder() //

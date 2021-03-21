@@ -3,9 +3,9 @@ package MakeUs.Moira.service.user;
 
 import MakeUs.Moira.advice.exception.DuplicatedNicknameException;
 import MakeUs.Moira.advice.exception.InvalidUserIdException;
-import MakeUs.Moira.controller.user.dto.HashtagResponseDto;
-import MakeUs.Moira.controller.user.dto.PositionResponseDto;
-import MakeUs.Moira.controller.user.dto.SignupResponseDto;
+import MakeUs.Moira.controller.user.dto.myPage.HashtagResponseDto;
+import MakeUs.Moira.controller.user.dto.signup.PositionResponseDto;
+import MakeUs.Moira.controller.user.dto.signup.SignupResponseDto;
 import MakeUs.Moira.domain.hashtag.HashtagRepo;
 import MakeUs.Moira.domain.position.PositionRepo;
 import MakeUs.Moira.domain.position.UserPosition;
@@ -42,7 +42,7 @@ public class UserService {
 
 
     @Transactional
-    public SignupResponseDto Signup(Long userId, String nickname, Long positionId, List<Long> hashtagIdList) {
+    public SignupResponseDto signup(Long userId, String nickname, Long positionId, List<Long> hashtagIdList) {
 
         // 1. 유저 엔티티
         User userEntity = findUserById(userId);
@@ -58,7 +58,7 @@ public class UserService {
 
         // 4. UserHistory 가져오기 + hashtagId 로 hashtagList 가져오기 => UserHashtag 만들고 저장
         UserHistory userHistoryEntity = userEntity.getUserHistory();
-        if ( !userHistoryEntity.getUserHashtags().isEmpty()){
+        if (!userHistoryEntity.getUserHashtags().isEmpty()) {
 
             userHistoryEntity.getUserHashtags()
                              .forEach(userHashtagRepo::delete);
@@ -88,7 +88,7 @@ public class UserService {
                                                                     .getUserHashtags()
                                                                     .stream()
                                                                     .map(userHashtag -> HashtagResponseDto.builder()
-                                                                                                          .id(userHashtag.getHashtag()
+                                                                                                          .hashtagId(userHashtag.getHashtag()
                                                                                                                          .getId())
                                                                                                           .hashtagName(userHashtag.getHashtag()
                                                                                                                                   .getHashtagName())
