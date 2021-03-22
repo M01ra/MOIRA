@@ -2,11 +2,15 @@ package MakeUs.Moira.domain.userReview;
 
 import MakeUs.Moira.domain.user.User;
 import MakeUs.Moira.domain.user.UserProject;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
 
 
+@NoArgsConstructor
+@Getter
 @Entity
 public class UserReview {
 
