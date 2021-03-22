@@ -1,7 +1,12 @@
 package MakeUs.Moira.domain.complimentMark;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
+@NoArgsConstructor
+@Getter
 @Entity
 public class ComplimentMarkInfo {
 

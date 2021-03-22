@@ -6,6 +6,7 @@ import MakeUs.Moira.domain.user.UserRole;
 import MakeUs.Moira.response.ResponseService;
 import MakeUs.Moira.response.model.CommonResult;
 import MakeUs.Moira.response.model.SingleResult;
+import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
+@Api(tags = {"99.예외처리"})
 @RequiredArgsConstructor
 @RequestMapping(value = "/exception")
 @RestController

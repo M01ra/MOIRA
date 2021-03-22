@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 
-@Api(tags = {"인재 풀"})
+@Api(tags = {"5.인재 풀"})
 @RequiredArgsConstructor
 @RestController
 public class UserPoolController {
