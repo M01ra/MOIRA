@@ -33,7 +33,7 @@ public class UserHistory {
     @OneToMany(mappedBy = "userHistory")
     private List<ProjectLike> projectLikes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "userHistory")
+    @OneToMany(mappedBy = "userHistory", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserPoolLike> userPoolLikes = new ArrayList<>();
 
     @OneToMany(mappedBy = "userHistory")
