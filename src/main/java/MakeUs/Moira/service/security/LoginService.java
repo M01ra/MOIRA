@@ -43,7 +43,6 @@ public class LoginService {
                               .build();
         userEntity.updateUserHistory(new UserHistory());
         userEntity.updateUserPortfolio(new UserPortfolio());
-        userEntity.updateUserPool(new UserPool());
 
         return userRepo.save(userEntity)
                        .getId();
