@@ -5,6 +5,7 @@ import lombok.Getter;
 
 @Getter
 public class ProjectMemberResponseDto {
+    private Long    userProjectId;
     private Long    userId;
     private String  userProfileImage;
     private String  nickname;
@@ -14,6 +15,7 @@ public class ProjectMemberResponseDto {
 
     public ProjectMemberResponseDto(Long loginUserId, UserProject userProject)
     {
+        this.userProjectId = userProject.getId();
         this.userId = userProject.getUserHistory()
                                  .getUser()
                                  .getId();

@@ -14,8 +14,6 @@ public class ComplimentMarkInfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String complimentMarkImageUrl;
-
     private String markName;
 
     private String content;

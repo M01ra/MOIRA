@@ -38,8 +38,15 @@ public class UserPool extends AuditorEntity {
         return this;
     }
 
-    public UserPool updateLikeCount(int value){
+    public UserPool updateLikeCount(int value) {
         likeCount += value;
         return this;
+    }
+
+    public boolean isDesiredPositionCategory(String positionCategoryName) {
+        return this.user.getUserPosition()
+                        .getPositionCategory()
+                        .getCategoryName()
+                        .equals(positionCategoryName);
     }
 }
