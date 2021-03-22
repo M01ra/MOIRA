@@ -81,8 +81,9 @@ public class ProjectController {
     @GetMapping
     public ListResult<ProjectsResponseDTO> getProjects(@ApiParam(value = "태그, 여러개 입력시 ,로 구분.\nex) tag=AOS,IOS,WEB") @RequestParam(name = "tag", required = false) String tag,
                                                        @ApiParam(value = "정렬 방식(최신 순(기본 값): modifiedDate, 조회순: hitCount, 좋아요순: likeCount)") @RequestParam(name = "sort", required = false, defaultValue = "modifiedDate") String sort,
-                                                       @ApiParam(value = "페이지(기본 값 : 0)") @RequestParam(name = "page", required = false, defaultValue = "0") int page){
-        List<ProjectsResponseDTO> projectDTOList = projectService.getProjects(tag, sort, page);
+                                                       @ApiParam(value = "페이지(기본 값 : 0)") @RequestParam(name = "page", required = false, defaultValue = "0") int page,
+                                                       @ApiParam(value = "검색어") @RequestParam(name = "keyword", required = false) String keyword){
+        List<ProjectsResponseDTO> projectDTOList = projectService.getProjects(tag, sort, page, keyword);
         return responseService.mappingListResult(projectDTOList, "프로젝트 조회 성공");
     }
 

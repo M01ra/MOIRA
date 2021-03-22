@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @NoArgsConstructor
-@Getter
 @Entity
+@Getter
 public class UserLink {
 
     @Id
