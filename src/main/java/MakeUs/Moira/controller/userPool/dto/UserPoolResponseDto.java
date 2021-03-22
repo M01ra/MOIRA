@@ -48,6 +48,5 @@ public class UserPoolResponseDto {
                                       .anyMatch(userPoolLike -> userPoolLike.getUserPool()
                                                                             .getId()
                                                                             .equals(userPoolPost.getId()));
-
     }
 }

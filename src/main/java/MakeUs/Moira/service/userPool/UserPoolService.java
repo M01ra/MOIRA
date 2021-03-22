@@ -33,30 +33,41 @@ public class UserPoolService {
 
 
     @Transactional
-    public boolean addUserPool(Long userId) {
-        try {
-            User userEntity = getUserEntity(userId);
-            userEntity.updateUserPool(new UserPool());
-            UserPool userPoolEntity = userEntity.getUserPool();
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+    public void switchUserPoolVisibility(Long userId) {
+        User userEntity = getUserEntity(userId);
+        userEntity.getUserPool()
+                  .switchVisible();
     }
 
 
-    public List<UserPoolResponseDto> getUserPoolList(Long userId, int page, String positionCategory,
-                                                     String sortKeyword)
+    public List<UserPoolResponseDto> getUserPool(Long userId, int page, String positionCategory,
+                                                 String sortKeyword)
     {
         User userEntity = getUserEntity(userId);
 
         String positionCategoryFilter = parseToFilter(positionCategory);
         Pageable pageable = getPageableWithSortKeyword(page, sortKeyword);
-        List<UserPool> userPoolListFiltered = userPoolRepo.findAllByUser_UserPosition_PositionCategory_CategoryName(positionCategoryFilter, pageable);
+        List<UserPool> userPoolFilteredList = userPoolRepo.findAllByUser_UserPosition_PositionCategory_CategoryName(positionCategoryFilter, pageable);
 
-        return userPoolListFiltered.stream()
+        return userPoolFilteredList.stream()
+                                   .filter(UserPool::isVisible)
                                    .map(userPoolFiltered -> new UserPoolResponseDto(userEntity, userPoolFiltered))
                                    .collect(Collectors.toList());
+    }
+
+
+    public List<UserPoolResponseDto> getUserPoolByNickname(Long userId, String keyword) {
+
+        keywordLengthValidation(keyword);
+
+        User userEntity = getUserEntity(userId);
+
+        List<User> userResultList = userRepo.findByNicknameContaining(keyword);
+        return userResultList.stream()
+                             .map(User::getUserPool)
+                             .filter(UserPool::isVisible)
+                             .map(userPool -> new UserPoolResponseDto(userEntity, userPool))
+                             .collect(Collectors.toList());
     }
 
 
@@ -64,8 +75,7 @@ public class UserPoolService {
     public UserPoolLikeAddResponse updateUserPoolLike(Long userId, Long userPoolId) {
 
         UserHistory userHistoryEntity = getUserEntity(userId).getUserHistory();
-        UserPool userPoolEntity = userPoolRepo.findById(userPoolId)
-                                              .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 userPoolId"));
+        UserPool userPoolEntity = getUserPoolEntity(userPoolId);
 
         UserPoolLike userPoolLikeEntity = getUserPoolLikeEntity(userPoolId, userHistoryEntity, userPoolEntity);
         return new UserPoolLikeAddResponse(userPoolLikeEntity);
@@ -73,8 +83,8 @@ public class UserPoolService {
 
 
     public UserPoolDetailProfileResponseDto getUserPoolDetailProfile(Long userPoolId) {
-        UserPool userPoolEntity = userPoolRepo.findById(userPoolId)
-                                              .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 userPoolId"));
+        UserPool userPoolEntity = getUserPoolEntity(userPoolId);
+        userPoolEntity.updateHitCount();
         UserPortfolio userPortfolioEntity = userPoolEntity.getUser()
                                                           .getUserPortfolio();
         return new UserPoolDetailProfileResponseDto(userPortfolioEntity);
@@ -86,10 +96,15 @@ public class UserPoolService {
                        .orElseThrow(() -> new InvalidUserIdException("유효하지 않은 userId"));
     }
 
+    private UserPool getUserPoolEntity(Long userPoolId) {
+        return userPoolRepo.findById(userPoolId)
+                           .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 userPoolId"));
+    }
+
     private Pageable getPageableWithSortKeyword(int page, String sortby) {
         switch (sortby) {
             case "date": {
-                return PageRequest.of(page - 1, 10, Sort.by("createdDate")
+                return PageRequest.of(page - 1, 10, Sort.by("modifiedDate")
                                                         .descending());
             }
             case "hit": {
@@ -126,22 +141,27 @@ public class UserPoolService {
         UserPoolLike userPoolLikeEntity = userPoolLikeRepo.findByUserHistory_IdAndUserPool_Id(userHistoryEntity.getId(), userPoolId);
 
         // UserPoolLike 가 이미 있는지 검사
-        //      a) 있으면, 값만 변경
-        //      b) 없으면, 새로 생성
 
+        //      a) 있으면, 값만 변경
         if (userPoolLikeEntity != null) {
             userPoolLikeEntity.switchIsLiked();
             return userPoolLikeEntity;
-        } else {
-            UserPoolLike newUserPoolLikeEntity = new UserPoolLike();
-            newUserPoolLikeEntity.updateUserPool(userPoolEntity)
-                                 .updateUserHistory(userHistoryEntity);
-            newUserPoolLikeEntity.getUserPool()
-                                 .updateLikeCount(+1);
-            //userPoolLikeRepo.saveAndFlush(newUserPoolLikeEntity);
-            return newUserPoolLikeEntity;
         }
+
+        //      b) 없으면, 새로 생성
+        UserPoolLike newUserPoolLikeEntity = new UserPoolLike();
+        newUserPoolLikeEntity.updateUserPool(userPoolEntity)
+                             .updateUserHistory(userHistoryEntity);
+        newUserPoolLikeEntity.getUserPool()
+                             .updateLikeCount(+1);
+        //userPoolLikeRepo.saveAndFlush(newUserPoolLikeEntity);
+        return newUserPoolLikeEntity;
+
     }
 
-
+    private void keywordLengthValidation(String keyword) {
+        if (keyword.length() < 3) {
+            throw new IllegalArgumentException("검색어의 길이가 3글자 미만입니다.");
+        }
+    }
 }
