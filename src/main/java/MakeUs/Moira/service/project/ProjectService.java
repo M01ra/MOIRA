@@ -174,7 +174,7 @@ public class ProjectService {
 
 
     @Transactional
-    public List<ProjectsResponseDTO> getProjects(String tag, String sort, int page) {
+    public List<ProjectsResponseDTO> getProjects(String tag, String sort, int page, String keyword) {
         isValidSort(sort);
         // 10개씩 page부터 sort 정렬방식
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sort).descending());
@@ -186,11 +186,17 @@ public class ProjectService {
             for (String tagName : tags) {
                 getValidHashtag(tagName);
             }
-            projectsResponseInterfaceList = projectRepo.findProjectsByTagOrderPage(tags, pageable);
+            // 검색 조건에 키워드가 있을 경우
+            if(keyword != null) projectsResponseInterfaceList = projectRepo.findProjectsByOrderPageTagKeyword(tags, keyword, pageable);
+            // 검색 조건에 키워드가 없을 경우
+            else projectsResponseInterfaceList = projectRepo.findProjectsByOrderPageTag(tags, pageable);
         }
         // 검색 조건에 태그가 없을 경우
         else {
-            projectsResponseInterfaceList = projectRepo.findProjectsByOrderPage(pageable);
+            // 검색 조건에 키워드가 있을 경우
+            if(keyword != null) projectsResponseInterfaceList = projectRepo.findProjectsByOrderPageKeyword(keyword, pageable);
+            // 검색 조건에 키워드가 없을 경우
+            else projectsResponseInterfaceList = projectRepo.findProjectsByOrderPage(pageable);
         }
 
         return projectsResponseInterfaceList

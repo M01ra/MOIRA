@@ -56,6 +56,14 @@ public class ProjectDetail {
         projectApplyList.add(projectApply);
     }
 
+    public void removeProjectComment(ProjectComment projectComment){
+        projectCommentList.remove(projectComment);
+    }
+
+    public void removeProjectApply(ProjectApply projectApply){
+        projectApplyList.remove(projectApply);
+    }
+
     public void addProjectQuestion(ProjectQuestion projectQuestion){
         projectQuestionList.add(projectQuestion);
     }
@@ -64,11 +72,4 @@ public class ProjectDetail {
         projectPositionList.add(projectPosition);
     }
 
-    public void updateProjectQuestionList(List<ProjectQuestion> projectQuestionList) {
-        this.projectQuestionList = projectQuestionList;
-    }
-
-    public void updateProjectPositionList(List<ProjectPosition> projectPositionList) {
-        this.projectPositionList = projectPositionList;
-    }
 }
