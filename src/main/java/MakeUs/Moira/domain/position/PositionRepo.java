@@ -6,7 +6,5 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PositionRepo extends JpaRepository<UserPosition, Long> {
-    Optional<UserPosition> findByPositionName(String positionName);
-
     List<UserPosition> findAllByPositionCategory_Id(Long positionCategoryId);
 }
