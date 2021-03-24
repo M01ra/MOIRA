@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 
-@Api(tags = {"나의 프로젝트(팀)"})
+@Api(tags = {"3-4.나의 프로젝트(팀)"})
 @RestController
 @RequestMapping("/myProject")
 @RequiredArgsConstructor
