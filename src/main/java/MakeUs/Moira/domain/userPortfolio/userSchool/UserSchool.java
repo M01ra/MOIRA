@@ -5,13 +5,14 @@ import MakeUs.Moira.domain.userPortfolio.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+
 import javax.persistence.*;
 import java.time.LocalDate;
 
 
 @NoArgsConstructor
-@Getter
 @Entity
+@Getter
 public class UserSchool {
 
     @Id

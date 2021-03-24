@@ -9,8 +9,8 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 @NoArgsConstructor
-@Getter
 @Entity
+@Getter
 public class UserLicense {
 
     @Id

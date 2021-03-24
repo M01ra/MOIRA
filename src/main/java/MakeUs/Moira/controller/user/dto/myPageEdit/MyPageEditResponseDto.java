@@ -6,12 +6,11 @@ import MakeUs.Moira.controller.userPortfolio.userAward.dto.UserAwardResponseDto;
 import MakeUs.Moira.controller.userPortfolio.userCareer.dto.UserCareerResponseDto;
 import MakeUs.Moira.controller.userPortfolio.userLicense.dto.UserLicenseResponseDto;
 import MakeUs.Moira.controller.userPortfolio.userLink.dto.UserLinkResponseDto;
-import MakeUs.Moira.controller.userPortfolio.userPrivateProject.dto.UserPrivateProjectResponseDto;
+
 import MakeUs.Moira.controller.userPortfolio.userSchool.dto.UserSchoolResponseDto;
 import MakeUs.Moira.domain.user.User;
 
 import MakeUs.Moira.domain.userPortfolio.UserPortfolio;
-import lombok.Builder;
 import lombok.Getter;
 
 import java.util.List;

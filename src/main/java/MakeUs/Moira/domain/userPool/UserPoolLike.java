@@ -40,7 +40,6 @@ public class UserPoolLike {
     }
 
     public UserPoolLike switchIsLiked() {
-
         this.isUserPoolLiked = !this.isUserPoolLiked;
 
         if (this.isUserPoolLiked) {
@@ -48,7 +47,6 @@ public class UserPoolLike {
         } else {
             this.userPool.updateLikeCount(-1);
         }
-
         return this;
     }
 }

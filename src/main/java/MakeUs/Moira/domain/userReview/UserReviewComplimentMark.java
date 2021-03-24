@@ -1,9 +1,7 @@
 package MakeUs.Moira.domain.userReview;
 
+import MakeUs.Moira.domain.AuditorEntity;
 import MakeUs.Moira.domain.complimentMark.ComplimentMarkInfo;
-import MakeUs.Moira.domain.hashtag.Hashtag;
-import MakeUs.Moira.domain.user.UserHashtag;
-import MakeUs.Moira.domain.user.UserHistory;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -12,7 +10,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Getter
 @Entity
-public class UserReviewComplimentMark {
+public class UserReviewComplimentMark extends AuditorEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,5 +37,11 @@ public class UserReviewComplimentMark {
     public UserReviewComplimentMark updateComplimentMarkInfo(ComplimentMarkInfo complimentMarkInfo) {
         this.complimentMarkInfo = complimentMarkInfo;
         return this;
+    }
+
+    public boolean isGivenComplimentMarkId(Long complimentMarkId) {
+        return this.getComplimentMarkInfo()
+            .getId()
+            .equals(complimentMarkId);
     }
 }
