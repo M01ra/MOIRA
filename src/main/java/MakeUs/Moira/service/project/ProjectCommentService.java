@@ -1,8 +1,8 @@
 package MakeUs.Moira.service.project;
 
 import MakeUs.Moira.advice.exception.ProjectException;
-import MakeUs.Moira.controller.project.dto.ProjectCommentRequestDTO;
-import MakeUs.Moira.controller.project.dto.ProjectCommentResponseDTO;
+import MakeUs.Moira.controller.project.dto.projectComment.ProjectCommentRequestDTO;
+import MakeUs.Moira.controller.project.dto.projectComment.ProjectCommentResponseDTO;
 import MakeUs.Moira.domain.project.Project;
 import MakeUs.Moira.domain.project.ProjectRepo;
 import MakeUs.Moira.domain.project.projectDetail.ProjectComment;

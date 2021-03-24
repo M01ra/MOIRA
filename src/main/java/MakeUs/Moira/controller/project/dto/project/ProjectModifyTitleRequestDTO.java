@@ -1,4 +1,4 @@
-package MakeUs.Moira.controller.project.dto;
+package MakeUs.Moira.controller.project.dto.project;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
