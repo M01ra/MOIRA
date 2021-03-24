@@ -56,14 +56,17 @@ public class ProjectService {
         projectEntity = projectRepo.save(projectEntity);
 
         // 태그
-        for(String hashtagName : projectRequestDTO.getHashtagList()){
-            projectEntity.addProjectHashtagList(
-                    ProjectHashtag.builder()
-                                  .projectHashtag(getValidHashtag(hashtagName))
-                                  .project(projectEntity)
-                                  .build()
-            );
+        if(projectRequestDTO.getHashtagList() != null){
+            for(String hashtagName : projectRequestDTO.getHashtagList()){
+                projectEntity.addProjectHashtagList(
+                        ProjectHashtag.builder()
+                                      .projectHashtag(getValidHashtag(hashtagName))
+                                      .project(projectEntity)
+                                      .build()
+                );
+            }
         }
+
 
         // ProjectDetail 생성
         ProjectDetail projectDetailEntity = ProjectDetail.builder()
@@ -75,17 +78,19 @@ public class ProjectService {
 
 
         // 프로젝트 포지션 리스트
-        for (ProjectPositionCategoryDTO projectPositionCategoryDTO : projectRequestDTO.getPositionCategoryList()) {
-            PositionCategory positionCategoryEntity = positionCategoryRepo.findByCategoryName(projectPositionCategoryDTO.getPositionCategoryName())
-                                                                          .orElseThrow(() -> new ProjectException("존재하지 않은 포지션 카테고리"));
+        if(projectRequestDTO.getPositionCategoryList() != null) {
+            for (ProjectPositionCategoryDTO projectPositionCategoryDTO : projectRequestDTO.getPositionCategoryList()) {
+                PositionCategory positionCategoryEntity = positionCategoryRepo.findByCategoryName(projectPositionCategoryDTO.getPositionCategoryName())
+                                                                              .orElseThrow(() -> new ProjectException("존재하지 않은 포지션 카테고리"));
 
-            projectDetailEntity.addProjectPosition(
-                    ProjectPosition.builder()
-                            .projectDetail(projectDetailEntity)
-                            .recruitPositionCount(projectPositionCategoryDTO.getCount())
-                            .recruitUserPositionCategory(positionCategoryEntity)
-                            .build()
-            );
+                projectDetailEntity.addProjectPosition(
+                        ProjectPosition.builder()
+                                       .projectDetail(projectDetailEntity)
+                                       .recruitPositionCount(projectPositionCategoryDTO.getCount())
+                                       .recruitUserPositionCategory(positionCategoryEntity)
+                                       .build()
+                );
+            }
         }
 
         projectEntity.updateProjectDetail(projectDetailEntity);
