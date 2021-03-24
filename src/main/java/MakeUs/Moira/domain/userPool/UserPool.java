@@ -33,6 +33,8 @@ public class UserPool extends AuditorEntity {
 
     private int hitCount = 0;
 
+    private boolean isVisible = false;
+
     public UserPool updateUser(User user) {
         this.user = user;
         return this;
@@ -40,6 +42,16 @@ public class UserPool extends AuditorEntity {
 
     public UserPool updateLikeCount(int value) {
         likeCount += value;
+        return this;
+    }
+
+    public UserPool updateHitCount() {
+        this.hitCount += 1;
+        return this;
+    }
+
+    public UserPool switchVisible() {
+        this.isVisible = !this.isVisible;
         return this;
     }
 

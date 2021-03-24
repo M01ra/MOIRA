@@ -1,6 +1,6 @@
 package MakeUs.Moira.domain.userReview;
 
-import MakeUs.Moira.controller.userReview.dto.UserReviewAddRequestDto;
+import MakeUs.Moira.domain.AuditorEntity;
 import MakeUs.Moira.domain.user.User;
 import MakeUs.Moira.domain.user.UserProject;
 import lombok.Builder;
@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Entity
-public class UserReview {
+public class UserReview extends AuditorEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
