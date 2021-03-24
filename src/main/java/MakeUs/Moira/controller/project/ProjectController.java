@@ -81,7 +81,7 @@ public class ProjectController {
 
 
     @ApiOperation(
-            value = "팀원 모집 - 팀원 찾기",
+            value = "팀원 모집 - 모집글 리스트",
             notes = "프로젝트(팀)들을 태그(tag), 정렬 방식(sort), 포지션(position), Page에 따라 10개씩 조회합니다.\n" +
                     "태그, 정렬 방식, 포지션, Page,는 모두 필수가 아니며 미입력시 기본 값이 적용됩니다.\n" +
                     "키워드를 포함할 시 다른 조건(태그, 정렬, 포지션)는 무시되고 키워드로 검색됩니다.")
