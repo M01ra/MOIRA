@@ -1,5 +1,6 @@
 package MakeUs.Moira.domain.userPool;
 
+import MakeUs.Moira.controller.userPool.dto.UserPoolOnOffResponseDto;
 import MakeUs.Moira.domain.AuditorEntity;
 
 import MakeUs.Moira.domain.user.User;
@@ -50,9 +51,8 @@ public class UserPool extends AuditorEntity {
         return this;
     }
 
-    public UserPool switchVisible() {
+    public void switchVisible() {
         this.isVisible = !this.isVisible;
-        return this;
     }
 
     public boolean isDesiredPositionCategory(String positionCategoryName) {
@@ -60,5 +60,13 @@ public class UserPool extends AuditorEntity {
                         .getPositionCategory()
                         .getCategoryName()
                         .equals(positionCategoryName);
+    }
+
+    public UserPoolOnOffResponseDto toUserPoolOnOffResponseDto(){
+        return UserPoolOnOffResponseDto.builder()
+                                       .userId(getUser().getId())
+                                       .userPoolId(id)
+                                       .isVisible(isVisible)
+                                       .build();
     }
 }

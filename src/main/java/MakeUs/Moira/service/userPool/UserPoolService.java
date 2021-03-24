@@ -37,10 +37,10 @@ public class UserPoolService {
 
 
     @Transactional
-    public void switchUserPoolVisibility(Long userId) {
-        User userEntity = getUserEntity(userId);
-        userEntity.getUserPool()
-                  .switchVisible();
+    public UserPoolOnOffResponseDto switchUserPoolVisibility(Long userId) {
+        UserPool userPoolEntity = getUserEntity(userId).getUserPool();
+        userPoolEntity.switchVisible();
+        return userPoolEntity.toUserPoolOnOffResponseDto();
     }
 
 
