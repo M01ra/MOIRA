@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(tags = {"6.유저 리뷰"})
+@Api(tags = {"5.유저 리뷰"})
 @RequiredArgsConstructor
 @RestController
 public class ComplimentMarkController {
