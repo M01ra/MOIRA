@@ -1,4 +1,4 @@
-package MakeUs.Moira.controller.project.dto;
+package MakeUs.Moira.controller.project.dto.projectApply;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModelProperty;
