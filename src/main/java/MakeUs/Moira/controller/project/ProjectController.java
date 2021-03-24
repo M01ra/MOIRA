@@ -14,7 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-@Api(tags = {"3.프로젝트(팀)"})
+@Api(tags = {"3-1.프로젝트(팀)"})
 @RestController
 @RequestMapping("/project")
 @RequiredArgsConstructor
