@@ -56,4 +56,11 @@ public class UserReview extends AuditorEntity {
         this.writtenUser = user;
         return this;
     }
+
+    public boolean hasComplimentMark(Long complimentMarkId) {
+        return this.userReviewComplimentMarkList.stream()
+                                                .anyMatch(userReviewComplimentMark -> userReviewComplimentMark.getComplimentMarkInfo()
+                                                                                                              .getId()
+                                                                                                              .equals(complimentMarkId));
+    }
 }

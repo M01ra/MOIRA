@@ -38,10 +38,4 @@ public class UserReviewComplimentMark extends AuditorEntity {
         this.complimentMarkInfo = complimentMarkInfo;
         return this;
     }
-
-    public boolean isGivenComplimentMarkId(Long complimentMarkId) {
-        return this.getComplimentMarkInfo()
-            .getId()
-            .equals(complimentMarkId);
-    }
 }

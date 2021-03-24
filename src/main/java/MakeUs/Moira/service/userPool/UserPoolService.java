@@ -4,7 +4,6 @@ package MakeUs.Moira.service.userPool;
 import MakeUs.Moira.advice.exception.InvalidUserIdException;
 import MakeUs.Moira.controller.userPool.dto.*;
 
-import MakeUs.Moira.domain.AuditorEntity;
 import MakeUs.Moira.domain.complimentMark.ComplimentMarkInfo;
 import MakeUs.Moira.domain.complimentMark.ComplimentMarkInfoRepo;
 import MakeUs.Moira.domain.user.*;
@@ -14,8 +13,8 @@ import MakeUs.Moira.domain.userPool.UserPoolLikeRepo;
 import MakeUs.Moira.domain.userPool.UserPoolRepo;
 import MakeUs.Moira.domain.userPortfolio.UserPortfolio;
 
-import MakeUs.Moira.domain.userReview.UserReviewComplimentMark;
-import MakeUs.Moira.domain.userReview.UserReviewComplimentMarkRepo;
+import MakeUs.Moira.domain.userReview.UserReview;
+import MakeUs.Moira.domain.userReview.UserReviewRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,8 +22,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,11 +29,11 @@ import java.util.stream.Collectors;
 @Service
 public class UserPoolService {
 
-    private final UserRepo                     userRepo;
-    private final UserPoolRepo                 userPoolRepo;
-    private final UserPoolLikeRepo             userPoolLikeRepo;
-    private final UserReviewComplimentMarkRepo userReviewComplimentMarkRepo;
-    private final ComplimentMarkInfoRepo       complimentMarkInfoRepo;
+    private final UserRepo               userRepo;
+    private final UserPoolRepo           userPoolRepo;
+    private final UserPoolLikeRepo       userPoolLikeRepo;
+    private final UserReviewRepo         userReviewRepo;
+    private final ComplimentMarkInfoRepo complimentMarkInfoRepo;
 
 
     @Transactional
@@ -100,16 +97,15 @@ public class UserPoolService {
 
 
     public UserPoolDetailReviewResponseDto getUserPoolDetailReview(Long userPoolId) {
+        Long userHistoryId = getUserHistoryEntity(userPoolId).getId();
 
-        UserHistory userHistoryEntity = getUserHistoryEntity(userPoolId);
-        List<UserReviewComplimentMark> userReviewComplimentMarkList =
-                userReviewComplimentMarkRepo.findAllByUserReview_UserProject_UserHistory_Id(userHistoryEntity.getId());
+        List<UserReview> userReviewList = getUserReviewList(userHistoryId);
+        List<ComplimentMarkInfo> complimentMarkInfoList = complimentMarkInfoRepo.findAll();
 
-        userReviewComplimentMarkList.sort(Comparator.comparing(AuditorEntity::getCreatedDate));
+        List<ComplimentMarkWithCountDto> complimentMarkWithCountDtoList
+                = getComplimentMarkWithCountDtoList(userReviewList, complimentMarkInfoList);
 
-        List<ComplimentMarkCountDto> complimentMarkCountDtoList = getComplimentMarkCountDtoList(userReviewComplimentMarkList);
-
-        return new UserPoolDetailReviewResponseDto(userHistoryEntity, userReviewComplimentMarkList, complimentMarkCountDtoList);
+        return new UserPoolDetailReviewResponseDto(userReviewList, complimentMarkWithCountDtoList);
     }
 
 
@@ -194,36 +190,15 @@ public class UserPoolService {
         }
     }
 
-    private List<ComplimentMarkCountDto> getComplimentMarkCountDtoList(List<UserReviewComplimentMark> userReviewComplimentMarkList)
-    {
-        List<ComplimentMarkInfo> complimentMarkInfoList = complimentMarkInfoRepo.findAll();
-        List<ComplimentMarkCountDto> complimentMarkCountDtoList = new ArrayList<>();
-
-        complimentMarkInfoList.forEach(complimentMarkInfo -> {
-            ComplimentMarkCountDto complimentMarkCountDto = getComplimentMarkCountDto(userReviewComplimentMarkList, complimentMarkInfo);
-            complimentMarkCountDtoList.add(complimentMarkCountDto);
-        });
-        return complimentMarkCountDtoList;
+    private List<UserReview> getUserReviewList(Long userHistoryId) {
+        return userReviewRepo.findAllByUserProject_UserHistory_Id(userHistoryId);
     }
 
-    private ComplimentMarkCountDto getComplimentMarkCountDto(List<UserReviewComplimentMark> userReviewComplimentMarkList,
-                                                             ComplimentMarkInfo complimentMarkInfo)
+    private List<ComplimentMarkWithCountDto> getComplimentMarkWithCountDtoList(List<UserReview> userReviewList,
+                                                                               List<ComplimentMarkInfo> complimentMarkInfoList)
     {
-        ComplimentMarkCountDto complimentMarkCountDto = new ComplimentMarkCountDto(complimentMarkInfo);
-
-        Long complimentMarkInfoId = complimentMarkInfo.getId();
-        Long complimentMarkCount = countComplimentMark(userReviewComplimentMarkList, complimentMarkInfoId);
-
-        complimentMarkCountDto.updateComplimentMarkCount(complimentMarkCount);
-
-        return complimentMarkCountDto;
-    }
-
-    private Long countComplimentMark(List<UserReviewComplimentMark> userReviewComplimentMarkList,
-                                     Long complimentMarkId)
-    {
-        return userReviewComplimentMarkList.stream()
-                                           .filter(userReviewComplimentMark -> userReviewComplimentMark.isGivenComplimentMarkId(complimentMarkId))
-                                           .count();
+        return complimentMarkInfoList.stream()
+                                     .map(complimentMarkInfo -> complimentMarkInfo.getComplimentMarkWithCountDto(userReviewList))
+                                     .collect(Collectors.toList());
     }
 }

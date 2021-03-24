@@ -6,11 +6,13 @@ import MakeUs.Moira.controller.userPool.dto.UserPoolDetailProfileResponseDto;
 import MakeUs.Moira.controller.userPool.dto.UserPoolDetailReviewResponseDto;
 import MakeUs.Moira.controller.userPool.dto.UserPoolLikeAddResponse;
 import MakeUs.Moira.controller.userPool.dto.UserPoolResponseDto;
+import MakeUs.Moira.controller.userReview.dto.UserReviewResponseDto;
 import MakeUs.Moira.response.ResponseService;
 import MakeUs.Moira.response.model.CommonResult;
 import MakeUs.Moira.response.model.ListResult;
 import MakeUs.Moira.response.model.SingleResult;
 import MakeUs.Moira.service.userPool.UserPoolService;
+import MakeUs.Moira.service.userReview.UserReviewService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -109,7 +111,7 @@ public class UserPoolController {
             notes = "- 팀원 찾기 - 인재풀의 게시글에 좋아요를 ON/OFF 합니다.\n" +
                     "- 비회원인 경우 에러가 발생합니다."
     )
-    @PostMapping(value = "/pool/{userPoolId}/like")
+    @PostMapping(value = "/pool/like/{userPoolId}")
     public SingleResult<UserPoolLikeAddResponse> addUserPoolLike(@RequestHeader(value = "X-AUTH-TOKEN") String token,
                                                                  @ApiParam(value = "인재풀 게시글 id", required = true) @PathVariable Long userPoolId)
     {
@@ -131,7 +133,7 @@ public class UserPoolController {
             notes = "- 팀원 찾기 - 인재풀 - 게시글 상세를 조회합니다.\n" +
                     "## API를 호출할 때 마다 해당 인재풀 게시글의 조회 수가 1이 증가합니다."
     )
-    @GetMapping(value = "/pool/{userPoolId}/profile")
+    @GetMapping(value = "/pool/profile/{userPoolId}")
     public SingleResult<UserPoolDetailProfileResponseDto> getUserPoolDetailProfile(
             @RequestHeader(value = "X-AUTH-TOKEN") String token,
             @ApiParam(value = "인재풀 게시글 id", required = true) @PathVariable Long userPoolId)
@@ -152,13 +154,13 @@ public class UserPoolController {
             value = "팀원 찾기 - 인재풀 - 게시글 상세(사용자평가)\n",
             notes = "- 팀원 찾기 - 인재풀 - 게시글 상세를 조회합니다.\n"
     )
-    @GetMapping(value = "/pool/{userPoolId}/review")
+    @GetMapping(value = "/pool/review/{userPoolId}")
     public SingleResult<UserPoolDetailReviewResponseDto> getUserPoolDetailReview(
             @RequestHeader(value = "X-AUTH-TOKEN") String token,
             @ApiParam(value = "인재풀 게시글 id", required = true) @PathVariable Long userPoolId)
     {
         // 권한 설정은 시큐리티에서 하자
         UserPoolDetailReviewResponseDto userPoolDetailReviewResponseDto = userPoolService.getUserPoolDetailReview(userPoolId);
-        return responseService.mappingSingleResult(userPoolDetailReviewResponseDto, "팀원 찾기 - 인재풀 - 게시글 상세");
+        return responseService.mappingSingleResult(userPoolDetailReviewResponseDto, "팀원 찾기 - 인재풀 - 게시글 상세(사용자평가)");
     }
 }
