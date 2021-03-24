@@ -25,7 +25,6 @@ public class PositionService {
                 .map(entity -> PositionCategoryResponseDto.builder()
                         .id(entity.getId())
                         .positionCategoryName(entity.getCategoryName())
-                        .positionCategoryImage(entity.getPositionCategoryImage())
                         .build())
                 .collect(Collectors.toList());
     }

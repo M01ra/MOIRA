@@ -18,9 +18,9 @@ public class ProjectRequestDTO {
     private String projectTitle;
     @ApiModelProperty(value = "내용", example = "공공 API를 활용한 웹사이트를 구축할 예정입니다")
     private String projectContent;
-    @ApiModelProperty(value = "프로젝트 기간", example = "일주")
+    @ApiModelProperty(value = "프로젝트 기간", example = "한달_미만")
     private ProjectDuration projectDuration;
-    @ApiModelProperty(value = "지역", example = "서울")
+    @ApiModelProperty(value = "지역", example = "서울_인천_경기")
     private ProjectLocalType projectLocalType;
     @ApiModelProperty(value = "포지션 리스트")
     private List<ProjectPositonDTO> projectPositionList;

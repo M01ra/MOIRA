@@ -8,12 +8,10 @@ import lombok.Getter;
 public class PositionCategoryResponseDto {
     private Long id;
     private String positionCategoryName;
-    private String positionCategoryImage;
 
     @Builder
-    public PositionCategoryResponseDto(Long id, String positionCategoryName, String positionCategoryImage) {
+    public PositionCategoryResponseDto(Long id, String positionCategoryName) {
         this.id = id;
         this.positionCategoryName = positionCategoryName;
-        this.positionCategoryImage = positionCategoryImage;
     }
 }

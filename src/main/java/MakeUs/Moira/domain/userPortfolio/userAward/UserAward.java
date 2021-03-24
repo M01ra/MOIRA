@@ -1,16 +1,13 @@
 package MakeUs.Moira.domain.userPortfolio.userAward;
 
 import MakeUs.Moira.domain.userPortfolio.UserPortfolio;
-import MakeUs.Moira.domain.userPortfolio.userCareer.UserCareer;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
 
-@NoArgsConstructor
+@NoArgsConstructor @Entity
 @Getter
-@Entity
 public class UserAward {
 
     @Id

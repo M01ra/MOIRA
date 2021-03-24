@@ -16,7 +16,7 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-@Api(tags = {"마이페이지-프로필 수정"})
+@Api(tags = {"9.마이페이지-프로필 수정"})
 @RequiredArgsConstructor
 @RestController
 public class MyPageEditController {

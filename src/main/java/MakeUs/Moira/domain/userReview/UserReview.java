@@ -1,14 +1,20 @@
 package MakeUs.Moira.domain.userReview;
 
+import MakeUs.Moira.domain.AuditorEntity;
 import MakeUs.Moira.domain.user.User;
 import MakeUs.Moira.domain.user.UserProject;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
 
 
+@NoArgsConstructor
+@Getter
 @Entity
-public class UserReview {
+public class UserReview extends AuditorEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,8 +23,8 @@ public class UserReview {
     @ManyToOne
     private UserProject userProject;
 
-    @OneToMany(mappedBy = "userReview")
-    private List<UserReviewComplimentMark> complimentMarkList;
+    @OneToMany(mappedBy = "userReview", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserReviewComplimentMark> userReviewComplimentMarkList;
 
     private int mannerPoint;
 
@@ -26,4 +32,28 @@ public class UserReview {
 
     @ManyToOne
     private User writtenUser;
+
+
+    @Builder
+    public UserReview(int mannerPoint, String reviewContent)
+    {
+        this.mannerPoint = mannerPoint;
+        this.reviewContent = reviewContent;
+    }
+
+    public UserReview updateUserProject(UserProject userProject) {
+        if (this.userProject != null) {
+            this.userProject.getReviews()
+                            .remove(this);
+        }
+        this.userProject = userProject;
+        userProject.getReviews()
+                   .add(this);
+        return this;
+    }
+
+    public UserReview updateWrittenUser(User user) {
+        this.writtenUser = user;
+        return this;
+    }
 }
