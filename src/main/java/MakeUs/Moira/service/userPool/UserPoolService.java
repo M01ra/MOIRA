@@ -100,54 +100,16 @@ public class UserPoolService {
 
 
     public UserPoolDetailReviewResponseDto getUserPoolDetailReview(Long userPoolId) {
-        // 해당 유저에 대한 리뷰들을 다 가져와야지....
-        // 내가 참여했던 리스트 -> 순회 -> 리뷰들 다 가져옴
-//        UserPool userPoolEntity = getUserPoolEntity(userPoolId);
-//        List<UserProject> attendedUserProjectList = userPoolEntity.getUser()
-//                                                                  .getUserHistory()
-//                                                                  .getUserProjects();
-//        List<UserReview> userReviewList = new ArrayList<>();
-//        attendedUserProjectList.forEach(userProject -> userReviewList.addAll(userProject.getReviews()));
-//        userReviewList.sort(Comparator.comparing(AuditorEntity::getCreatedDate)
-//                                      .reversed());
-//
-//        List<UserReviewComplimentMark> userReviewComplimentMarkList = new ArrayList<>();
-//        userReviewList.forEach(userReview -> userReviewComplimentMarkList.addAll(userReview.getUserReviewComplimentMarkList()));
+
         UserHistory userHistoryEntity = getUserHistoryEntity(userPoolId);
         List<UserReviewComplimentMark> userReviewComplimentMarkList =
                 userReviewComplimentMarkRepo.findAllByUserReview_UserProject_UserHistory_Id(userHistoryEntity.getId());
 
         userReviewComplimentMarkList.sort(Comparator.comparing(AuditorEntity::getCreatedDate));
 
-        List<ComplimentMarkInfo> complimentMarkInfoList = complimentMarkInfoRepo.findAll();
+        List<ComplimentMarkCountDto> complimentMarkCountDtoList = getComplimentMarkCountDtoList(userReviewComplimentMarkList);
 
-        List<ComplimentMarkCountDto> complimentMarkCountDtoList = new ArrayList<>();
-        complimentMarkInfoList.forEach(complimentMarkInfo -> {
-            ComplimentMarkCountDto complimentMarkCountDto = getComplimentMarkCountDto(userReviewComplimentMarkList, complimentMarkInfo);
-            complimentMarkCountDtoList.add(complimentMarkCountDto);
-        });
-
-        return new UserPoolDetailReviewResponseDto(userReviewComplimentMarkList, complimentMarkCountDtoList);
-    }
-
-    private ComplimentMarkCountDto getComplimentMarkCountDto(List<UserReviewComplimentMark> userReviewComplimentMarkList,
-                                                             ComplimentMarkInfo complimentMarkInfo)
-    {
-        ComplimentMarkCountDto complimentMarkCountDto = new ComplimentMarkCountDto(complimentMarkInfo);
-
-        Long complimentMarkInfoId = complimentMarkInfo.getId();
-        Long complimentMarkCount = getComplimentMarkCount(userReviewComplimentMarkList, complimentMarkInfoId);
-        complimentMarkCountDto.updateComplimentMarkCount(complimentMarkCount);
-
-        return complimentMarkCountDto;
-    }
-
-    private Long getComplimentMarkCount(List<UserReviewComplimentMark> userReviewComplimentMarkList,
-                                        Long complimentMarkId)
-    {
-        return userReviewComplimentMarkList.stream()
-                                           .filter(userReviewComplimentMark -> userReviewComplimentMark.isGivenComplimentMarkId(complimentMarkId))
-                                           .count();
+        return new UserPoolDetailReviewResponseDto(userHistoryEntity, userReviewComplimentMarkList, complimentMarkCountDtoList);
     }
 
 
@@ -230,5 +192,38 @@ public class UserPoolService {
         if (keyword.length() < 3) {
             throw new IllegalArgumentException("검색어의 길이가 3글자 미만입니다.");
         }
+    }
+
+    private List<ComplimentMarkCountDto> getComplimentMarkCountDtoList(List<UserReviewComplimentMark> userReviewComplimentMarkList)
+    {
+        List<ComplimentMarkInfo> complimentMarkInfoList = complimentMarkInfoRepo.findAll();
+        List<ComplimentMarkCountDto> complimentMarkCountDtoList = new ArrayList<>();
+
+        complimentMarkInfoList.forEach(complimentMarkInfo -> {
+            ComplimentMarkCountDto complimentMarkCountDto = getComplimentMarkCountDto(userReviewComplimentMarkList, complimentMarkInfo);
+            complimentMarkCountDtoList.add(complimentMarkCountDto);
+        });
+        return complimentMarkCountDtoList;
+    }
+
+    private ComplimentMarkCountDto getComplimentMarkCountDto(List<UserReviewComplimentMark> userReviewComplimentMarkList,
+                                                             ComplimentMarkInfo complimentMarkInfo)
+    {
+        ComplimentMarkCountDto complimentMarkCountDto = new ComplimentMarkCountDto(complimentMarkInfo);
+
+        Long complimentMarkInfoId = complimentMarkInfo.getId();
+        Long complimentMarkCount = countComplimentMark(userReviewComplimentMarkList, complimentMarkInfoId);
+
+        complimentMarkCountDto.updateComplimentMarkCount(complimentMarkCount);
+
+        return complimentMarkCountDto;
+    }
+
+    private Long countComplimentMark(List<UserReviewComplimentMark> userReviewComplimentMarkList,
+                                     Long complimentMarkId)
+    {
+        return userReviewComplimentMarkList.stream()
+                                           .filter(userReviewComplimentMark -> userReviewComplimentMark.isGivenComplimentMarkId(complimentMarkId))
+                                           .count();
     }
 }

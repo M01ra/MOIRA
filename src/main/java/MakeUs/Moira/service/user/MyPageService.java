@@ -64,7 +64,7 @@ public class MyPageService {
 
         List<Project> writtenProjectList = userHistoryEntity.getUserProjects()
                                                             .stream()
-                                                            .filter(userProject -> userProject.getRoleType() == UserProjectRoleType.LEADER)
+                                                            .filter(userProject -> userProject.getRoleType().equals(UserProjectRoleType.LEADER) )
                                                             .map(UserProject::getProject)
                                                             .collect(Collectors.toList());
 
@@ -75,15 +75,10 @@ public class MyPageService {
 
 
     public List<AppliedProjectInfoResponseDto> getAppliedProjectList(Long userId) {
-
         List<ProjectApply> projectApplyList = projectApplyRepo.findAllByApplicant_Id(userId);
-        List<Project> appliedProjectList = projectApplyList.stream()
-                                                           .map(projectApply -> projectApply.getProjectDetail()
-                                                                                            .getProject())
-                                                           .collect(Collectors.toList());
-        return appliedProjectList.stream()
-                                 .map(AppliedProjectInfoResponseDto::new)
-                                 .collect(Collectors.toList());
+        return projectApplyList.stream()
+                               .map(AppliedProjectInfoResponseDto::new)
+                               .collect(Collectors.toList());
     }
 
 
@@ -111,14 +106,14 @@ public class MyPageService {
 
         String positionCategoryFilter = parseToFilter(positionCategory);
         List<UserPool> likedUserPoolFilteredList = userHistoryEntity.getUserPoolLikes()
-                                                               .stream()
-                                                               .map(UserPoolLike::getUserPool)
-                                                               .filter(likedUserPool -> likedUserPool.isDesiredPositionCategory(positionCategoryFilter))
-                                                               .collect(Collectors.toList());
+                                                                    .stream()
+                                                                    .map(UserPoolLike::getUserPool)
+                                                                    .filter(likedUserPool -> likedUserPool.isDesiredPositionCategory(positionCategoryFilter))
+                                                                    .collect(Collectors.toList());
         sortUserPoolByKeyword(sortKeyword, likedUserPoolFilteredList);
         return likedUserPoolFilteredList.stream()
-                .map(LikedUserPoolResponseDto::new)
-                .collect(Collectors.toList());
+                                        .map(LikedUserPoolResponseDto::new)
+                                        .collect(Collectors.toList());
     }
 
     private User getUserEntity(Long userId) {

@@ -1,6 +1,7 @@
 package MakeUs.Moira.controller.userPool.dto;
 
 
+import MakeUs.Moira.domain.user.UserHistory;
 import MakeUs.Moira.domain.userReview.UserReviewComplimentMark;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,17 +14,17 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Getter
 public class UserPoolDetailReviewResponseDto {
+    private Long                         userId;
     private Double                       avgMannerPoint             = 0D;
     private String                       recentReviewContent        = "";
     private List<ComplimentMarkCountDto> complimentMarkCountDtoList = new ArrayList<>();
 
-    public UserPoolDetailReviewResponseDto(List<UserReviewComplimentMark> userReviewComplimentMarkList,
+    public UserPoolDetailReviewResponseDto(UserHistory userHistoryEntity,
+                                           List<UserReviewComplimentMark> userReviewComplimentMarkList,
                                            List<ComplimentMarkCountDto> complimentMarkCountDtoList)
     {
-//        this.avgMannerPoint = userReviewList.stream()
-//                                            .collect(Collectors.averagingDouble(userReview -> (double) userReview.getMannerPoint()));
-//        this.recentReviewContent = userReviewList.get(0)
-//                                                 .getReviewContent();
+        this.userId = userHistoryEntity.getUser()
+                                       .getId();
         this.avgMannerPoint = userReviewComplimentMarkList.stream()
                                                           .map(userReviewComplimentMark -> userReviewComplimentMark.getUserReview()
                                                                                                                    .getMannerPoint())
@@ -34,8 +35,11 @@ public class UserPoolDetailReviewResponseDto {
     }
 
     private String getFirstReviewContent(List<UserReviewComplimentMark> userReviewComplimentMarkList) {
-        if (userReviewComplimentMarkList.isEmpty())
+        if (userReviewComplimentMarkList.isEmpty()) {
             return "";
-        return userReviewComplimentMarkList.get(0).getUserReview().getReviewContent();
+        }
+        return userReviewComplimentMarkList.get(0)
+                                           .getUserReview()
+                                           .getReviewContent();
     }
 }
