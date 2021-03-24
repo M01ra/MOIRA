@@ -3,6 +3,7 @@ package MakeUs.Moira.controller.userPool;
 
 import MakeUs.Moira.config.security.JwtTokenProvider;
 import MakeUs.Moira.controller.userPool.dto.UserPoolDetailProfileResponseDto;
+import MakeUs.Moira.controller.userPool.dto.UserPoolDetailReviewResponseDto;
 import MakeUs.Moira.controller.userPool.dto.UserPoolLikeAddResponse;
 import MakeUs.Moira.controller.userPool.dto.UserPoolResponseDto;
 import MakeUs.Moira.response.ResponseService;
@@ -138,5 +139,26 @@ public class UserPoolController {
         // 권한 설정은 시큐리티에서 하자
         UserPoolDetailProfileResponseDto userPoolDetailProfileResponseDto = userPoolService.getUserPoolDetailProfile(userPoolId);
         return responseService.mappingSingleResult(userPoolDetailProfileResponseDto, "팀원 찾기 - 인재풀 - 게시글 상세");
+    }
+
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "X-AUTH-TOKEN",
+                    value = "로그인 성공 후 JWT_TOKEN",
+                    dataType = "String", paramType = "header")
+    })
+    @ApiOperation(
+            value = "팀원 찾기 - 인재풀 - 게시글 상세(사용자평가)\n",
+            notes = "- 팀원 찾기 - 인재풀 - 게시글 상세를 조회합니다.\n"
+    )
+    @GetMapping(value = "/pool/{userPoolId}/review")
+    public SingleResult<UserPoolDetailReviewResponseDto> getUserPoolDetailReview(
+            @RequestHeader(value = "X-AUTH-TOKEN") String token,
+            @ApiParam(value = "인재풀 게시글 id", required = true) @PathVariable Long userPoolId)
+    {
+        // 권한 설정은 시큐리티에서 하자
+        UserPoolDetailReviewResponseDto userPoolDetailReviewResponseDto = userPoolService.getUserPoolDetailReview(userPoolId);
+        return responseService.mappingSingleResult(userPoolDetailReviewResponseDto, "팀원 찾기 - 인재풀 - 게시글 상세");
     }
 }
