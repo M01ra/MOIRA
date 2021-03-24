@@ -1,5 +1,6 @@
 package MakeUs.Moira.domain.project.projectDetail;
 
+import MakeUs.Moira.domain.position.PositionCategory;
 import MakeUs.Moira.domain.position.UserPosition;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,18 +21,18 @@ public class ProjectPosition {
     private ProjectDetail projectDetail;
 
     @ManyToOne
-    private UserPosition recruitUserPosition;
+    private PositionCategory recruitUserPositionCategory;
 
     private int recruitPositionCount;
 
     @Builder
-    public ProjectPosition(ProjectDetail projectDetail, UserPosition recruitUserPosition, int recruitPositionCount){
+    public ProjectPosition(ProjectDetail projectDetail, PositionCategory recruitUserPositionCategory, int recruitPositionCount){
         this.projectDetail = projectDetail;
-        this.recruitUserPosition = recruitUserPosition;
+        this.recruitUserPositionCategory = recruitUserPositionCategory;
         this.recruitPositionCount = recruitPositionCount;
     }
 
     public String getRecruitingPositionCategoryName(){
-        return this.getRecruitUserPosition().getPositionCategory().getCategoryName();
+        return this.getRecruitUserPositionCategory().getCategoryName();
     }
 }

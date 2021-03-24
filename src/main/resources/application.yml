@@ -8,7 +8,7 @@ spring:
 
 logging:
   level:
-    root: info
+    root: debug
     com:
       amazonaws:
         util:
@@ -30,17 +30,10 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
-logging:
-  level:
-    org:
-      hibernate:
-        type:
-          descriptor:
-            sql: trace
 
   h2:
     console:
@@ -50,6 +43,13 @@ logging:
     url: jdbc:h2:mem:moira;
     username: sa
     password:
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace
 ---
 spring:
   config:
@@ -58,7 +58,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
@@ -75,7 +75,7 @@ spring:
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true

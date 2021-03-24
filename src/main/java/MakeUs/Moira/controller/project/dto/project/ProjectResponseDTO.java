@@ -1,6 +1,7 @@
-package MakeUs.Moira.controller.project.dto;
+package MakeUs.Moira.controller.project.dto.project;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
@@ -10,9 +11,7 @@ import java.util.List;
 @Setter
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ProjectsResponseDTO {
-    @ApiModelProperty(value = "프로젝트 ID", example = "1")
-    private Long id;
+public class ProjectResponseDTO {
     @ApiModelProperty(value = "글쓴이", example = "웰시고기")
     private String writer;
     @ApiModelProperty(value = "제목", example = "웹 프로젝트 팀원 모집합니다")
@@ -23,6 +22,17 @@ public class ProjectsResponseDTO {
     private String imageUrl;
     @ApiModelProperty(value = "조회수", example = "3")
     private int hitCount;
+    @ApiModelProperty(value = "좋아요수", example = "2")
+    private int likeCount;
+    @ApiModelProperty(value = "기간", example = "2")
+    private String duration;
+    @ApiModelProperty(value = "지역", example = "서울")
+    private String location;
+    @ApiModelProperty(value = "포지션 리스트")
+    private List<ProjectPositionCategoryDTO> positionCategoryList;
     @ApiModelProperty(value = "생성 시간", example = "방금전")
     private String time;
+    @ApiModelProperty(value = "좋아요 여부", example = "true")
+    @JsonProperty("isLike")
+    private boolean isLike;
 }

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(tags = {"7.마이페이지"})
+@Api(tags = {"6-1.마이페이지"})
 @RequiredArgsConstructor
 @RestController
 public class MyPageController {
