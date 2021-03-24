@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 
-@Api(tags = {"5.인재 풀"})
+@Api(tags = {"6.인재 풀"})
 @RequiredArgsConstructor
 @RestController
 public class UserPoolController {
@@ -87,7 +87,7 @@ public class UserPoolController {
                     "- 닉네임(3글자 이상)으로 인재풀 게시물을 검색합니다. \n" +
                     "- 비회원인 경우 에러가 발생합니다."
     )
-    @GetMapping(value = "/pool")
+    @GetMapping(value = "/pool/search")
     public ListResult<UserPoolResponseDto> searchByNickname(@RequestHeader(value = "X-AUTH-TOKEN") String token,
                                                             @ApiParam(value = "검색 키워드", required = true) @RequestParam String keyword)
     {

@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 
-@Api(tags = {"6.유저 리뷰"})
+@Api(tags = {"7.유저 리뷰"})
 @RequiredArgsConstructor
 @RestController
 public class UserReviewController {

@@ -13,8 +13,8 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Getter
 public class UserPoolDetailReviewResponseDto {
-    private Double                       avgMannerPoint;
-    private String                       recentReviewContent;
+    private Double                       avgMannerPoint             = 0D;
+    private String                       recentReviewContent        = "";
     private List<ComplimentMarkCountDto> complimentMarkCountDtoList = new ArrayList<>();
 
     public UserPoolDetailReviewResponseDto(List<UserReviewComplimentMark> userReviewComplimentMarkList,
@@ -29,7 +29,13 @@ public class UserPoolDetailReviewResponseDto {
                                                                                                                    .getMannerPoint())
 
                                                           .collect(Collectors.averagingDouble(mannerPoint -> mannerPoint));
-        this.recentReviewContent = userReviewComplimentMarkList.get(0).getUserReview().getReviewContent();
+        this.recentReviewContent = getFirstReviewContent(userReviewComplimentMarkList);
         this.complimentMarkCountDtoList = complimentMarkCountDtoList;
+    }
+
+    private String getFirstReviewContent(List<UserReviewComplimentMark> userReviewComplimentMarkList) {
+        if (userReviewComplimentMarkList.isEmpty())
+            return "";
+        return userReviewComplimentMarkList.get(0).getUserReview().getReviewContent();
     }
 }
