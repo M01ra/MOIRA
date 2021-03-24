@@ -1,5 +1,6 @@
 package MakeUs.Moira.domain.userReview;
 
+import MakeUs.Moira.controller.userPool.UserPoolDetailReviewDetailResponseDto;
 import MakeUs.Moira.controller.userReview.dto.UserReviewDetailResponseDto;
 import MakeUs.Moira.domain.AuditorEntity;
 import MakeUs.Moira.domain.user.User;
@@ -68,6 +69,16 @@ public class UserReview extends AuditorEntity {
 
     public UserReviewDetailResponseDto toUserReviewDetailResponseDto(){
         return UserReviewDetailResponseDto.builder()
+                                          .userProfileUrl(writtenUser.getProfileImage())
+                                          .nickname(writtenUser.getNickname())
+                                          .mannerPoint(mannerPoint)
+                                          .reviewContent(reviewContent)
+                                          .writtenDate(getCreatedDate().toLocalDate())
+                                          .build();
+    }
+
+    public UserPoolDetailReviewDetailResponseDto toUserPoolDetailReviewDetailResponseDto(){
+        return UserPoolDetailReviewDetailResponseDto.builder()
                                           .userProfileUrl(writtenUser.getProfileImage())
                                           .nickname(writtenUser.getNickname())
                                           .mannerPoint(mannerPoint)

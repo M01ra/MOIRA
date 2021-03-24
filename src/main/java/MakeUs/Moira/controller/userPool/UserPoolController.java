@@ -156,4 +156,26 @@ public class UserPoolController {
         UserPoolDetailReviewResponseDto userPoolDetailReviewResponseDto = userPoolService.getUserPoolDetailReview(userPoolId);
         return responseService.mappingSingleResult(userPoolDetailReviewResponseDto, "팀원 찾기 - 인재풀 - 게시글 상세(사용자평가)");
     }
+
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "X-AUTH-TOKEN",
+                    value = "로그인 성공 후 JWT_TOKEN",
+                    dataType = "String", paramType = "header")
+    })
+    @ApiOperation(
+            value = "팀원 찾기 - 인재풀 - 게시글 상세(사용자평가) - 모든 리뷰 조회\n",
+            notes = "### 팀원 찾기 - 인재풀 - 게시글 상세를 조회합니다"
+    )
+    @GetMapping(value = "/pool/review/detail/{userPoolId}")
+    public ListResult<UserPoolDetailReviewDetailResponseDto> getUserPoolDetailReviewDetail(
+            @RequestHeader(value = "X-AUTH-TOKEN") String token,
+            @ApiParam(value = "인재풀 게시글 id", required = true) @PathVariable Long userPoolId,
+            @ApiParam(value = "정렬 방식", required = true) @RequestParam String sort)
+    {
+        // 권한 설정은 시큐리티에서 하자
+        List<UserPoolDetailReviewDetailResponseDto> userPoolDetailReviewDetailResponseDtoList = userPoolService.getUserPoolDetailReviewDetail(userPoolId, sort);
+        return responseService.mappingListResult(userPoolDetailReviewDetailResponseDtoList, "팀원 찾기 - 인재풀 - 게시글 상세(사용자평가) - 모든 리뷰 조회");
+    }
 }
