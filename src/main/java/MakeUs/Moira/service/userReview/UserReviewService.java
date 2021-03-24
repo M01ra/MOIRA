@@ -77,7 +77,6 @@ public class UserReviewService {
         return userReviewList.stream()
                              .map(UserReview::toUserReviewDetailResponseDto)
                              .collect(Collectors.toList());
-
     }
 
 

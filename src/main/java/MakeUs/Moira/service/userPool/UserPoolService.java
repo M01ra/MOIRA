@@ -2,8 +2,10 @@ package MakeUs.Moira.service.userPool;
 
 
 import MakeUs.Moira.advice.exception.InvalidUserIdException;
+import MakeUs.Moira.controller.userPool.UserPoolDetailReviewDetailResponseDto;
 import MakeUs.Moira.controller.userPool.dto.*;
 
+import MakeUs.Moira.domain.AuditorEntity;
 import MakeUs.Moira.domain.complimentMark.ComplimentMarkInfo;
 import MakeUs.Moira.domain.complimentMark.ComplimentMarkInfoRepo;
 import MakeUs.Moira.domain.user.*;
@@ -22,6 +24,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -106,6 +109,16 @@ public class UserPoolService {
                 = getComplimentMarkWithCountDtoList(userReviewList, complimentMarkInfoList);
 
         return new UserPoolDetailReviewResponseDto(userReviewList, complimentMarkWithCountDtoList);
+    }
+
+
+    public List<UserPoolDetailReviewDetailResponseDto> getUserPoolDetailReviewDetail(Long userPoolId, String sortKeyword) {
+        Long userHistoryId = getUserHistoryEntity(userPoolId).getId();
+        List<UserReview> userReviewList = userReviewRepo.findAllByUserProject_UserHistory_Id(userHistoryId);
+        sortUserReviewListByKeyword(userReviewList, sortKeyword);
+        return userReviewList.stream()
+                             .map(UserReview::toUserPoolDetailReviewDetailResponseDto)
+                             .collect(Collectors.toList());
     }
 
 
@@ -200,5 +213,17 @@ public class UserPoolService {
         return complimentMarkInfoList.stream()
                                      .map(complimentMarkInfo -> complimentMarkInfo.getComplimentMarkWithCountDto(userReviewList))
                                      .collect(Collectors.toList());
+    }
+
+    private void sortUserReviewListByKeyword(List<UserReview> userReviewList, String sortKeyword) {
+        if (sortKeyword.equals("date")) {
+            userReviewList.sort(Comparator.comparing(AuditorEntity::getCreatedDate)
+                                          .reversed());
+        } else if (sortKeyword.equals("point")) {
+            userReviewList.sort(Comparator.comparing(UserReview::getMannerPoint)
+                                          .reversed());
+        } else {
+            throw new IllegalArgumentException("유효하지 않은 sort");
+        }
     }
 }
