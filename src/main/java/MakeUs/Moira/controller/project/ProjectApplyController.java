@@ -1,13 +1,11 @@
 package MakeUs.Moira.controller.project;
 
 import MakeUs.Moira.config.security.JwtTokenProvider;
-import MakeUs.Moira.controller.project.dto.ProjectApplicantsResponseDTO;
-import MakeUs.Moira.controller.project.dto.ProjectApplyRequestDTO;
-import MakeUs.Moira.controller.project.dto.ProjectApplysResponseDTO;
-import MakeUs.Moira.domain.project.projectApply.ProjectApplyStatus;
+import MakeUs.Moira.controller.project.dto.projectApply.*;
 import MakeUs.Moira.response.ResponseService;
 import MakeUs.Moira.response.model.CommonResult;
 import MakeUs.Moira.response.model.ListResult;
+import MakeUs.Moira.response.model.SingleResult;
 import MakeUs.Moira.service.project.ProjectApplyService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -29,8 +27,8 @@ public class ProjectApplyController {
 
 
     @ApiOperation(
-            value = "프로젝트(팀) 지원",
-            notes = "유저가 팀에 지원합니다")
+            value = "모집글 - 지원하기",
+            notes = "유저가 프로젝트(팀)에 지원합니다")
     @PostMapping
     public CommonResult applyProject(@RequestBody ProjectApplyRequestDTO projectApplyRequestDTO,
                                       @RequestHeader(value = "X-AUTH-TOKEN") String token) {
@@ -40,19 +38,20 @@ public class ProjectApplyController {
 
 
     @ApiOperation(
-            value = "유저의 지원 목록 조회",
-            notes = "유저가 팀에 지원 목록을 조회합니다")
-    @GetMapping
-    public ListResult<ProjectApplysResponseDTO> getApplyProjects(@RequestHeader(value = "X-AUTH-TOKEN") String token) {
-        List<ProjectApplysResponseDTO> projectApplysResponseDTOList = projectApplyService.getApplyProjects(Long.valueOf(jwtTokenProvider.getUserPk(token)));
-        return responseService.mappingListResult(projectApplysResponseDTOList, "유저 지원 목록 조회 성공");
+            value = "마이페이지 - 지원한 글 - 지원 목록 - 지원 내역",
+            notes = "특정 지원서(프로필)를 조회합니다")
+    @GetMapping("/{projectApplyId}")
+    public SingleResult<ProjectApplyResponseDTO> getApplyProject(@ApiParam(value = "프로젝트(팀) 지원 ID", required = true) @PathVariable Long projectApplyId,
+                                                                 @RequestHeader(value = "X-AUTH-TOKEN") String token) {
+        ProjectApplyResponseDTO projectApplyResponseDTO = projectApplyService.getApplyProject(projectApplyId, Long.valueOf(jwtTokenProvider.getUserPk(token)));
+        return responseService.mappingSingleResult(projectApplyResponseDTO, "유저 지원서 조회 성공");
     }
 
 
     @ApiOperation(
-            value = "프로젝트(팀)의 지원자 목록 조회",
+            value = "마이페이지 - 작성한 글 - 지원자 목록",
             notes = "팀에 지원한 유저들을 조회합니다")
-    @GetMapping("/{projectId}")
+    @GetMapping("/project/{projectId}")
     public ListResult<ProjectApplicantsResponseDTO> getProjectApplicants(@ApiParam(value = "프로젝트(팀) ID", required = true) @PathVariable Long projectId,
                                                                          @RequestHeader(value = "X-AUTH-TOKEN") String token){
         List<ProjectApplicantsResponseDTO> projectApplicantsResponseDTOList = projectApplyService.getProjectApplicants(projectId, Long.valueOf(jwtTokenProvider.getUserPk(token)));
@@ -66,8 +65,8 @@ public class ProjectApplyController {
     @PutMapping("/{projectApplyId}")
     public CommonResult changeProjectApplyStatus(@ApiParam(value = "프로젝트(팀) 지원 ID", required = true) @PathVariable Long projectApplyId,
                                                  @RequestHeader(value = "X-AUTH-TOKEN") String token,
-                                                 @ApiParam(value = "변경할 상태", required = true) @RequestParam(name = "status", required = true) ProjectApplyStatus status){
-        projectApplyService.changeProjectApplyStatus(projectApplyId, Long.valueOf(jwtTokenProvider.getUserPk(token)), status);
+                                                 @ApiParam(value = "변경할 상태", required = true) @RequestBody ProjectApplyModifyStatusRequestDTO projectApplyModifyStatusRequestDTO){
+        projectApplyService.changeProjectApplyStatus(projectApplyId, Long.valueOf(jwtTokenProvider.getUserPk(token)), projectApplyModifyStatusRequestDTO.getStatus());
         return responseService.mappingSuccessCommonResultOnly("지원서 상태 변경 성공");
     }
 
@@ -81,15 +80,4 @@ public class ProjectApplyController {
         projectApplyService.cancelApplyProject(projectApplyId, Long.valueOf(jwtTokenProvider.getUserPk(token)));
         return responseService.mappingSuccessCommonResultOnly("프로젝트 지원 취소 성공");
     }
-
-
-    //    @ApiOperation(
-//            value = "유저의 지원서 상세 조회",
-//            notes = "팀에 지원한 유저의 지원서를 상세 조회합니다")
-//    @GetMapping("/{projectId}")
-//    public SingleResult<ProjectApplyResponseDTO> getProjectApply(@ApiParam(value = "프로젝트(팀) 지원 ID", required = true) @PathVariable Long projectApplyId,
-//                                                                         @RequestHeader(value = "X-AUTH-TOKEN") String token){
-//        ProjectApplyResponseDTO projectApplyResponseDTO = projectApplyService.getProjectApply(projectApplyId, Long.valueOf(jwtTokenProvider.getUserPk(token)));
-//        return responseService.mappingSingleResult(projectApplyResponseDTO, "지원서 상세 조회 성공");
-//    }
 }
