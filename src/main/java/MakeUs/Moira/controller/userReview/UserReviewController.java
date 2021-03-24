@@ -4,14 +4,18 @@ package MakeUs.Moira.controller.userReview;
 import MakeUs.Moira.config.security.JwtTokenProvider;
 import MakeUs.Moira.controller.userReview.dto.UserReviewAddRequestDto;
 import MakeUs.Moira.controller.userReview.dto.UserReviewAddResponseDto;
+import MakeUs.Moira.controller.userReview.dto.UserReviewDetailResponseDto;
 import MakeUs.Moira.controller.userReview.dto.UserReviewResponseDto;
 import MakeUs.Moira.response.ResponseService;
 
+import MakeUs.Moira.response.model.ListResult;
 import MakeUs.Moira.response.model.SingleResult;
 import MakeUs.Moira.service.userReview.UserReviewService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @Api(tags = {"5.유저 리뷰"})
@@ -64,5 +68,25 @@ public class UserReviewController {
     {
         UserReviewResponseDto userReviewResponseDto = userReviewService.getUserReview(targetId);
         return responseService.mappingSingleResult(userReviewResponseDto, "유저의 사용자 평가 조회");
+    }
+
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "X-AUTH-TOKEN",
+                    value = "로그인 성공 후 JWT_TOKEN",
+                    required = true, dataType = "String", paramType = "header")
+    })
+    @ApiOperation(
+            value = "유저의 \"모든 리뷰 내용\" 조회",
+            notes = "### targetId와 매칭되는 특정 유저의 모든 리뷰 내용을 조회합니다.\n"
+    )
+    @GetMapping(value = "/review/detail/{targetId}")
+    public ListResult<UserReviewDetailResponseDto> getUserReviewDetail(@RequestHeader(value = "X-AUTH-TOKEN") String token,
+                                                                       @ApiParam(value = "조회하려는 유저의 userId", required = true) @PathVariable Long targetId,
+                                                                       @ApiParam(value = "정렬 방식", required = true) @RequestParam String sort)
+    {
+        List<UserReviewDetailResponseDto> userReviewDetailResponseDtoList = userReviewService.getUserReviewDetail(targetId, sort);
+        return responseService.mappingListResult(userReviewDetailResponseDtoList, "유저의 모든 리뷰 내용 조회");
     }
 }
