@@ -8,22 +8,18 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Getter
-public class ComplimentMarkCountDto {
-    private Long complimentMarkId;
+public class ComplimentMarkWithCountDto {
+    private Long   complimentMarkId;
     private String complimentMarkName;
     private String complimentMarkContent;
-    private Long complimentMarkCount = 0L;
+    private Long   complimentMarkCount = 0L;
 
 
-    public ComplimentMarkCountDto(ComplimentMarkInfo complimentMarkInfo)
+    public ComplimentMarkWithCountDto(ComplimentMarkInfo complimentMarkInfo, Long complimentMarkCount)
     {
         this.complimentMarkId = complimentMarkInfo.getId();
         this.complimentMarkName = complimentMarkInfo.getMarkName();
         this.complimentMarkContent = complimentMarkInfo.getContent();
+        this.complimentMarkCount = complimentMarkCount;
     }
-
-    public void updateComplimentMarkCount(Long count){
-        this.complimentMarkCount = count;
-    }
-
 }

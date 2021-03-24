@@ -1,5 +1,7 @@
 package MakeUs.Moira.domain.userReview;
 
+import MakeUs.Moira.controller.userPool.UserPoolDetailReviewDetailResponseDto;
+import MakeUs.Moira.controller.userReview.dto.UserReviewDetailResponseDto;
 import MakeUs.Moira.domain.AuditorEntity;
 import MakeUs.Moira.domain.user.User;
 import MakeUs.Moira.domain.user.UserProject;
@@ -8,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -24,7 +27,7 @@ public class UserReview extends AuditorEntity {
     private UserProject userProject;
 
     @OneToMany(mappedBy = "userReview", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UserReviewComplimentMark> userReviewComplimentMarkList;
+    private List<UserReviewComplimentMark> userReviewComplimentMarkList = new ArrayList<>();
 
     private int mannerPoint;
 
@@ -55,5 +58,32 @@ public class UserReview extends AuditorEntity {
     public UserReview updateWrittenUser(User user) {
         this.writtenUser = user;
         return this;
+    }
+
+    public boolean hasComplimentMark(Long complimentMarkId) {
+        return this.userReviewComplimentMarkList.stream()
+                                                .anyMatch(userReviewComplimentMark -> userReviewComplimentMark.getComplimentMarkInfo()
+                                                                                                              .getId()
+                                                                                                              .equals(complimentMarkId));
+    }
+
+    public UserReviewDetailResponseDto toUserReviewDetailResponseDto(){
+        return UserReviewDetailResponseDto.builder()
+                                          .userProfileUrl(writtenUser.getProfileImage())
+                                          .nickname(writtenUser.getNickname())
+                                          .mannerPoint(mannerPoint)
+                                          .reviewContent(reviewContent)
+                                          .writtenDate(getCreatedDate().toLocalDate())
+                                          .build();
+    }
+
+    public UserPoolDetailReviewDetailResponseDto toUserPoolDetailReviewDetailResponseDto(){
+        return UserPoolDetailReviewDetailResponseDto.builder()
+                                          .userProfileUrl(writtenUser.getProfileImage())
+                                          .nickname(writtenUser.getNickname())
+                                          .mannerPoint(mannerPoint)
+                                          .reviewContent(reviewContent)
+                                          .writtenDate(getCreatedDate().toLocalDate())
+                                          .build();
     }
 }
