@@ -3,6 +3,7 @@ package MakeUs.Moira.advice;
 import MakeUs.Moira.advice.exception.*;
 import MakeUs.Moira.response.ResponseService;
 import MakeUs.Moira.response.model.CommonResult;
+import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,6 +51,7 @@ public class ExceptionAdvice {
         return responseService.mappingFailCommonResultOnly(411, e.getMessage());
     }
 
+    // @Valid에 의한 검증
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public CommonResult MethodArgumentNotValidException(HttpServletRequest request, MethodArgumentNotValidException e) {
@@ -93,6 +95,14 @@ public class ExceptionAdvice {
     public CommonResult HttpMessageNotReadableException(HttpServletRequest request, HttpMessageNotReadableException e) {
         logger.info("code : 410 " + e.getMessage());
         return responseService.mappingFailCommonResultOnly(410, e.getMessage());
+    }
+
+
+    @ExceptionHandler(JwtException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public CommonResult JWTException(HttpServletRequest request, JwtException e) {
+        logger.info("code : 435 " + e.getMessage());
+        return responseService.mappingFailCommonResultOnly(435, e.getMessage());
     }
 
 }
