@@ -4,11 +4,13 @@ import MakeUs.Moira.controller.user.dto.myPage.HashtagResponseDto;
 import MakeUs.Moira.domain.user.User;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
+@ToString
 public class MyPageEditProfileUpdateResponseDto {
     @ApiModelProperty(value = "닉네임")
     private String nickname;

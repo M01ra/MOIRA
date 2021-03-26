@@ -13,8 +13,12 @@ import MakeUs.Moira.response.model.SingleResult;
 import MakeUs.Moira.service.userPool.UserPoolService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 
@@ -26,6 +30,7 @@ public class UserPoolController {
     private final UserPoolService  userPoolService;
     private final JwtTokenProvider jwtTokenProvider;
     private final ResponseService  responseService;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @ApiImplicitParams({
             @ApiImplicitParam(
@@ -40,7 +45,8 @@ public class UserPoolController {
                     "- 비회원인 경우 에러가 발생합니다."
     )
     @PostMapping(value = "/pool")
-    public CommonResult switchUserPoolVisibility(@RequestHeader(value = "X-AUTH-TOKEN") String token)
+    public CommonResult switchUserPoolVisibility(
+            @RequestHeader(value = "X-AUTH-TOKEN") String token)
     {
         // 권한 설정은 시큐리티에서 하자
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(token));
@@ -71,6 +77,7 @@ public class UserPoolController {
         // 권한 설정은 시큐리티에서 하자
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(token));
         List<UserPoolResponseDto> userPoolResponseDtoList = userPoolService.getUserPool(userId, page, positionCategory, sortby);
+        logger.info(userPoolResponseDtoList.toString());
         return responseService.mappingListResult(userPoolResponseDtoList, "팀원 찾기 - 인재풀");
     }
 
@@ -88,12 +95,14 @@ public class UserPoolController {
                     "- 비회원인 경우 에러가 발생합니다."
     )
     @GetMapping(value = "/pool/search")
-    public ListResult<UserPoolResponseDto> searchByNickname(@RequestHeader(value = "X-AUTH-TOKEN") String token,
-                                                            @ApiParam(value = "검색 키워드", required = true) @RequestParam String keyword)
+    public ListResult<UserPoolResponseDto> searchByNickname(
+            @RequestHeader(value = "X-AUTH-TOKEN") String token,
+            @NotBlank(message = "keyword에 빈 값을 넣을 수 없음") @ApiParam(value = "검색 키워드", required = true) @RequestParam String keyword)
     {
         // 권한 설정은 시큐리티에서 하자
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(token));
         List<UserPoolResponseDto> userPoolSearchResponseDtoList = userPoolService.getUserPoolByNickname(userId, keyword);
+        logger.info(userPoolSearchResponseDtoList.toString());
         return responseService.mappingListResult(userPoolSearchResponseDtoList, "팀원 찾기 - 인재풀 - 검색");
     }
 
@@ -110,12 +119,14 @@ public class UserPoolController {
                     "- 비회원인 경우 에러가 발생합니다."
     )
     @PostMapping(value = "/pool/{userPoolId}/like")
-    public SingleResult<UserPoolLikeAddResponse> addUserPoolLike(@RequestHeader(value = "X-AUTH-TOKEN") String token,
-                                                                 @ApiParam(value = "인재풀 게시글 id", required = true) @PathVariable Long userPoolId)
+    public SingleResult<UserPoolLikeAddResponse> addUserPoolLike(
+            @RequestHeader(value = "X-AUTH-TOKEN") String token,
+            @NotNull(message = "userPoolId에 빈 값을 넣을 수 없음") @ApiParam(value = "인재풀 게시글 id", required = true) @PathVariable Long userPoolId)
     {
         // 권한 설정은 시큐리티에서 하자
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(token));
         UserPoolLikeAddResponse UserPoolLikeAddResponse = userPoolService.updateUserPoolLike(userId, userPoolId);
+        logger.info(UserPoolLikeAddResponse.toString());
         return responseService.mappingSingleResult(UserPoolLikeAddResponse, "팀원 찾기 - 인재풀 - 게시글 좋아요");
     }
 
@@ -134,10 +145,11 @@ public class UserPoolController {
     @GetMapping(value = "/pool/{userPoolId}/profile")
     public SingleResult<UserPoolDetailProfileResponseDto> getUserPoolDetailProfile(
             @RequestHeader(value = "X-AUTH-TOKEN") String token,
-            @ApiParam(value = "인재풀 게시글 id", required = true) @PathVariable Long userPoolId)
+            @NotNull(message = "userPoolId에 빈 값을 넣을 수 없음") @ApiParam(value = "인재풀 게시글 id", required = true) @PathVariable Long userPoolId)
     {
         // 권한 설정은 시큐리티에서 하자
         UserPoolDetailProfileResponseDto userPoolDetailProfileResponseDto = userPoolService.getUserPoolDetailProfile(userPoolId);
+        logger.info(userPoolDetailProfileResponseDto.toString());
         return responseService.mappingSingleResult(userPoolDetailProfileResponseDto, "팀원 찾기 - 인재풀 - 게시글 상세");
     }
 
@@ -155,10 +167,11 @@ public class UserPoolController {
     @GetMapping(value = "/pool/{userPoolId}/review")
     public SingleResult<UserPoolDetailReviewResponseDto> getUserPoolDetailReview(
             @RequestHeader(value = "X-AUTH-TOKEN") String token,
-            @ApiParam(value = "인재풀 게시글 id", required = true) @PathVariable Long userPoolId)
+            @NotNull(message = "userPoolId에 빈 값을 넣을 수 없음") @ApiParam(value = "인재풀 게시글 id", required = true) @PathVariable Long userPoolId)
     {
         // 권한 설정은 시큐리티에서 하자
         UserPoolDetailReviewResponseDto userPoolDetailReviewResponseDto = userPoolService.getUserPoolDetailReview(userPoolId);
+        logger.info(userPoolDetailReviewResponseDto.toString());
         return responseService.mappingSingleResult(userPoolDetailReviewResponseDto, "팀원 찾기 - 인재풀 - 게시글 상세");
     }
 }

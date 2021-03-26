@@ -14,6 +14,8 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 @Api(tags = {"6-2.마이페이지-프로필 수정"})
@@ -24,6 +26,7 @@ public class MyPageEditController {
     private final ResponseService   responseService;
     private final JwtTokenProvider  jwtTokenProvider;
     private final MyPageEditService myPageEditService;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @ApiImplicitParams({
             @ApiImplicitParam(
@@ -37,10 +40,12 @@ public class MyPageEditController {
                     "- 비회원인 경우 에러가 발생합니다."
     )
     @GetMapping(value = "/mypage/edit")
-    public SingleResult<MyPageEditResponseDto> getMyPageEdit(@RequestHeader(value = "X-AUTH-TOKEN") String token) {
+    public SingleResult<MyPageEditResponseDto> getMyPageEdit(
+            @RequestHeader(value = "X-AUTH-TOKEN") String token) {
         // 권한 설정은 시큐리티에서 하자
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(token));
         MyPageEditResponseDto myPageEditResponseDto = myPageEditService.getMyPageEdit(userId);
+        logger.info(myPageEditResponseDto.toString());
         return responseService.mappingSingleResult(myPageEditResponseDto, "마이페이지 - 내 정보 수정하기 - 첫 화면");
     }
 
@@ -61,9 +66,11 @@ public class MyPageEditController {
     public SingleResult<MyPageEditProfileUpdateResponseDto> updateMyPageEditProfile(
             @RequestHeader(value = "X-AUTH-TOKEN") String token,
             @RequestBody MyPageEditProfileUpdateRequestDto myPageEditProfileUpdateRequestDto) {
+        logger.info(myPageEditProfileUpdateRequestDto.toString());
         // 권한 설정은 시큐리티에서 하자
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(token));
         MyPageEditProfileUpdateResponseDto myPageEditProfileUpdateResponseDto = myPageEditService.updateMyPageProfile(userId, myPageEditProfileUpdateRequestDto);
+        logger.info(myPageEditProfileUpdateResponseDto.toString());
         return responseService.mappingSingleResult(myPageEditProfileUpdateResponseDto, "마이페이지 - 내 정보 수정하기 - 프로필 관련 정보 수정하기(프로필 사진 제외) 성공");
     }
 }

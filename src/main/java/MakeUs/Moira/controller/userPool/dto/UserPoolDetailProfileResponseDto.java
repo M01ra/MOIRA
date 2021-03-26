@@ -10,11 +10,13 @@ import MakeUs.Moira.domain.userPool.UserPool;
 import MakeUs.Moira.domain.userPortfolio.UserPortfolio;
 import MakeUs.Moira.domain.userPortfolio.userCareer.UserCareer;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
+@ToString
 public class UserPoolDetailProfileResponseDto {
     private Long                         userId;
     private List<UserSchoolResponseDto>  userSchoolResponseDtoList;

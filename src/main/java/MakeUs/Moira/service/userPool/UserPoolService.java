@@ -1,7 +1,7 @@
 package MakeUs.Moira.service.userPool;
 
-
-import MakeUs.Moira.advice.exception.InvalidUserIdException;
+import MakeUs.Moira.advice.exception.CustomException;
+import MakeUs.Moira.advice.exception.ErrorCode;
 import MakeUs.Moira.controller.userPool.dto.*;
 
 import MakeUs.Moira.domain.AuditorEntity;
@@ -64,8 +64,6 @@ public class UserPoolService {
 
 
     public List<UserPoolResponseDto> getUserPoolByNickname(Long userId, String keyword) {
-
-        keywordLengthValidation(keyword);
 
         User userEntity = getUserEntity(userId);
 
@@ -153,17 +151,17 @@ public class UserPoolService {
 
     private User getUserEntity(Long userId) {
         return userRepo.findById(userId)
-                       .orElseThrow(() -> new InvalidUserIdException("유효하지 않은 userId"));
+                       .orElseThrow(() -> new CustomException(ErrorCode.INVALID_USER));
     }
 
     private UserPool getUserPoolEntity(Long userPoolId) {
         return userPoolRepo.findById(userPoolId)
-                           .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 userPoolId"));
+                           .orElseThrow(() -> new CustomException(ErrorCode.INVALID_USER_POOL));
     }
 
     private UserHistory getUserHistoryEntity(Long userPoolId) {
         return userPoolRepo.findById(userPoolId)
-                           .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 userPoolId"))
+                           .orElseThrow(() -> new CustomException(ErrorCode.INVALID_USER_POOL))
                            .getUser()
                            .getUserHistory();
     }
@@ -183,7 +181,7 @@ public class UserPoolService {
                                                         .descending());
             }
             default: {
-                throw new IllegalArgumentException("유효하지 않은 sortKeyword");
+                throw new CustomException(ErrorCode.INVALID_SORT);
             }
         }
     }
@@ -197,7 +195,7 @@ public class UserPoolService {
             case "designer":
                 return positionCategory = "디자이너";
             default:
-                throw new IllegalArgumentException("유효하지 않은 positionCategory");
+                throw new CustomException(ErrorCode.INVALID_POSITION_CATEGORY);
         }
     }
 
@@ -224,11 +222,5 @@ public class UserPoolService {
         //userPoolLikeRepo.saveAndFlush(newUserPoolLikeEntity);
         return newUserPoolLikeEntity;
 
-    }
-
-    private void keywordLengthValidation(String keyword) {
-        if (keyword.length() < 3) {
-            throw new IllegalArgumentException("검색어의 길이가 3글자 미만입니다.");
-        }
     }
 }

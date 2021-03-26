@@ -2,11 +2,13 @@ package MakeUs.Moira.controller.user.dto.myPage;
 
 import MakeUs.Moira.domain.userPool.UserPool;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
+@ToString
 public class LikedUserPoolResponseDto {
     private Long                     userPoolId;
     private String                   nickname;

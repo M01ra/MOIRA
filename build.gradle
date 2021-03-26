@@ -23,8 +23,15 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.mariadb.jdbc:mariadb-java-client'
-	implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
-	implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+	implementation("io.springfox:springfox-swagger2:2.9.2") {
+		exclude group: 'io.swagger',module: 'swagger-annotations'
+		exclude group: 'io.swagger',module: 'swagger-models'
+	}
+	implementation "io.swagger:swagger-annotations:1.5.21"
+	implementation "io.swagger:swagger-models:1.5.21"
+	implementation "io.springfox:springfox-swagger-ui:2.9.2"
+	//implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+	//implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'
@@ -34,6 +41,7 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-aws', version: '2.2.6.RELEASE'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
 }
 
 test {

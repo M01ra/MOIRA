@@ -2,11 +2,13 @@ package MakeUs.Moira.controller.userReview.dto;
 
 import MakeUs.Moira.domain.userReview.UserReview;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
+@ToString
 public class UserReviewAddResponseDto {
 
     private Long                    userProjectId;

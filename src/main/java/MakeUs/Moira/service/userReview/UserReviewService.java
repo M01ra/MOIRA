@@ -1,6 +1,7 @@
 package MakeUs.Moira.service.userReview;
 
-import MakeUs.Moira.advice.exception.InvalidUserIdException;
+import MakeUs.Moira.advice.exception.CustomException;
+import MakeUs.Moira.advice.exception.ErrorCode;
 import MakeUs.Moira.controller.userReview.dto.UserReviewAddRequestDto;
 import MakeUs.Moira.controller.userReview.dto.UserReviewAddResponseDto;
 import MakeUs.Moira.domain.complimentMark.ComplimentMarkInfo;
@@ -30,7 +31,7 @@ public class UserReviewService {
         Long targetUserProjectId = userReviewAddRequestDto.getUserProjectId();
 
         UserProject targetUserProjectEntity = userProjectRepo.findById(targetUserProjectId)
-                                                             .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 userProjectId"));
+                                                             .orElseThrow(() -> new CustomException(ErrorCode.INVALID_USER_PROJECT));
 
         UserReview newUserReview = userReviewAddRequestDto.toEntity();
         newUserReview.updateUserProject(targetUserProjectEntity);
@@ -50,6 +51,6 @@ public class UserReviewService {
 
     private User getUserEntity(Long userId) {
         return userRepo.findById(userId)
-                       .orElseThrow(() -> new InvalidUserIdException("유효하지 않은 userId"));
+                       .orElseThrow(() -> new CustomException(ErrorCode.INVALID_USER));
     }
 }
