@@ -41,8 +41,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .antMatchers("/login", "/h2-console/**").permitAll() // 가입 및 local에서 h2는 누구나 접근가능
                         .antMatchers(HttpMethod.GET, "/exception/**").permitAll() // 얘네로 시작하는 GET요청 리소스는 누구나 접근가능
                         //.antMatchers("/*/users").hasRole("ADMIN")
-                        .anyRequest().hasRole(UserRole.USER.name()) // 그외 나머지 요청은 모두 인증된 회원만 접근 가능
-                        //.anyRequest().permitAll() // 그외 나머지 요청은 모두 인증된 회원만 접근 가능
+                        //.anyRequest().hasRole(UserRole.USER.name()) // 그외 나머지 요청은 모두 인증된 회원만 접근 가능
+                        .anyRequest().permitAll() // 그외 나머지 요청은 모두 인증된 회원만 접근 가능
 
                 // accessDeniedHandler 추가
                 .and()
