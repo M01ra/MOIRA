@@ -9,6 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
+@ToString
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProjectsResponseDTO {
     @ApiModelProperty(value = "프로젝트 ID", example = "1")

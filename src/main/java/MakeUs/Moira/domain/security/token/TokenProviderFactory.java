@@ -1,6 +1,7 @@
 package MakeUs.Moira.domain.security.token;
 
-import MakeUs.Moira.advice.exception.TokenProviderInvalidException;
+import MakeUs.Moira.advice.exception.CustomException;
+import MakeUs.Moira.advice.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +17,6 @@ public class TokenProviderFactory {
         return tokenProviderList.stream()
                 .filter(tokenProvider -> tokenProvider.getProviderName().equals(providerName))
                 .findFirst()
-                .orElseThrow(TokenProviderInvalidException::new);
+                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_TOKEN_PROVIDER));
     }
 }

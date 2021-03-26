@@ -3,12 +3,14 @@ package MakeUs.Moira.controller.user.dto.signup;
 import MakeUs.Moira.controller.user.dto.myPage.HashtagResponseDto;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 
 import java.util.List;
 
 
 @Getter
+@ToString
 public class SignupResponseDto {
 
 

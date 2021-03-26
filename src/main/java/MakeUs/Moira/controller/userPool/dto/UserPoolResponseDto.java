@@ -5,11 +5,13 @@ import MakeUs.Moira.domain.user.User;
 import MakeUs.Moira.domain.userPool.UserPool;
 import MakeUs.Moira.domain.userPool.UserPoolLike;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
+@ToString
 public class UserPoolResponseDto {
     /*
     - 닉네임, 포지션명, 프로필 이미지, 한 줄 소개, 관심태그들, 내가 좋아요 눌렀던가?

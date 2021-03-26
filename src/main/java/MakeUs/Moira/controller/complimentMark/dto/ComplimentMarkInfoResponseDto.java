@@ -2,8 +2,10 @@ package MakeUs.Moira.controller.complimentMark.dto;
 
 import MakeUs.Moira.domain.complimentMark.ComplimentMarkInfo;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@ToString
 public class ComplimentMarkInfoResponseDto {
     private Long   complimentMarkId;
     private String complimentMarkName;

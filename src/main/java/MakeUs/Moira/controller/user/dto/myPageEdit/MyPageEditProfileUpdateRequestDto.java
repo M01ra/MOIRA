@@ -3,11 +3,13 @@ package MakeUs.Moira.controller.user.dto.myPageEdit;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.List;
 
 
 @Getter
+@ToString
 @ApiModel
 public class MyPageEditProfileUpdateRequestDto {
 

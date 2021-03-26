@@ -3,10 +3,12 @@ package MakeUs.Moira.controller.userPortfolio.userCareer.dto;
 
 import MakeUs.Moira.domain.userPortfolio.userCareer.UserCareer;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.time.LocalDate;
 
 @Getter
+@ToString
 public class UserCareerResponseDto {
     private Long      userCareerId;
     private String    companyName;

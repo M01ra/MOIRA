@@ -65,4 +65,8 @@ public class ProjectDetail {
         projectPositionList.add(projectPosition);
     }
 
+    public void updateProjectContent(String projectContent){
+        this.projectContent = projectContent;
+    }
+
 }

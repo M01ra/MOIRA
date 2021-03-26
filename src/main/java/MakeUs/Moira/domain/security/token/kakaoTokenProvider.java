@@ -1,7 +1,6 @@
 package MakeUs.Moira.domain.security.token;
 
 
-import MakeUs.Moira.advice.exception.AccessTokenInvalidException;
 import org.json.JSONObject;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
@@ -23,17 +22,13 @@ public class kakaoTokenProvider implements TokenProvider{
 
         ResponseEntity<String> responseHttpEntity = requestByAccessToken(accessToken);
 
-        if (responseHttpEntity.getStatusCode().value() != 200) {
-            throw new AccessTokenInvalidException("AccessToken이 유효하지 않습니다.");
-        }
-
-        String response =responseHttpEntity.getBody();
+        String response = responseHttpEntity.getBody();
         JSONObject jObject = new JSONObject(response);
 
         return String.valueOf(jObject.getInt("id"));
     }
 
-    private ResponseEntity<String> requestByAccessToken(String accessToken) throws AccessTokenInvalidException{
+    private ResponseEntity<String> requestByAccessToken(String accessToken){
         RestTemplate rest = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);

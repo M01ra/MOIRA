@@ -14,11 +14,14 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Api(tags = {"6-3.마이페이지-프로필 수정-선택정보"})
@@ -29,6 +32,7 @@ public class UserAwardController {
     private final UserAwardService userAwardService;
     private final JwtTokenProvider jwtTokenProvider;
     private final ResponseService  responseService;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @ApiImplicitParams({
             @ApiImplicitParam(
@@ -43,11 +47,14 @@ public class UserAwardController {
                     "- 비회원인 경우 에러가 발생합니다."
     )
     @PostMapping(value = "/mypage/edit/award")
-    public ListResult<UserAwardResponseDto> addUserAward(@RequestHeader(value = "X-AUTH-TOKEN") String token,
-                                                         @RequestBody UserAwardAddRequestDto userAwardAddRequestDto ) {
+    public ListResult<UserAwardResponseDto> addUserAward(
+            @RequestHeader(value = "X-AUTH-TOKEN") String token,
+            @Valid @RequestBody UserAwardAddRequestDto userAwardAddRequestDto ) {
+        logger.info(userAwardAddRequestDto.toString());
         // 권한 설정은 시큐리티에서 하자
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(token));
         List<UserAwardResponseDto> userAwardResponseDtoList = userAwardService.addUserAward(userId, userAwardAddRequestDto);
+        logger.info(userAwardResponseDtoList.toString());
         return responseService.mappingListResult(userAwardResponseDtoList, "마이페이지 - 내 정보 수정하기 - 수상 정보 추가");
     }
 }
