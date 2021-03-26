@@ -1,6 +1,7 @@
 package MakeUs.Moira.service.user;
 
-import MakeUs.Moira.advice.exception.InvalidUserIdException;
+import MakeUs.Moira.advice.exception.CustomException;
+import MakeUs.Moira.advice.exception.ErrorCode;
 import MakeUs.Moira.controller.user.dto.myPageEdit.MyPageEditResponseDto;
 import MakeUs.Moira.controller.user.dto.myPageEdit.MyPageEditProfileUpdateResponseDto;
 import MakeUs.Moira.controller.user.dto.myPageEdit.MyPageEditProfileUpdateRequestDto;
@@ -39,7 +40,7 @@ public class MyPageEditService {
         userEntity.updateNickname(myPageEditProfileUpdateRequestDto.getNickname());
 
         UserPosition userPositionEntity = positionRepo.findById(myPageEditProfileUpdateRequestDto.getPositionId())
-                                                      .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 positionId"));
+                                                      .orElseThrow(() -> new CustomException(ErrorCode.INVALID_POSITION));
 
         userEntity.updateUserPosition(userPositionEntity);
         userEntity.updateShorIntroduction(myPageEditProfileUpdateRequestDto.getShortIntroduction());
@@ -51,7 +52,7 @@ public class MyPageEditService {
                          .clear();
 
         hashtagRepo.findAllByIdIn(myPageEditProfileUpdateRequestDto.getHashtagIdList())
-                   .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 hashtagId"))
+                   .orElseThrow(() -> new CustomException(ErrorCode.INVALID_HASHTAG))
                    .forEach((hashtagEntity) -> {
                        UserHashtag userHashtagEntity = new UserHashtag();
                        userHashtagEntity.updateHashtag(hashtagEntity)
@@ -64,6 +65,6 @@ public class MyPageEditService {
 
     private User getUserEntity(Long userId) {
         return userRepo.findById(userId)
-                       .orElseThrow(() -> new InvalidUserIdException("유효하지 않은 userId"));
+                       .orElseThrow(() -> new CustomException(ErrorCode.INVALID_USER));
     }
 }

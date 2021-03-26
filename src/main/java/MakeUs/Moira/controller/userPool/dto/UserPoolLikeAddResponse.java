@@ -2,8 +2,10 @@ package MakeUs.Moira.controller.userPool.dto;
 
 import MakeUs.Moira.domain.userPool.UserPoolLike;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@ToString
 public class UserPoolLikeAddResponse {
     private Long userId;
     private Long userPoolId;

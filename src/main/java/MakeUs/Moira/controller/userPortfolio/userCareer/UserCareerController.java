@@ -14,11 +14,14 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 
@@ -30,6 +33,7 @@ public class UserCareerController {
     private final UserCareerService userCareerService;
     private final JwtTokenProvider jwtTokenProvider;
     private final ResponseService responseService;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @ApiImplicitParams({
             @ApiImplicitParam(
@@ -44,11 +48,14 @@ public class UserCareerController {
                     "- 비회원인 경우 에러가 발생합니다."
     )
     @PostMapping(value = "/mypage/edit/career")
-    public ListResult<UserCareerResponseDto> addUserCareer(@RequestHeader(value = "X-AUTH-TOKEN") String token,
-                                                           @RequestBody UserCareerAddRequestDto userCareerAddRequestDto ) {
+    public ListResult<UserCareerResponseDto> addUserCareer(
+            @RequestHeader(value = "X-AUTH-TOKEN") String token,
+            @Valid @RequestBody UserCareerAddRequestDto userCareerAddRequestDto ) {
+        logger.info(userCareerAddRequestDto.toString());
         // 권한 설정은 시큐리티에서 하자
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(token));
         List<UserCareerResponseDto> userCareerResponseDtoList = userCareerService.addUserCareer(userId, userCareerAddRequestDto);
+        logger.info(userCareerResponseDtoList.toString());
         return responseService.mappingListResult(userCareerResponseDtoList, "마이페이지 - 내 정보 수정하기 - 경력 정보 추가");
     }
 }

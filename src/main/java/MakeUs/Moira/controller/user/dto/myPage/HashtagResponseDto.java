@@ -4,8 +4,10 @@ import MakeUs.Moira.domain.project.ProjectHashtag;
 import MakeUs.Moira.domain.user.UserHashtag;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@ToString
 public class HashtagResponseDto {
     private Long   hashtagId;
     private String hashtagName;

@@ -1,6 +1,7 @@
 package MakeUs.Moira.service.userPortfolio;
 
-import MakeUs.Moira.advice.exception.InvalidUserIdException;
+import MakeUs.Moira.advice.exception.CustomException;
+import MakeUs.Moira.advice.exception.ErrorCode;
 import MakeUs.Moira.controller.userPortfolio.userSchool.dto.UserSchoolAddRequestDto;
 import MakeUs.Moira.controller.userPortfolio.userSchool.dto.UserSchoolResponseDto;
 import MakeUs.Moira.controller.userPortfolio.userSchool.dto.MajorInfoResponseDto;
@@ -63,16 +64,16 @@ public class UserSchoolService {
 
     private User getUserEntity(Long userId) {
         return userRepo.findById(userId)
-                       .orElseThrow(() -> new InvalidUserIdException("유효하지 않은 userId"));
+                       .orElseThrow(() -> new CustomException(ErrorCode.INVALID_USER));
     }
 
     private SchoolInfo getSchoolInfo(UserSchoolAddRequestDto userSchoolAddRequestDto) {
         return schoolInfoRepo.findById(userSchoolAddRequestDto.getSchoolId())
-                             .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 schoolInfoId"));
+                             .orElseThrow(() -> new CustomException(ErrorCode.INVALID_SCHOOL));
     }
 
     private MajorInfo getMajorInfo(UserSchoolAddRequestDto userSchoolAddRequestDto) {
         return majorInfoRepo.findById(userSchoolAddRequestDto.getMajorId())
-                            .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 majorInfoId"));
+                            .orElseThrow(() -> new CustomException(ErrorCode.INVALID_MAJOR));
     }
 }

@@ -8,7 +8,7 @@ spring:
 
 logging:
   level:
-    root: debug
+    root: info
     com:
       amazonaws:
         util:
@@ -28,7 +28,7 @@ spring:
     activate:
       on-profile: local
   jpa:
-    show-sql: true
+    show-sql: false
     hibernate:
       ddl-auto: update
     properties:
@@ -49,7 +49,7 @@ logging:
       hibernate:
         type:
           descriptor:
-            sql: trace
+            sql: info
 ---
 spring:
   config:

@@ -1,6 +1,7 @@
 package MakeUs.Moira.service.security;
 
-import MakeUs.Moira.advice.exception.UserException;
+import MakeUs.Moira.advice.exception.CustomException;
+import MakeUs.Moira.advice.exception.ErrorCode;
 import MakeUs.Moira.domain.user.UserRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,6 +17,6 @@ public class CustomUserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String userPk) throws UsernameNotFoundException {
-        return userRepo.findById(Long.valueOf(userPk)).orElseThrow(UserException::new);
+        return userRepo.findById(Long.valueOf(userPk)).orElseThrow(() -> new CustomException(ErrorCode.INVALID_USER));
     }
 }

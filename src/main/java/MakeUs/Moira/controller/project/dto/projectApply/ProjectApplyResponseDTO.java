@@ -11,12 +11,14 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 
 @Getter
 @Setter
 @Builder
+@ToString
 public class ProjectApplyResponseDTO {
     @ApiModelProperty(value = "지원자 ID", example = "1")
     private Long                     userId;

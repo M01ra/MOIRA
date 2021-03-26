@@ -1,6 +1,7 @@
 package MakeUs.Moira.service.user;
 
-import MakeUs.Moira.advice.exception.InvalidUserIdException;
+import MakeUs.Moira.advice.exception.CustomException;
+import MakeUs.Moira.advice.exception.ErrorCode;
 
 import MakeUs.Moira.controller.user.dto.myPage.*;
 import MakeUs.Moira.domain.AuditorEntity;
@@ -35,7 +36,7 @@ public class MyPageService {
     public MyPageResponseDto getMyPage(Long userId) {
 
         User userEntity = userRepo.findById(userId)
-                                  .orElseThrow(() -> new InvalidUserIdException("유효하지 않은 userId"));
+                                  .orElseThrow(() -> new CustomException(ErrorCode.INVALID_USER));
 
         int writtenPostCount = (int) userEntity.getUserHistory()
                                                .getUserProjects()
@@ -60,7 +61,7 @@ public class MyPageService {
     public List<WrittenProjectInfoResponseDto> getWrittenProjectList(Long userId) {
 
         UserHistory userHistoryEntity = userHistoryRepo.findByUserId(userId)
-                                                       .orElseThrow(() -> new InvalidUserIdException("유효하지 않은 userId"));
+                                                       .orElseThrow(() -> new CustomException(ErrorCode.INVALID_USER));
 
         List<Project> writtenProjectList = userHistoryEntity.getUserProjects()
                                                             .stream()
@@ -85,7 +86,7 @@ public class MyPageService {
     public List<LikedProjectResponseDto> getLikedProjectList(Long userId, String positionCategory, String sortKeyword) {
 
         UserHistory userHistoryEntity = userHistoryRepo.findByUserId(userId)
-                                                       .orElseThrow(() -> new InvalidUserIdException("유효하지 않은 userId"));
+                                                       .orElseThrow(() -> new CustomException(ErrorCode.INVALID_USER));
 
         String positionCategoryFilter = parseToFilter(positionCategory);
         List<Project> likedProjectFilteredList = userHistoryEntity.getProjectLikes()
@@ -118,7 +119,7 @@ public class MyPageService {
 
     private User getUserEntity(Long userId) {
         return userRepo.findById(userId)
-                       .orElseThrow(() -> new InvalidUserIdException("유효하지 않은 userId"));
+                       .orElseThrow(() -> new CustomException(ErrorCode.INVALID_USER));
     }
 
     private String parseToFilter(String positionCategoryFilter) {
@@ -133,7 +134,7 @@ public class MyPageService {
                 positionCategoryFilter = "디자이너";
                 break;
             default:
-                throw new IllegalArgumentException("유효하지 않은 positionCategory");
+                throw new CustomException(ErrorCode.INVALID_POSITION_CATEGORY);
         }
         return positionCategoryFilter;
     }

@@ -1,8 +1,8 @@
 package MakeUs.Moira.service.user;
 
 
-import MakeUs.Moira.advice.exception.DuplicatedNicknameException;
-import MakeUs.Moira.advice.exception.InvalidUserIdException;
+import MakeUs.Moira.advice.exception.CustomException;
+import MakeUs.Moira.advice.exception.ErrorCode;
 import MakeUs.Moira.controller.user.dto.myPage.HashtagResponseDto;
 import MakeUs.Moira.controller.user.dto.signup.PositionResponseDto;
 import MakeUs.Moira.controller.user.dto.signup.SignupResponseDto;
@@ -31,7 +31,13 @@ public class UserService {
 
     private User findUserById(Long userId) {
         return userRepo.findById(userId)
-                       .orElseThrow(() -> new InvalidUserIdException("유효하지 않은 userId"));
+                       .orElseThrow(() -> new CustomException(ErrorCode.INVALID_USER));
+    }
+
+
+    private UserHistory findUserHistoryById(Long userId) {
+        return userHistoryRepo.findByUserId(userId)
+                       .orElseThrow(() -> new CustomException(ErrorCode.INVALID_USER));
     }
 
 
@@ -48,12 +54,12 @@ public class UserService {
         User userEntity = findUserById(userId);
 
         // 2. 닉네임
-        if (isDuplicatedNickname(nickname)) throw new DuplicatedNicknameException("중복된 닉네임");
+        if (isDuplicatedNickname(nickname)) throw new CustomException(ErrorCode.ALREADY_REGISTRED_NICKNAME);
         userEntity.updateNickname(nickname);
 
         // 3. 포지션
         UserPosition userPositionEntity = positionRepo.findById(positionId)
-                                                      .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 PositionId"));
+                                                      .orElseThrow(() -> new CustomException(ErrorCode.INVALID_POSITION));
         userEntity.updateUserPosition(userPositionEntity);
 
         // 4. UserHistory 가져오기 + hashtagId 로 hashtagList 가져오기 => UserHashtag 만들고 저장
@@ -67,7 +73,7 @@ public class UserService {
         }
 
         hashtagRepo.findAllByIdIn(hashtagIdList)
-                   .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 hashtagId"))
+                   .orElseThrow(() -> new CustomException(ErrorCode.INVALID_HASHTAG))
                    .forEach((hashtagEntity) -> {
                        UserHashtag userHashtagEntity = new UserHashtag();
                        userHashtagEntity.updateUserHistory(userHistoryEntity)
@@ -100,5 +106,15 @@ public class UserService {
                                 .positionResponseDto(positionResponseDto)
                                 .hashtagResponseDtoList(hashtagResponseDtoList)
                                 .build();
+    }
+
+
+    @Transactional
+    public List<String> getUserHashtags(Long userId){
+        UserHistory userHistory = findUserHistoryById(userId);
+        return userHashtagRepo.findAllByUserHistoryId(userHistory.getId())
+                       .stream()
+                       .map(userHashtag -> userHashtag.getHashtag().getHashtagName())
+                       .collect(Collectors.toList());
     }
 }
