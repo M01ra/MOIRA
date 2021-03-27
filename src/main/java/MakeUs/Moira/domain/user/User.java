@@ -1,5 +1,6 @@
 package MakeUs.Moira.domain.user;
 
+import MakeUs.Moira.controller.security.dto.LoginResponseDto;
 import MakeUs.Moira.controller.user.dto.myPageEdit.MyPageEditIntroductionResponseDto;
 import MakeUs.Moira.controller.user.dto.myPageEdit.MyPageEditNicknameResponseDto;
 import MakeUs.Moira.controller.user.dto.myPageEdit.MyPageEditPositionResponseDto;
