@@ -2,8 +2,10 @@ package MakeUs.Moira.controller.project.dto;
 
 import MakeUs.Moira.domain.user.UserProject;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@ToString
 public class ProjectMemberResponseDto {
     private Long    userProjectId;
     private Long    userId;

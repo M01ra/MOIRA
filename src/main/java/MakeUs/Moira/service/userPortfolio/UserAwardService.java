@@ -1,6 +1,7 @@
 package MakeUs.Moira.service.userPortfolio;
 
-import MakeUs.Moira.advice.exception.InvalidUserIdException;
+import MakeUs.Moira.advice.exception.CustomException;
+import MakeUs.Moira.advice.exception.ErrorCode;
 import MakeUs.Moira.controller.userPortfolio.userAward.dto.UserAwardAddRequestDto;
 import MakeUs.Moira.controller.userPortfolio.userAward.dto.UserAwardResponseDto;
 import MakeUs.Moira.domain.user.User;
@@ -39,6 +40,6 @@ public class UserAwardService {
 
     private User getUserEntity(Long userId) {
         return userRepo.findById(userId)
-                       .orElseThrow(() -> new InvalidUserIdException("유효하지 않은 userId"));
+                       .orElseThrow(() -> new CustomException(ErrorCode.INVALID_USER));
     }
 }

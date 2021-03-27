@@ -1,6 +1,7 @@
 package MakeUs.Moira.service;
 
-import MakeUs.Moira.advice.exception.S3Exception;
+import MakeUs.Moira.advice.exception.CustomException;
+import MakeUs.Moira.advice.exception.ErrorCode;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -62,7 +63,7 @@ public class S3Service {
             s3Client.putObject(new PutObjectRequest(bucket, key, file.getInputStream(), objMeta)
                     .withCannedAcl(CannedAccessControlList.PublicRead));
         } catch (IOException e) {
-            throw new S3Exception("파일 입출력 에러");
+            throw new CustomException(ErrorCode.INVALID_FILE_IO);
         }
         return s3Client.getUrl(bucket, key).toString();
     }
@@ -77,7 +78,7 @@ public class S3Service {
             s3Client.deleteObject(bucket, key);
         }
         else{
-            throw new S3Exception("존재하지 않는 파일 혹은 이미지");
+            throw new CustomException(ErrorCode.NON_EXIST_FILE_NAME);
         }
     }
 }

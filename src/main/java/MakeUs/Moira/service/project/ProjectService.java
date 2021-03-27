@@ -1,12 +1,9 @@
 package MakeUs.Moira.service.project;
 
-import MakeUs.Moira.advice.exception.InvalidUserIdException;
-import MakeUs.Moira.advice.exception.ProjectException;
+import MakeUs.Moira.advice.exception.ErrorCode;
+import MakeUs.Moira.advice.exception.CustomException;
 import MakeUs.Moira.controller.project.dto.ProjectMemberResponseDto;
-import MakeUs.Moira.controller.project.dto.project.ProjectPositionCategoryDTO;
-import MakeUs.Moira.controller.project.dto.project.ProjectRequestDTO;
-import MakeUs.Moira.controller.project.dto.project.ProjectResponseDTO;
-import MakeUs.Moira.controller.project.dto.project.ProjectsResponseDTO;
+import MakeUs.Moira.controller.project.dto.project.*;
 import MakeUs.Moira.domain.hashtag.Hashtag;
 import MakeUs.Moira.domain.hashtag.HashtagRepo;
 import MakeUs.Moira.domain.position.PositionCategory;
@@ -81,7 +78,7 @@ public class ProjectService {
         if(projectRequestDTO.getPositionCategoryList() != null) {
             for (ProjectPositionCategoryDTO projectPositionCategoryDTO : projectRequestDTO.getPositionCategoryList()) {
                 PositionCategory positionCategoryEntity = positionCategoryRepo.findByCategoryName(projectPositionCategoryDTO.getPositionCategoryName())
-                                                                              .orElseThrow(() -> new ProjectException("존재하지 않은 포지션 카테고리"));
+                                                                              .orElseThrow(() -> new CustomException(ErrorCode.INVALID_POSITION_CATEGORY));
 
                 projectDetailEntity.addProjectPosition(
                         ProjectPosition.builder()
@@ -117,9 +114,6 @@ public class ProjectService {
         Project projectEntity = getValidProject(projectId);
         getAuthorizedUserProject(userHistoryEntity.getId(), projectId);
 
-        if (file == null) {
-            throw new ProjectException("존재하지 않는 파일");
-        }
         // 기존에 존재했을 경우 삭제
         if (projectEntity.getProjectImageUrl() != null) {
             s3Service.delete("project" + projectId);
@@ -141,13 +135,15 @@ public class ProjectService {
 
 
     @Transactional
-    public void changeProjectTitle(Long projectId, String title, Long userId) {
+    public void modifyProject(Long projectId, ProjectModifyRequestDTO projectModifyRequestDTO, Long userId) {
         getValidUser(userId);
         UserHistory userHistoryEntity = getValidUserHistory(userId);
         Project projectEntity = getValidProject(projectId);
+        ProjectDetail projectDetailEntity = projectEntity.getProjectDetail();
         getAuthorizedUserProject(userHistoryEntity.getId(), projectId);
 
-        projectEntity.updateProjectTitle(title);
+        projectEntity.updateProjectTitle(projectModifyRequestDTO.getTitle());
+        projectDetailEntity.updateProjectContent(projectModifyRequestDTO.getContent());
     }
 
 
@@ -233,6 +229,7 @@ public class ProjectService {
     @Transactional
     public ProjectResponseDTO getProject(Long projectId, Long userId) {
         Project projectEntity = getValidProject(projectId);
+        ProjectDetail projectDetailEntity = projectEntity.getProjectDetail();
         getValidUser(userId);
         UserHistory userHistoryEntity = getValidUserHistory(userId);
 
@@ -244,6 +241,7 @@ public class ProjectService {
 
         return ProjectResponseDTO.builder()
                 .title(projectEntity.getProjectTitle())
+                .content(projectDetailEntity.getProjectContent())
                 .writer(getWriter(projectEntity.getUserProjectList()))
                 .hashtagList(getHashtagList(projectEntity.getProjectHashtagList()))
                 .imageUrl(projectEntity.getProjectImageUrl())
@@ -272,7 +270,7 @@ public class ProjectService {
 
     private User getUserEntity(Long userId) {
         return userRepo.findById(userId)
-                       .orElseThrow(() -> new InvalidUserIdException("유효하지 않은 userId"));
+                       .orElseThrow(() -> new CustomException(ErrorCode.INVALID_USER));
     }
 
 
@@ -322,7 +320,7 @@ public class ProjectService {
                                                                            .getUser()
                                                                            .getId());
                 if (!optionalUser.isPresent()) {
-                    throw new ProjectException("존재하지 않는 유저");
+                    throw new CustomException(ErrorCode.INVALID_USER);
                 }
                 writer = optionalUser.get()
                                      .getNickname();
@@ -335,30 +333,30 @@ public class ProjectService {
 
     private User getValidUser(Long userId) {
         User userEntity = userRepo.findById(userId)
-                                  .orElseThrow(() -> new ProjectException("유효하지 않는 유저"));
+                                  .orElseThrow(() -> new CustomException(ErrorCode.INVALID_USER));
         return userEntity;
     }
 
 
     private UserHistory getValidUserHistory(Long userId) {
         UserHistory userHistoryEntity = userHistoryRepo.findByUserId(userId)
-                                                       .orElseThrow(() -> new ProjectException("유효하지 않는 유저"));
+                                                       .orElseThrow(() -> new CustomException(ErrorCode.INVALID_USER));
         return userHistoryEntity;
     }
 
 
     private Project getValidProject(Long projectId) {
         Project projectEntity = projectRepo.findById(projectId)
-                                           .orElseThrow(() -> new ProjectException("존재하지 않은 프로젝트 ID"));
+                                           .orElseThrow(() -> new CustomException(ErrorCode.INVALID_PROJECT));
         return projectEntity;
     }
 
 
     private UserProject getAuthorizedUserProject(Long userHistoryId, Long projectId) {
         UserProject userProjectEntity = userProjectRepo.findByUserHistoryIdAndProjectId(userHistoryId, projectId)
-                                                       .orElseThrow(() -> new ProjectException("프로젝트에 가입되지 않은 유저"));
+                                                       .orElseThrow(() -> new CustomException(ErrorCode.UNAUTHORIZED_USER));
         if (userProjectEntity.getRoleType() != UserProjectRoleType.LEADER) {
-            throw new ProjectException("권한이 없는 유저");
+            throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
         }
         return userProjectEntity;
     }
@@ -366,21 +364,21 @@ public class ProjectService {
 
     private Hashtag getValidHashtag(String hashtagName) {
         Hashtag hashtag = hashtagRepo.findHashtagByHashtagName(hashtagName)
-                                     .orElseThrow(() -> new ProjectException("존재하지 않는 태그"));
+                                     .orElseThrow(() -> new CustomException(ErrorCode.INVALID_HASHTAG));
         return hashtag;
     }
 
 
     private void checkValidSort(String sort){
         if(!sort.equals("date") && !sort.equals("hitCount") && !sort.equals("likeCount")){
-            throw new ProjectException("유효하지 않는 정렬 방식");
+            throw new CustomException(ErrorCode.INVALID_SORT);
         }
     }
 
 
     private void checkValidPosition(String position){
         if(!position.equals("개발자") && !position.equals("기획자") && !position.equals("디자이너")){
-            throw new ProjectException("유효하지 않는 포지션 이름");
+            throw new CustomException(ErrorCode.INVALID_POSITION_CATEGORY);
         }
     }
 

@@ -5,10 +5,12 @@ import MakeUs.Moira.domain.project.Project;
 import MakeUs.Moira.domain.project.projectApply.ProjectApply;
 import MakeUs.Moira.domain.project.projectDetail.ProjectDetail;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.time.LocalDate;
 
 @Getter
+@ToString
 public class AppliedProjectInfoResponseDto {
     private Long      projectId;
     private Long      projectApplyId;

@@ -2,8 +2,10 @@ package MakeUs.Moira.controller.user.dto.myPage;
 
 import MakeUs.Moira.domain.user.User;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@ToString
 public class MyPageResponseDto {
     private String nickname;
     private String positionName;

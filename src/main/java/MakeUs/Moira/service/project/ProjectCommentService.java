@@ -1,6 +1,7 @@
 package MakeUs.Moira.service.project;
 
-import MakeUs.Moira.advice.exception.ProjectException;
+import MakeUs.Moira.advice.exception.CustomException;
+import MakeUs.Moira.advice.exception.ErrorCode;
 import MakeUs.Moira.controller.project.dto.projectComment.ProjectCommentRequestDTO;
 import MakeUs.Moira.controller.project.dto.projectComment.ProjectCommentResponseDTO;
 import MakeUs.Moira.domain.project.Project;
@@ -91,7 +92,7 @@ public class ProjectCommentService {
         ProjectComment projectCommentEntity = getValidProjectComment(commentId);
         ProjectDetail projectDetailEntity = projectCommentEntity.getProjectDetail();
         if(!projectCommentEntity.getWriter().getId().equals(userId)){
-            throw new ProjectException("로그인한 유저가 쓴 댓글이 아님");
+            throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
         }
         projectDetailEntity.removeProjectComment(projectCommentEntity);
         projectCommentRepo.delete(projectCommentEntity);
@@ -99,13 +100,13 @@ public class ProjectCommentService {
 
     private User getValidUser(Long userId){
         User userEntity = userRepo.findById(userId)
-                .orElseThrow(() -> new ProjectException("유효하지 않는 유저"));
+                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_USER));
         return userEntity;
     }
 
     private Project getValidProject(Long projectId){
         Project projectEntity = projectRepo.findById(projectId)
-                .orElseThrow(() -> new ProjectException("존재하지 않은 프로젝트 ID"));
+                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_PROJECT));
         return projectEntity;
     }
 
@@ -113,7 +114,7 @@ public class ProjectCommentService {
     private ProjectComment getValidProjectComment(Long projectCommentId){
         Optional<ProjectComment> optionalProjectComment = projectCommentRepo.findById(projectCommentId);
         if(!optionalProjectComment.isPresent()){
-            throw new ProjectException("존재하지 않는 댓글 ID");
+            throw new CustomException(ErrorCode.INVALID_COMMENT);
         }
         return optionalProjectComment.get();
     }

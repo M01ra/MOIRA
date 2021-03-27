@@ -12,11 +12,13 @@ import MakeUs.Moira.domain.user.User;
 
 import MakeUs.Moira.domain.userPortfolio.UserPortfolio;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
+@ToString
 public class MyPageEditResponseDto {
     private String                   profileImageUrl;
     private String                   nickname;

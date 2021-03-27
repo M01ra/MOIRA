@@ -14,6 +14,8 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +28,7 @@ public class MyPageEditController {
     private final ResponseService   responseService;
     private final JwtTokenProvider  jwtTokenProvider;
     private final MyPageEditService myPageEditService;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @ApiImplicitParams({
             @ApiImplicitParam(
@@ -43,6 +46,7 @@ public class MyPageEditController {
         // 권한 설정은 시큐리티에서 하자
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(token));
         MyPageEditResponseDto myPageEditResponseDto = myPageEditService.getMyPageEdit(userId);
+        logger.info(myPageEditResponseDto.toString());
         return responseService.mappingSingleResult(myPageEditResponseDto, "마이페이지 - 내 정보 수정하기 - 첫 화면");
     }
 

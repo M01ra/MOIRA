@@ -1,6 +1,7 @@
 package MakeUs.Moira.service.project;
 
-import MakeUs.Moira.advice.exception.ProjectException;
+import MakeUs.Moira.advice.exception.CustomException;
+import MakeUs.Moira.advice.exception.ErrorCode;
 import MakeUs.Moira.controller.project.dto.myProject.MyProjectResponseDTO;
 import MakeUs.Moira.controller.project.dto.myProject.MyProjectTeammateResponseDTO;
 import MakeUs.Moira.controller.project.dto.myProject.MyProjectsResponseDTO;
@@ -25,7 +26,6 @@ public class MyProjectService {
 
     @Transactional
     public List<MyProjectsResponseDTO> getMyProjects(Long userId, String sort, UserProjectStatus status) {
-        checkValidSort(sort);
         UserHistory userHistoryEntity = getValidUserHistory(userId);
         List<MyProjectsResponseDTO> myProjectResponseDTOList =  userHistoryEntity.getUserProjects()
                                                                                  .stream()
@@ -49,7 +49,7 @@ public class MyProjectService {
         // 입력에 맞는 정렬
         if(sort.equals("date")) myProjectResponseDTOList.sort(Comparator.comparing(MyProjectsResponseDTO::getDate).reversed());
         else if(sort.equals("character")) myProjectResponseDTOList.sort(Comparator.comparing(MyProjectsResponseDTO::getTitle));
-        else throw new ProjectException("존재하지 않는 정렬 기준");
+        else throw new CustomException(ErrorCode.INVALID_SORT);
         return myProjectResponseDTOList;
     }
 
@@ -86,22 +86,15 @@ public class MyProjectService {
 
     private Project getValidProject(Long projectId){
         Project projectEntity = projectRepo.findById(projectId)
-                                           .orElseThrow(() -> new ProjectException("존재하지 않은 프로젝트 ID"));
+                                           .orElseThrow(() -> new CustomException(ErrorCode.INVALID_PROJECT));
         return projectEntity;
     }
 
 
     private UserHistory getValidUserHistory(Long userId){
         UserHistory userHistoryEntity = userHistoryRepo.findByUserId(userId)
-                                                       .orElseThrow(() -> new ProjectException("유효하지 않는 유저"));
+                                                       .orElseThrow(() -> new CustomException(ErrorCode.INVALID_USER));
         return userHistoryEntity;
-    }
-
-
-    private void checkValidSort(String sort){
-        if(!sort.equals("date") && !sort.equals("character")){
-            throw new ProjectException("유효하지 않는 정렬 방식");
-        }
     }
 
 }

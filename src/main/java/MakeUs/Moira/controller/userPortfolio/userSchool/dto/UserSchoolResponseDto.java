@@ -2,10 +2,12 @@ package MakeUs.Moira.controller.userPortfolio.userSchool.dto;
 
 import MakeUs.Moira.domain.userPortfolio.userSchool.UserSchool;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.time.LocalDate;
 
 @Getter
+@ToString
 public class UserSchoolResponseDto {
 
     private Long      userSchoolId;

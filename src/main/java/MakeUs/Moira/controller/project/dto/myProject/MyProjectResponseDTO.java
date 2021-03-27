@@ -1,15 +1,19 @@
 package MakeUs.Moira.controller.project.dto.myProject;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 
 @Getter
 @Setter
 @Builder
+@ToString
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class MyProjectResponseDTO {
     @ApiModelProperty(value = "제목", example = "웹 프로젝트 팀원 모집합니다")
     private String title;
