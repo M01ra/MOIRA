@@ -2,7 +2,7 @@ package MakeUs.Moira.service.userPool;
 
 
 import MakeUs.Moira.advice.exception.InvalidUserIdException;
-import MakeUs.Moira.controller.userPool.UserPoolDetailReviewDetailResponseDto;
+import MakeUs.Moira.controller.userPool.dto.UserPoolDetailReviewDetailResponseDto;
 import MakeUs.Moira.controller.userPool.dto.*;
 
 import MakeUs.Moira.domain.AuditorEntity;
