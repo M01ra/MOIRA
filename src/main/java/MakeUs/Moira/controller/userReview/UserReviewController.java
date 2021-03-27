@@ -75,6 +75,7 @@ public class UserReviewController {
                                                              @ApiParam(value = "조회하려는 유저의 userId", required = true) @PathVariable Long targetId)
     {
         UserReviewResponseDto userReviewResponseDto = userReviewService.getUserReview(targetId);
+        logger.info(userReviewResponseDto.toString());
         return responseService.mappingSingleResult(userReviewResponseDto, "유저의 사용자 평가 조회");
     }
 
@@ -95,6 +96,7 @@ public class UserReviewController {
                                                                        @ApiParam(value = "정렬 방식", required = true) @RequestParam String sort)
     {
         List<UserReviewDetailResponseDto> userReviewDetailResponseDtoList = userReviewService.getUserReviewDetail(targetId, sort);
+        logger.info(userReviewDetailResponseDtoList.toString());
         return responseService.mappingListResult(userReviewDetailResponseDtoList, "유저의 모든 리뷰 내용 조회");
     }
 }

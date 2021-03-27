@@ -1,6 +1,7 @@
 package MakeUs.Moira.service.user;
 
-import MakeUs.Moira.advice.exception.InvalidUserIdException;
+import MakeUs.Moira.advice.exception.CustomException;
+import MakeUs.Moira.advice.exception.ErrorCode;
 import MakeUs.Moira.controller.user.dto.myPageEdit.*;
 import MakeUs.Moira.domain.hashtag.HashtagRepo;
 import MakeUs.Moira.domain.position.PositionRepo;
@@ -37,7 +38,7 @@ public class MyPageEditService {
     {
         String newNickname = myPageEditNicknameRequestDto.getNickname();
         if (isDuplicatedNickname(newNickname)) {
-            throw new IllegalArgumentException();
+            throw new CustomException(ErrorCode.ALREADY_REGISTRED_NICKNAME);
         }
 
         User userEntity = getUserEntity(userId);
@@ -60,7 +61,7 @@ public class MyPageEditService {
     {
         User userEntity = getUserEntity(userId);
         UserPosition userPosition = positionRepo.findById(myPageEditPositionRequestDto.getPositionId())
-                                                .orElseThrow(IllegalArgumentException::new);
+                                                .orElseThrow(()->new CustomException(ErrorCode.INVALID_POSITION));
         userEntity.updateUserPosition(userPosition);
         return userEntity.toMyPageEditPositionResponseDto();
     }
@@ -87,7 +88,7 @@ public class MyPageEditService {
                          .clear();
 
         hashtagRepo.findAllByIdIn(myPageEditHashtagRequestDto.getHashtagIdList())
-                   .orElseThrow(IllegalArgumentException::new)
+                   .orElseThrow(()->new CustomException(ErrorCode.INVALID_HASHTAG))
                    .forEach((hashtagEntity) -> {
                        UserHashtag userHashtagEntity = new UserHashtag();
                        userHashtagEntity.updateHashtag(hashtagEntity)
@@ -100,7 +101,7 @@ public class MyPageEditService {
 
     private User getUserEntity(Long userId) {
         return userRepo.findById(userId)
-                       .orElseThrow(() -> new InvalidUserIdException("유효하지 않은 userId"));
+                       .orElseThrow(() -> new CustomException(ErrorCode.INVALID_USER));
     }
 
     private boolean isDuplicatedNickname(String newNickname) {

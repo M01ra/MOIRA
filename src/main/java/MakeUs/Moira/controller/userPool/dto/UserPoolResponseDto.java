@@ -22,7 +22,7 @@ public class UserPoolResponseDto {
     private String       positionName;
     private String       profileImage;
     private String       shortIntroduction;
-    private List<String> hastagNameList;
+    private List<String> hashtagList;
     private boolean      isLikedByUser;
 
     public UserPoolResponseDto(User loginUser, UserPool userPoolPost) {
@@ -36,13 +36,13 @@ public class UserPoolResponseDto {
                                         .getProfileImage();
         this.shortIntroduction = userPoolPost.getUser()
                                              .getProfileImage();
-        this.hastagNameList = userPoolPost.getUser()
-                                          .getUserHistory()
-                                          .getUserHashtags()
-                                          .stream()
-                                          .map(userHashtag -> userHashtag.getHashtag()
+        this.hashtagList = userPoolPost.getUser()
+                                       .getUserHistory()
+                                       .getUserHashtags()
+                                       .stream()
+                                       .map(userHashtag -> userHashtag.getHashtag()
                                                                          .getHashtagName())
-                                          .collect(Collectors.toList());
+                                       .collect(Collectors.toList());
         this.isLikedByUser = loginUser.getUserHistory()
                                       .getUserPoolLikes()
                                       .stream()

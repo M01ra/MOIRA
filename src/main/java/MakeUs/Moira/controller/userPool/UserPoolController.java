@@ -67,7 +67,7 @@ public class UserPoolController {
     @GetMapping(value = "/pool")
     public ListResult<UserPoolResponseDto> getUserPoolList(
             @RequestHeader(value = "X-AUTH-TOKEN") String token,
-            @ApiParam(value = "포지션 카테고리 필터", required = true, allowableValues = "develop, director, designer") @RequestParam String positionCategory,
+            @ApiParam(value = "포지션 카테고리 필터", required = true, allowableValues = "개발자, 기획자, 디자이너") @RequestParam String positionCategory,
             @ApiParam(value = "정렬 방식 필터", required = true, allowableValues = "date, hit, like") @RequestParam String sortby,
             @ApiParam(value = "현재 페이지 위치", required = true) @RequestParam int page)
     {

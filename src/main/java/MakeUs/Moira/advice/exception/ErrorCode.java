@@ -27,6 +27,8 @@ public enum ErrorCode {
     INVALID_FILE_IO(433, "유효하지 않은 파일 입출력"),
     INVALID_TOKEN_PROVIDER(434, "유효하지 않은 토큰 제공자(kakao)"),
     INVALID_JWT_TOKEN(435, "유효하지 않은 JWT 토큰"),
+    INVALID_MESSAGE_TYPE(436, "유효하지 않은 쪽지 타입"),
+    INVALID_CHAT_ROOM(436, "유효하지 않은 채팅방"),
 
     ALREADY_REGISTRED_USER(450, "이미 가입된 유저"),
     ALREADY_REGISTRED_NICKNAME(451, "이미 존재하는 닉네임"),

@@ -11,6 +11,8 @@ import MakeUs.Moira.response.model.SingleResult;
 import MakeUs.Moira.service.chat.ChatService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +25,7 @@ public class ChatController {
     private final ChatService      chatService;
     private final JwtTokenProvider jwtTokenProvider;
     private final ResponseService  responseService;
+    private final Logger           logger = LoggerFactory.getLogger(this.getClass());
 
     @ApiImplicitParams({
             @ApiImplicitParam(
@@ -39,6 +42,7 @@ public class ChatController {
     {
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(token));
         List<ChatRoomResponseDto> chatRoomResponseDtoList = chatService.getChatRoomList(userId);
+        logger.info(chatRoomResponseDtoList.toString());
         return responseService.mappingListResult(chatRoomResponseDtoList, "채팅 방 목록 불러오기");
     }
 
@@ -61,6 +65,7 @@ public class ChatController {
     {
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(token));
         List<ChatMessageResponseDto> chatMessageResponseDtoList = chatService.getChatMessageList(userId, chatRoomId, page);
+        logger.info(chatMessageResponseDtoList.toString());
         return responseService.mappingListResult(chatMessageResponseDtoList, "유저와 채팅 내용 불러오기");
     }
 
@@ -79,8 +84,10 @@ public class ChatController {
     public SingleResult<ChatMessageSendResponseDto> sendMessage(@RequestHeader(value = "X-AUTH-TOKEN") String token,
                                                                 @ApiParam(required = true) @RequestBody ChatMessageSendRequestDto chatMessageSendRequestDto)
     {
+        logger.info(chatMessageSendRequestDto.toString());
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(token));
         ChatMessageSendResponseDto chatMessageSendResponseDto = chatService.sendMessage(userId, chatMessageSendRequestDto);
+        logger.info(chatMessageSendResponseDto.toString());
         return responseService.mappingSingleResult(chatMessageSendResponseDto, "유저와 채팅 내용 불러오기");
     }
 }

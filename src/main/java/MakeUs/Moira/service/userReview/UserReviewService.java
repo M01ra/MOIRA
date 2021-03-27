@@ -106,7 +106,7 @@ public class UserReviewService {
             userReviewList.sort(Comparator.comparing(UserReview::getMannerPoint)
                                           .reversed());
         } else {
-            throw new IllegalArgumentException("유효하지 않은 sort");
+            throw new CustomException(ErrorCode.INVALID_SORT);
         }
     }
 }

@@ -15,7 +15,7 @@ public class LikedUserPoolResponseDto {
     private String                   positionName;
     private String                   profileImage;
     private String                   shortIntroduction;
-    private List<HashtagResponseDto> hastagNameList;
+    private List<HashtagResponseDto> hashtagList;
 
     public LikedUserPoolResponseDto(UserPool likedUserPool)
     {
@@ -29,11 +29,11 @@ public class LikedUserPoolResponseDto {
                                          .getProfileImage();
         this.shortIntroduction = likedUserPool.getUser()
                                               .getShortIntroduction();
-        this.hastagNameList = likedUserPool.getUser()
-                                           .getUserHistory()
-                                           .getUserHashtags()
-                                           .stream()
-                                           .map(HashtagResponseDto::new)
-                                           .collect(Collectors.toList());
+        this.hashtagList = likedUserPool.getUser()
+                                        .getUserHistory()
+                                        .getUserHashtags()
+                                        .stream()
+                                        .map(HashtagResponseDto::new)
+                                        .collect(Collectors.toList());
     }
 }

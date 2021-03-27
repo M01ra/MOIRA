@@ -1,5 +1,7 @@
 package MakeUs.Moira.controller.chat.dto;
 
+import MakeUs.Moira.advice.exception.CustomException;
+import MakeUs.Moira.advice.exception.ErrorCode;
 import MakeUs.Moira.domain.chat.ChatMessage;
 import MakeUs.Moira.domain.chat.MessageType;
 import MakeUs.Moira.domain.chat.ReadStatus;
@@ -27,6 +29,6 @@ public class ChatMessageSendRequestDto {
         } else if (messageType.equals(MessageType.TEXT.name())) {
             return MessageType.TEXT;
         }
-        throw new IllegalArgumentException();
+        throw new CustomException(ErrorCode.INVALID_MESSAGE_TYPE);
     }
 }
