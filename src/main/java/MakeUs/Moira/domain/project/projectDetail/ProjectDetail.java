@@ -27,9 +27,6 @@ public class ProjectDetail {
     private List<ProjectApply> projectApplyList = new ArrayList<>();
 
     @OneToMany(mappedBy = "projectDetail", cascade = CascadeType.ALL)
-    private List<ProjectQuestion> projectQuestionList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "projectDetail", cascade = CascadeType.ALL)
     private List<ProjectPosition> projectPositionList = new ArrayList<>();
 
     private String projectContent;
@@ -56,19 +53,16 @@ public class ProjectDetail {
         projectApplyList.add(projectApply);
     }
 
-    public void addProjectQuestion(ProjectQuestion projectQuestion){
-        projectQuestionList.add(projectQuestion);
+    public void removeProjectComment(ProjectComment projectComment){
+        projectCommentList.remove(projectComment);
+    }
+
+    public void removeProjectApply(ProjectApply projectApply){
+        projectApplyList.remove(projectApply);
     }
 
     public void addProjectPosition(ProjectPosition projectPosition){
         projectPositionList.add(projectPosition);
     }
 
-    public void updateProjectQuestionList(List<ProjectQuestion> projectQuestionList) {
-        this.projectQuestionList = projectQuestionList;
-    }
-
-    public void updateProjectPositionList(List<ProjectPosition> projectPositionList) {
-        this.projectPositionList = projectPositionList;
-    }
 }

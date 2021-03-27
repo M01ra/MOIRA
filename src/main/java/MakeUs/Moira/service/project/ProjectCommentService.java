@@ -1,8 +1,8 @@
 package MakeUs.Moira.service.project;
 
 import MakeUs.Moira.advice.exception.ProjectException;
-import MakeUs.Moira.controller.project.dto.ProjectCommentRequestDTO;
-import MakeUs.Moira.controller.project.dto.ProjectCommentResponseDTO;
+import MakeUs.Moira.controller.project.dto.projectComment.ProjectCommentRequestDTO;
+import MakeUs.Moira.controller.project.dto.projectComment.ProjectCommentResponseDTO;
 import MakeUs.Moira.domain.project.Project;
 import MakeUs.Moira.domain.project.ProjectRepo;
 import MakeUs.Moira.domain.project.projectDetail.ProjectComment;
@@ -88,11 +88,13 @@ public class ProjectCommentService {
 
     @Transactional
     public void deleteProjectComment(Long commentId, Long userId){
-        ProjectComment projectComment = getValidProjectComment(commentId);
-        if(projectComment.getWriter().getId() != userId){
+        ProjectComment projectCommentEntity = getValidProjectComment(commentId);
+        ProjectDetail projectDetailEntity = projectCommentEntity.getProjectDetail();
+        if(!projectCommentEntity.getWriter().getId().equals(userId)){
             throw new ProjectException("로그인한 유저가 쓴 댓글이 아님");
         }
-        projectCommentRepo.delete(projectComment);
+        projectDetailEntity.removeProjectComment(projectCommentEntity);
+        projectCommentRepo.delete(projectCommentEntity);
     }
 
     private User getValidUser(Long userId){

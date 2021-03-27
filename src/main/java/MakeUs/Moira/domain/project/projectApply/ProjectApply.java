@@ -1,16 +1,21 @@
 package MakeUs.Moira.domain.project.projectApply;
 
+import MakeUs.Moira.domain.AuditorEntity;
 import MakeUs.Moira.domain.position.UserPosition;
 import MakeUs.Moira.domain.project.projectDetail.ProjectDetail;
 import MakeUs.Moira.domain.user.User;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Entity
-public class ProjectApply {
+@NoArgsConstructor
+public class ProjectApply extends AuditorEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,20 +27,30 @@ public class ProjectApply {
     @ManyToOne
     private User applicant;
 
-    @OneToMany(mappedBy = "projectApply")
-    private List<ProjectApplyAnswer> projectApplyAnswerList;
-
     @ManyToOne
     private UserPosition userPosition;
 
-    @OneToMany(mappedBy = "projectApply")
-    private List<OptionalApplyInfo> optionalApplyInfoList;
+    @OneToMany(mappedBy = "projectApply", cascade = CascadeType.ALL)
+    private List<OptionalApplyInfo> optionalApplyInfoList = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private ProjectApplyStatus projectApplyStatus;
 
+    @Builder
+    public ProjectApply(ProjectDetail projectDetail, User applicant, UserPosition userPosition, List<OptionalApplyInfo> optionalApplyInfoList, ProjectApplyStatus projectApplyStatus) {
+        this.projectDetail = projectDetail;
+        this.applicant = applicant;
+        this.userPosition = userPosition;
+        this.projectApplyStatus = projectApplyStatus;
+    }
 
+    public void addOptionalApplyInfo(OptionalApplyInfo optionalApplyInfo){
+        this.optionalApplyInfoList.add(optionalApplyInfo);
+    }
 
+    public void updateProjectApplyStatus(ProjectApplyStatus projectApplyStatus){
+        this.projectApplyStatus = projectApplyStatus;
+    }
 }
 
 

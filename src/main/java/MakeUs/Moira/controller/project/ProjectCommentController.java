@@ -1,8 +1,8 @@
 package MakeUs.Moira.controller.project;
 
 import MakeUs.Moira.config.security.JwtTokenProvider;
-import MakeUs.Moira.controller.project.dto.ProjectCommentRequestDTO;
-import MakeUs.Moira.controller.project.dto.ProjectCommentResponseDTO;
+import MakeUs.Moira.controller.project.dto.projectComment.ProjectCommentRequestDTO;
+import MakeUs.Moira.controller.project.dto.projectComment.ProjectCommentResponseDTO;
 import MakeUs.Moira.response.ResponseService;
 import MakeUs.Moira.response.model.CommonResult;
 import MakeUs.Moira.response.model.ListResult;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(tags = {"프로젝트(팀) 댓글"})
+@Api(tags = {"3-2.프로젝트(팀) 댓글"})
 @RestController
 @RequestMapping("/comment")
 @RequiredArgsConstructor
@@ -27,7 +27,7 @@ public class ProjectCommentController {
     private final JwtTokenProvider jwtTokenProvider;
 
     @ApiOperation(
-            value = "프로젝트(팀) 댓글 생성",
+            value = "댓글창 - 댓글 쓰기",
             notes = "프로젝트(팀)의 댓글을 추가합니다")
     @PostMapping("/{projectId}")
     public SingleResult<Long> createProjectComment(@RequestBody ProjectCommentRequestDTO projectCommentRequestDTO,
@@ -38,8 +38,9 @@ public class ProjectCommentController {
         return responseService.mappingSingleResult(commentId, "프로젝트 댓글 추가 성공");
     }
 
+
     @ApiOperation(
-            value = "프로젝트(팀) 댓글 조회",
+            value = "댓글창 - 댓글 조회",
             notes = "프로젝트(팀)의 댓글을 조회합니다. 프로젝트에 생성된 모든 댓글을 최신순으로 제공합니다")
     @GetMapping("/{projectId}")
     public ListResult<ProjectCommentResponseDTO> getProjectComments(@ApiParam(value = "프로젝트(팀) ID", required = true) @PathVariable Long projectId,
@@ -49,7 +50,7 @@ public class ProjectCommentController {
     }
 
     @ApiOperation(
-            value = "프로젝트(팀) 댓글 삭제",
+            value = "댓글창 - 댓글 삭제",
             notes = "프로젝트(팀)의 댓글을 삭제합니다")
     @DeleteMapping("/{commentId}")
     public CommonResult deleteProjectComment(@ApiParam(value = "댓글 ID", required = true) @PathVariable Long commentId,

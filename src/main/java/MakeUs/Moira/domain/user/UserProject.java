@@ -23,7 +23,7 @@ public class UserProject {
     @ManyToOne
     private UserHistory userHistory;
 
-    @OneToMany(mappedBy = "userProject")
+    @OneToMany(mappedBy = "userProject", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserReview> reviews = new ArrayList<>();
 
     @ManyToOne
