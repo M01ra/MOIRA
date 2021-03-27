@@ -14,6 +14,8 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +28,7 @@ public class MyPageEditController {
     private final ResponseService   responseService;
     private final JwtTokenProvider  jwtTokenProvider;
     private final MyPageEditService myPageEditService;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @ApiImplicitParams({
             @ApiImplicitParam(
@@ -43,6 +46,7 @@ public class MyPageEditController {
         // 권한 설정은 시큐리티에서 하자
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(token));
         MyPageEditResponseDto myPageEditResponseDto = myPageEditService.getMyPageEdit(userId);
+        logger.info(myPageEditResponseDto.toString());
         return responseService.mappingSingleResult(myPageEditResponseDto, "마이페이지 - 내 정보 수정하기 - 첫 화면");
     }
 
@@ -63,8 +67,10 @@ public class MyPageEditController {
                                                                                 @RequestBody MyPageEditNicknameRequestDto mypageEditNicknameRequestDto)
     {
         // 권한 설정은 시큐리티에서 하자
+        logger.info(mypageEditNicknameRequestDto.toString());
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(token));
         MyPageEditNicknameResponseDto myPageEditNicknameResponseDto = myPageEditService.updateMyPageEditNickname(userId, mypageEditNicknameRequestDto);
+        logger.info(myPageEditNicknameResponseDto.toString());
         return responseService.mappingSingleResult(myPageEditNicknameResponseDto, "마이페이지 - 내 정보 수정하기 - 프로필 - 닉네임 수정");
     }
 
@@ -85,6 +91,7 @@ public class MyPageEditController {
     {
         // 권한 설정은 시큐리티에서 하자
         List<MyPageEditPositionInfoDto> myPageEditPositionInfoDtoList = myPageEditService.getPositionList();
+        logger.info(myPageEditPositionInfoDtoList.toString());
         return responseService.mappingListResult(myPageEditPositionInfoDtoList, "마이페이지 - 내 정보 수정하기 - 프로필 - 포지션 목록");
     }
 
@@ -105,8 +112,10 @@ public class MyPageEditController {
                                                                                 @RequestBody MyPageEditPositionRequestDto myPageEditPositionRequestDto)
     {
         // 권한 설정은 시큐리티에서 하자
+        logger.info(myPageEditPositionRequestDto.toString());
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(token));
         MyPageEditPositionResponseDto myPageEditPositionResponseDto = myPageEditService.updateMyPageEditPosition(userId, myPageEditPositionRequestDto);
+        logger.info(myPageEditPositionResponseDto.toString());
         return responseService.mappingSingleResult(myPageEditPositionResponseDto, "마이페이지 - 내 정보 수정하기 - 프로필 - 포지션 수정");
     }
 
@@ -126,8 +135,10 @@ public class MyPageEditController {
                                                                                         @RequestBody MyPageEditIntroductionRequestDto myPageEditIntroductionRequestDto)
     {
         // 권한 설정은 시큐리티에서 하자
+        logger.info(myPageEditIntroductionRequestDto.toString());
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(token));
         MyPageEditIntroductionResponseDto myPageEditIntroductionResponseDto = myPageEditService.updateMyPageEditIntroduction(userId, myPageEditIntroductionRequestDto);
+        logger.info(myPageEditIntroductionResponseDto.toString());
         return responseService.mappingSingleResult(myPageEditIntroductionResponseDto, "마이페이지 - 내 정보 수정하기 - 프로필 - 한 줄 소개 수정");
     }
 
@@ -148,8 +159,10 @@ public class MyPageEditController {
                                                                               @RequestBody MyPageEditHashtagRequestDto myPageEditHashtagRequestDto)
     {
         // 권한 설정은 시큐리티에서 하자
+        logger.info(myPageEditHashtagRequestDto.toString());
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(token));
         MyPageEditHashtagResponseDto myPageEditHashtagResponseDto = myPageEditService.updateMyPageEditHashtag(userId, myPageEditHashtagRequestDto);
+        logger.info(myPageEditHashtagResponseDto.toString());
         return responseService.mappingSingleResult(myPageEditHashtagResponseDto, "마이페이지 - 내 정보 수정하기 - 프로필 - 관심 태그 수정");
     }
 }

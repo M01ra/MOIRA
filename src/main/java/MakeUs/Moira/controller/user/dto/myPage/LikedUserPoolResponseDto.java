@@ -2,18 +2,20 @@ package MakeUs.Moira.controller.user.dto.myPage;
 
 import MakeUs.Moira.domain.userPool.UserPool;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
+@ToString
 public class LikedUserPoolResponseDto {
     private Long                     userPoolId;
     private String                   nickname;
     private String                   positionName;
     private String                   profileImage;
     private String                   shortIntroduction;
-    private List<HashtagResponseDto> hastagNameList;
+    private List<HashtagResponseDto> hashtagList;
 
     public LikedUserPoolResponseDto(UserPool likedUserPool)
     {
@@ -27,11 +29,11 @@ public class LikedUserPoolResponseDto {
                                          .getProfileImage();
         this.shortIntroduction = likedUserPool.getUser()
                                               .getShortIntroduction();
-        this.hastagNameList = likedUserPool.getUser()
-                                           .getUserHistory()
-                                           .getUserHashtags()
-                                           .stream()
-                                           .map(HashtagResponseDto::new)
-                                           .collect(Collectors.toList());
+        this.hashtagList = likedUserPool.getUser()
+                                        .getUserHistory()
+                                        .getUserHashtags()
+                                        .stream()
+                                        .map(HashtagResponseDto::new)
+                                        .collect(Collectors.toList());
     }
 }

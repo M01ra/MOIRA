@@ -1,7 +1,8 @@
 package MakeUs.Moira.service.userPool;
 
 
-import MakeUs.Moira.advice.exception.InvalidUserIdException;
+import MakeUs.Moira.advice.exception.CustomException;
+import MakeUs.Moira.advice.exception.ErrorCode;
 import MakeUs.Moira.controller.userPool.dto.UserPoolDetailReviewDetailResponseDto;
 import MakeUs.Moira.controller.userPool.dto.*;
 
@@ -52,9 +53,8 @@ public class UserPoolService {
     {
         User userEntity = getUserEntity(userId);
 
-        String positionCategoryFilter = parseToFilter(positionCategory);
         Pageable pageable = getPageableWithSortKeyword(page, sortKeyword);
-        List<UserPool> userPoolFilteredList = userPoolRepo.findAllByUser_UserPosition_PositionCategory_CategoryName(positionCategoryFilter, pageable);
+        List<UserPool> userPoolFilteredList = userPoolRepo.findAllByUser_UserPosition_PositionCategory_CategoryName(positionCategory, pageable);
 
         return userPoolFilteredList.stream()
                                    .filter(UserPool::isVisible)
@@ -64,8 +64,6 @@ public class UserPoolService {
 
 
     public List<UserPoolResponseDto> getUserPoolByNickname(Long userId, String keyword) {
-
-        keywordLengthValidation(keyword);
 
         User userEntity = getUserEntity(userId);
 
@@ -112,7 +110,9 @@ public class UserPoolService {
     }
 
 
-    public List<UserPoolDetailReviewDetailResponseDto> getUserPoolDetailReviewDetail(Long userPoolId, String sortKeyword) {
+    public List<UserPoolDetailReviewDetailResponseDto> getUserPoolDetailReviewDetail(Long userPoolId,
+                                                                                     String sortKeyword)
+    {
         Long userHistoryId = getUserHistoryEntity(userPoolId).getId();
         List<UserReview> userReviewList = userReviewRepo.findAllByUserProject_UserHistory_Id(userHistoryId);
         sortUserReviewListByKeyword(userReviewList, sortKeyword);
@@ -124,17 +124,17 @@ public class UserPoolService {
 
     private User getUserEntity(Long userId) {
         return userRepo.findById(userId)
-                       .orElseThrow(() -> new InvalidUserIdException("유효하지 않은 userId"));
+                       .orElseThrow(() -> new CustomException(ErrorCode.INVALID_USER));
     }
 
     private UserPool getUserPoolEntity(Long userPoolId) {
         return userPoolRepo.findById(userPoolId)
-                           .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 userPoolId"));
+                           .orElseThrow(() -> new CustomException(ErrorCode.INVALID_USER_POOL));
     }
 
     private UserHistory getUserHistoryEntity(Long userPoolId) {
         return userPoolRepo.findById(userPoolId)
-                           .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 userPoolId"))
+                           .orElseThrow(() -> new CustomException(ErrorCode.INVALID_USER_POOL))
                            .getUser()
                            .getUserHistory();
     }
@@ -154,23 +154,11 @@ public class UserPoolService {
                                                         .descending());
             }
             default: {
-                throw new IllegalArgumentException("유효하지 않은 sortKeyword");
+                throw new CustomException(ErrorCode.INVALID_SORT);
             }
         }
     }
 
-    private String parseToFilter(String positionCategory) {
-        switch (positionCategory) {
-            case "develop":
-                return positionCategory = "개발자";
-            case "director":
-                return positionCategory = "기획자";
-            case "designer":
-                return positionCategory = "디자이너";
-            default:
-                throw new IllegalArgumentException("유효하지 않은 positionCategory");
-        }
-    }
 
     private UserPoolLike getUserPoolLikeEntity(Long userPoolId, UserHistory userHistoryEntity,
                                                UserPool userPoolEntity)
@@ -197,12 +185,6 @@ public class UserPoolService {
 
     }
 
-    private void keywordLengthValidation(String keyword) {
-        if (keyword.length() < 3) {
-            throw new IllegalArgumentException("검색어의 길이가 3글자 미만입니다.");
-        }
-    }
-
     private List<UserReview> getUserReviewList(Long userHistoryId) {
         return userReviewRepo.findAllByUserProject_UserHistory_Id(userHistoryId);
     }
@@ -223,7 +205,7 @@ public class UserPoolService {
             userReviewList.sort(Comparator.comparing(UserReview::getMannerPoint)
                                           .reversed());
         } else {
-            throw new IllegalArgumentException("유효하지 않은 sort");
+            throw new CustomException(ErrorCode.INVALID_SORT);
         }
     }
 }

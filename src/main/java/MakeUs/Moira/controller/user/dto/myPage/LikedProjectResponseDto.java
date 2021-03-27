@@ -4,11 +4,14 @@ package MakeUs.Moira.controller.user.dto.myPage;
 
 import MakeUs.Moira.domain.project.Project;
 import lombok.Getter;
+import lombok.ToString;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Getter
+@ToString
 public class LikedProjectResponseDto {
     private Long                     projectId;
     private String                   projectTitle;

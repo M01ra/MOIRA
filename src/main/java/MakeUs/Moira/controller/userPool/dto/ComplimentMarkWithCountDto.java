@@ -5,9 +5,11 @@ import MakeUs.Moira.domain.userReview.UserReviewComplimentMark;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @NoArgsConstructor
 @Getter
+@ToString
 public class ComplimentMarkWithCountDto {
     private Long   complimentMarkId;
     private String complimentMarkName;

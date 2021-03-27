@@ -1,5 +1,7 @@
 package MakeUs.Moira.service.chat;
 
+import MakeUs.Moira.advice.exception.CustomException;
+import MakeUs.Moira.advice.exception.ErrorCode;
 import MakeUs.Moira.controller.chat.dto.ChatMessageResponseDto;
 import MakeUs.Moira.controller.chat.dto.ChatMessageSendRequestDto;
 import MakeUs.Moira.controller.chat.dto.ChatMessageSendResponseDto;
@@ -67,7 +69,7 @@ public class ChatService {
 
     private User getUserEntity(Long userId) {
         return userRepo.findById(userId)
-                       .orElseThrow(IllegalArgumentException::new);
+                       .orElseThrow(() -> new CustomException(ErrorCode.INVALID_USER));
     }
 
 
@@ -80,7 +82,7 @@ public class ChatService {
 
     public void updateChatMessageReadStatus(Long userId, Long chatRoomId) {
         ChatRoom chatRoom = chatRoomRepo.findById(chatRoomId)
-                                        .orElseThrow(IllegalArgumentException::new);
+                                        .orElseThrow(()->new CustomException(ErrorCode.INVALID_CHAT_ROOM));
         chatRoom.updateChatMessageReadStatus(userId);
     }
 }

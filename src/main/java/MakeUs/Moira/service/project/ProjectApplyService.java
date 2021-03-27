@@ -1,6 +1,7 @@
 package MakeUs.Moira.service.project;
 
-import MakeUs.Moira.advice.exception.ProjectException;
+import MakeUs.Moira.advice.exception.CustomException;
+import MakeUs.Moira.advice.exception.ErrorCode;
 import MakeUs.Moira.controller.project.dto.projectApply.ProjectApplicantsResponseDTO;
 import MakeUs.Moira.controller.project.dto.projectApply.ProjectApplyRequestDTO;
 import MakeUs.Moira.controller.project.dto.projectApply.ProjectApplyResponseDTO;
@@ -64,9 +65,9 @@ public class ProjectApplyService {
                         .forEach(projectApplyEntity -> checkProjectApplicant(projectApplyEntity, userId));
 
         // 이미 가입된 유저인지 확인
-        //if(isProjectUser(userHistoryEntity.getId(), projectEntity.getId())){
-        //    throw new ProjectException("권한이 없는 유저");
-        //}
+        if(isProjectUser(userHistoryEntity.getId(), projectEntity.getId())){
+            throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
+        }
 
         // ProjectApply 생성
         ProjectApply projectApplyEntity = ProjectApply.builder()
@@ -99,7 +100,7 @@ public class ProjectApplyService {
         }
         else{
             if(!isProjectLeader(userHistoryEntity.getId(), projectEntity.getId())){
-                throw new ProjectException("권한이 없는 유저");
+                throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
             }
         }
 
@@ -157,13 +158,13 @@ public class ProjectApplyService {
                     userHistoryEntity.addUserProject(userProjectEntity);
                 }
                 else{
-                    throw new ProjectException("이미 가입된 유저");
+                    throw new CustomException(ErrorCode.ALREADY_REGISTRED_USER);
                 }
                 break;
             case REJECT: checkProjectApplicant(projectApplyEntity, userId); break;
             case INVITE:
                 if(!isProjectLeader(userHistoryEntity.getId(), projectApplyId)){
-                    throw new ProjectException("권한이 없는 유저");
+                    throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
                 }
                 break;
         }
@@ -180,7 +181,7 @@ public class ProjectApplyService {
 
         // 본인의 지원서가 아닐 경우
         if(!projectApplyEntity.getApplicant().getId().equals(userId)){
-            throw new ProjectException("권한이 없는 유저");
+            throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
         }
 
         projectDetailEntity.removeProjectApply(projectApplyEntity);
@@ -193,7 +194,7 @@ public class ProjectApplyService {
         Project projectEntity = getValidProject(projectId);
         UserHistory userHistoryEntity = getValidUserHistory(userId);
         if(!isProjectLeader(userHistoryEntity.getId(), projectId)){
-            throw new ProjectException("권한이 없는 유저");
+            throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
         }
 
         return projectEntity.getProjectDetail().getProjectApplyList()
@@ -302,63 +303,63 @@ public class ProjectApplyService {
 
     private User getValidUser(Long userId){
         User userEntity = userRepo.findById(userId)
-                                  .orElseThrow(() -> new ProjectException("유효하지 않는 유저"));
+                                  .orElseThrow(() -> new CustomException(ErrorCode.INVALID_USER));
         return userEntity;
     }
 
 
     private UserHistory getValidUserHistory(Long userId){
         UserHistory userHistoryEntity = userHistoryRepo.findByUserId(userId)
-                                                       .orElseThrow(() -> new ProjectException("유효하지 않는 유저"));
+                                                       .orElseThrow(() -> new CustomException(ErrorCode.INVALID_USER));
         return userHistoryEntity;
     }
 
 
     private Project getValidProject(Long projectId){
         Project projectEntity = projectRepo.findById(projectId)
-                                           .orElseThrow(() -> new ProjectException("존재하지 않은 프로젝트 ID"));
+                                           .orElseThrow(() -> new CustomException(ErrorCode.INVALID_PROJECT));
         return projectEntity;
     }
 
 
     private ProjectApply getValidProjectApply(Long projectApplyId){
         ProjectApply projectApplyEntity = projectApplyRepo.findById(projectApplyId)
-                                           .orElseThrow(() -> new ProjectException("존재하지 않은 지원서 ID"));
+                                           .orElseThrow(() -> new CustomException(ErrorCode.INVALID_PROJECT_APPLY));
         return projectApplyEntity;
     }
 
 
     private UserSchool getValidUserSchool(Long userSchoolId){
         UserSchool userSchoolEntity = userSchoolRepo.findById(userSchoolId)
-                                                    .orElseThrow(() -> new ProjectException("존재하지 않은 포트폴리오 ID"));
+                                                    .orElseThrow(() -> new CustomException(ErrorCode.INVALID_PROJECT_APPLY_OPTIONAL_INFO));
         return userSchoolEntity;
     }
 
 
     private UserCareer getValidUserCareer(Long userCareerId){
         UserCareer userCareerEntity = userCareerRepo.findById(userCareerId)
-                                                          .orElseThrow(() -> new ProjectException("존재하지 않은 포트폴리오 ID"));
+                                                          .orElseThrow(() -> new CustomException(ErrorCode.INVALID_PROJECT_APPLY_OPTIONAL_INFO));
         return userCareerEntity;
     }
 
 
     private UserLicense getValidUserLicense(Long userLicenseId){
         UserLicense userLicenseEntity = userLicenseRepo.findById(userLicenseId)
-                                                    .orElseThrow(() -> new ProjectException("존재하지 않은 포트폴리오 ID"));
+                                                    .orElseThrow(() -> new CustomException(ErrorCode.INVALID_PROJECT_APPLY_OPTIONAL_INFO));
         return userLicenseEntity;
     }
 
 
     private UserAward getValidUserAward(Long userAwardId){
         UserAward userAwardEntity = userAwardRepo.findById(userAwardId)
-                                                    .orElseThrow(() -> new ProjectException("존재하지 않은 포트폴리오 ID"));
+                                                    .orElseThrow(() -> new CustomException(ErrorCode.INVALID_PROJECT_APPLY_OPTIONAL_INFO));
         return userAwardEntity;
     }
 
 
     private UserLink getValidUserLink(Long userLinkId){
         UserLink userLinkEntity = userLinkRepo.findById(userLinkId)
-                                                    .orElseThrow(() -> new ProjectException("존재하지 않은 포트폴리오 ID"));
+                                                    .orElseThrow(() -> new CustomException(ErrorCode.INVALID_PROJECT_APPLY_OPTIONAL_INFO));
         return userLinkEntity;
     }
 
@@ -383,13 +384,13 @@ public class ProjectApplyService {
 
     private void checkProjectTeammate(Long userHistoryId, Long projectId){
         UserProject UserProjectEntity = userProjectRepo.findByUserHistoryIdAndProjectId(userHistoryId, projectId)
-                .orElseThrow(() -> new ProjectException("권한이 없는 유저"));
+                .orElseThrow(() -> new CustomException(ErrorCode.UNAUTHORIZED_USER));
     }
 
 
     private void checkProjectApplicant(ProjectApply projectApplyEntity, Long userId) {
         if (projectApplyEntity.getApplicant().getId().equals(userId)) {
-            throw new ProjectException("권한이 없는 유저");
+            throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
         }
     }
 

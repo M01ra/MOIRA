@@ -2,8 +2,10 @@ package MakeUs.Moira.controller.userReview.dto;
 
 import MakeUs.Moira.domain.userReview.UserReviewComplimentMark;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@ToString
 public class ComplimentMarkDto {
     private Long   complimentMarkId;
     private String complimentMarkName;

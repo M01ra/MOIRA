@@ -7,6 +7,8 @@ import MakeUs.Moira.response.model.ListResult;
 import MakeUs.Moira.service.complimentMark.ComplimentMarkInfoService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +20,7 @@ public class ComplimentMarkController {
 
     private final ComplimentMarkInfoService complimentMarkInfoService;
     private final ResponseService           responseService;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @ApiImplicitParams({
             @ApiImplicitParam(
@@ -34,6 +37,7 @@ public class ComplimentMarkController {
     public ListResult<ComplimentMarkInfoResponseDto> getComplimentMark(@RequestHeader(value = "X-AUTH-TOKEN") String token)
     {
         List<ComplimentMarkInfoResponseDto> complimentMarkInfoResponseDtoList = complimentMarkInfoService.getComplimentMark();
+        logger.info(complimentMarkInfoResponseDtoList.toString());
         return responseService.mappingListResult(complimentMarkInfoResponseDtoList, "칭찬 뱃지 정보 불러오기");
     }
 }

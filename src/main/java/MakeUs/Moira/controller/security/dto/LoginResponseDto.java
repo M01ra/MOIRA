@@ -1,8 +1,10 @@
 package MakeUs.Moira.controller.security.dto;
 
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@ToString
 public class LoginResponseDto {
 
     private String  jwtToken;

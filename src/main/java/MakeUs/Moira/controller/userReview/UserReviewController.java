@@ -13,9 +13,12 @@ import MakeUs.Moira.response.model.SingleResult;
 import MakeUs.Moira.service.userReview.UserReviewService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import javax.validation.Valid;
 
 
 @Api(tags = {"5.유저 리뷰"})
@@ -25,7 +28,9 @@ public class UserReviewController {
 
     private final UserReviewService userReviewService;
     private final ResponseService   responseService;
-    private final JwtTokenProvider  jwtTokenProvider;
+
+    private final JwtTokenProvider jwtTokenProvider;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
     @ApiImplicitParams({
@@ -41,12 +46,15 @@ public class UserReviewController {
                     "### 비회원인 경우 에러가 발생합니다."
     )
     @PostMapping(value = "/review")
-    public SingleResult<UserReviewAddResponseDto> addUserReview(@RequestHeader(value = "X-AUTH-TOKEN") String token,
-                                                                @RequestBody UserReviewAddRequestDto userReviewAddRequestDto)
+    public SingleResult<UserReviewAddResponseDto> addUserReview(
+            @RequestHeader(value = "X-AUTH-TOKEN") String token,
+            @Valid @RequestBody UserReviewAddRequestDto userReviewAddRequestDto)
     {
+        logger.info(userReviewAddRequestDto.toString());
         // 권한 설정은 시큐리티에서 하자
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(token));
         UserReviewAddResponseDto userReviewAddResponseDto = userReviewService.addUserReview(userId, userReviewAddRequestDto);
+        logger.info(userReviewAddResponseDto.toString());
         return responseService.mappingSingleResult(userReviewAddResponseDto, "팀원 평가하기 - 특정 유저 평가하기");
     }
 
@@ -67,6 +75,7 @@ public class UserReviewController {
                                                              @ApiParam(value = "조회하려는 유저의 userId", required = true) @PathVariable Long targetId)
     {
         UserReviewResponseDto userReviewResponseDto = userReviewService.getUserReview(targetId);
+        logger.info(userReviewResponseDto.toString());
         return responseService.mappingSingleResult(userReviewResponseDto, "유저의 사용자 평가 조회");
     }
 
@@ -87,6 +96,7 @@ public class UserReviewController {
                                                                        @ApiParam(value = "정렬 방식", required = true) @RequestParam String sort)
     {
         List<UserReviewDetailResponseDto> userReviewDetailResponseDtoList = userReviewService.getUserReviewDetail(targetId, sort);
+        logger.info(userReviewDetailResponseDtoList.toString());
         return responseService.mappingListResult(userReviewDetailResponseDtoList, "유저의 모든 리뷰 내용 조회");
     }
 }

@@ -10,12 +10,15 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
+@ToString
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProjectResponseDTO {
     @ApiModelProperty(value = "글쓴이", example = "웰시고기")
     private String writer;
     @ApiModelProperty(value = "제목", example = "웹 프로젝트 팀원 모집합니다")
     private String title;
+    @ApiModelProperty(value = "내용", example = "안녕하세요")
+    private String content;
     @ApiModelProperty(value = "태그 리스트", example = "[\"서버\",\"IOS\",\"AOS\"]")
     private List<String> hashtagList;
     @ApiModelProperty(value = "이미지 URL", example = "https://moira-springboot.s3.ap-northeast-2.amazonaws.com/project-3-Sketchpad.png")
