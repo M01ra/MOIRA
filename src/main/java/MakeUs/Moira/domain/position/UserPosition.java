@@ -1,5 +1,6 @@
 package MakeUs.Moira.domain.position;
 
+import MakeUs.Moira.controller.user.dto.myPageEdit.MyPageEditPositionInfoDto;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -16,5 +17,14 @@ public class UserPosition {
     private PositionCategory positionCategory;
 
     private String positionName;
+
+    public MyPageEditPositionInfoDto toMyPageEditPositionInfoDto() {
+        return MyPageEditPositionInfoDto.builder()
+                                        .positionCategoryId(positionCategory.getId())
+                                        .positionCategoryName(positionCategory.getCategoryName())
+                                        .positionId(id)
+                                        .positionName(positionName)
+                                        .build();
+    }
 
 }

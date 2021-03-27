@@ -1,5 +1,7 @@
 package MakeUs.Moira.domain.user;
 
+import MakeUs.Moira.controller.user.dto.myPage.HashtagResponseDto;
+import MakeUs.Moira.controller.user.dto.myPageEdit.MyPageEditHashtagResponseDto;
 import MakeUs.Moira.domain.club.ClubLike;
 import MakeUs.Moira.domain.inquiry.Inquiry;
 import MakeUs.Moira.domain.project.ProjectLike;
@@ -11,6 +13,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @NoArgsConstructor
 @Getter
@@ -49,24 +52,33 @@ public class UserHistory {
 
     private int completionCount = 0;
 
-    public UserHistory updateUser(User user){
+    public UserHistory updateUser(User user) {
         this.user = user;
         return this;
     }
 
-    public void addUserProject(UserProject userProject){
+    public void addUserProject(UserProject userProject) {
         userProjects.add(userProject);
     }
 
-    public void removeUserProject(UserProject userProject){
+    public void removeUserProject(UserProject userProject) {
         userProjects.remove(userProject);
     }
 
-    public void addProjectLike(ProjectLike projectLike){
+    public void addProjectLike(ProjectLike projectLike) {
         projectLikes.add(projectLike);
     }
 
-    public void removeProjectLike(ProjectLike projectLike){
+    public void removeProjectLike(ProjectLike projectLike) {
         projectLikes.remove(projectLike);
+    }
+
+    public MyPageEditHashtagResponseDto toMyPageEditHashtagResponseDto() {
+        return MyPageEditHashtagResponseDto.builder()
+                                           .userId(id)
+                                           .hashtagList(userHashtags.stream()
+                                                                    .map(HashtagResponseDto::new)
+                                                                    .collect(Collectors.toList()))
+                                           .build();
     }
 }
