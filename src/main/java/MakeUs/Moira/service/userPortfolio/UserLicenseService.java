@@ -9,6 +9,7 @@ import MakeUs.Moira.domain.user.User;
 import MakeUs.Moira.domain.user.UserRepo;
 import MakeUs.Moira.domain.userPortfolio.UserPortfolio;
 import MakeUs.Moira.domain.userPortfolio.userLicense.UserLicense;
+import MakeUs.Moira.domain.userPortfolio.userLicense.UserLicenseRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +21,8 @@ import java.util.stream.Collectors;
 @Service
 public class UserLicenseService {
 
-    private final UserRepo userRepo;
+    private final UserRepo        userRepo;
+    private final UserLicenseRepo userLicenseRepo;
 
     @Transactional
     public List<UserLicenseResponseDto> addUserLicense(Long userId, UserLicenseAddRequestDto userLicenseAddRequestDto) {
@@ -36,6 +38,14 @@ public class UserLicenseService {
                          .stream()
                          .map(UserLicenseResponseDto::new)
                          .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void deleteUserLicense(Long userId, Long userLicenseId) {
+        UserPortfolio userPortfolioEntity = getUserEntity(userId).getUserPortfolio();
+        UserLicense userLicense = userLicenseRepo.findById(userLicenseId)
+                                                 .orElseThrow(() -> new CustomException(ErrorCode.INVALID_USER_PORTFOLIO));
+        userPortfolioEntity.deleteUserLicense(userLicense);
     }
 
     private User getUserEntity(Long userId) {

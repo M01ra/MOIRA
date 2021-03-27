@@ -7,6 +7,7 @@ import MakeUs.Moira.controller.userPortfolio.userSchool.dto.UserSchoolResponseDt
 import MakeUs.Moira.controller.userPortfolio.userSchool.dto.MajorInfoResponseDto;
 import MakeUs.Moira.controller.userPortfolio.userSchool.dto.SchoolInfoResponseDto;
 import MakeUs.Moira.response.ResponseService;
+import MakeUs.Moira.response.model.CommonResult;
 import MakeUs.Moira.response.model.ListResult;
 import MakeUs.Moira.service.userPortfolio.UserSchoolService;
 import io.swagger.annotations.*;
@@ -93,5 +94,26 @@ public class UserSchoolController {
         List<UserSchoolResponseDto> userSchoolResponseDtoList = userSchoolService.addUserSchool(userId, userSchoolAddRequestDto);
         logger.info(userSchoolResponseDtoList.toString());
         return responseService.mappingListResult(userSchoolResponseDtoList, "마이페이지 - 내 정보 수정하기 - 학력 정보 추가");
+    }
+
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "X-AUTH-TOKEN",
+                    value = "로그인 성공 후 JWT_TOKEN",
+                    required = true, dataType = "String", paramType = "header")
+    })
+    @ApiOperation(
+            value = "마이페이지 - 내 정보 수정하기 - 학력 삭제",
+            notes = "### 마이페이지 - 내 정보 수정하기 - 학력 내역을 삭제합니다.\n"
+    )
+    @DeleteMapping(value = "/mypage/edit/school/{userSchoolId}")
+    public CommonResult deleteUserSchool(@RequestHeader(value = "X-AUTH-TOKEN") String token,
+                                        @PathVariable Long userSchoolId)
+    {
+        // 권한 설정은 시큐리티에서 하자
+        Long userId = Long.parseLong(jwtTokenProvider.getUserPk(token));
+        userSchoolService.deleteUserSchool(userId, userSchoolId);
+        return responseService.mappingSuccessCommonResultOnly("마이페이지 - 내 정보 수정하기 - 학력 삭제");
     }
 }
