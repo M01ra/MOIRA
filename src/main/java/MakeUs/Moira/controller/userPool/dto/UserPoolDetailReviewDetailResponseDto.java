@@ -1,4 +1,4 @@
-package MakeUs.Moira.controller.userPool;
+package MakeUs.Moira.controller.userPool.dto;
 
 import lombok.Builder;
 import lombok.Getter;

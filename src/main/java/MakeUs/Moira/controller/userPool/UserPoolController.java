@@ -3,13 +3,10 @@ package MakeUs.Moira.controller.userPool;
 
 import MakeUs.Moira.config.security.JwtTokenProvider;
 import MakeUs.Moira.controller.userPool.dto.*;
-import MakeUs.Moira.controller.userReview.dto.UserReviewResponseDto;
 import MakeUs.Moira.response.ResponseService;
-import MakeUs.Moira.response.model.CommonResult;
 import MakeUs.Moira.response.model.ListResult;
 import MakeUs.Moira.response.model.SingleResult;
 import MakeUs.Moira.service.userPool.UserPoolService;
-import MakeUs.Moira.service.userReview.UserReviewService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
