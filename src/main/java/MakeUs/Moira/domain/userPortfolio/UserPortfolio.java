@@ -48,4 +48,24 @@ public class UserPortfolio {
         this.user = user;
         return this;
     }
+
+    public void deleteUserSchool(UserSchool userSchool) {
+        userSchoolList.remove(userSchool);
+    }
+
+    public void deleteUserCareer(UserCareer userCareer) {
+        userCareerList.remove(userCareer);
+    }
+
+    public void deleteUserLicense(UserLicense userLicense) {
+        userLicenseList.remove(userLicense);
+    }
+
+    public void deleteUserAward(UserAward userAward) {
+        userAwardList.remove(userAward);
+    }
+
+    public void deleteUserLink(UserLink userLink) {
+        userLinkList.remove(userLink);
+    }
 }

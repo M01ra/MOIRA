@@ -29,6 +29,7 @@ public enum ErrorCode {
     INVALID_JWT_TOKEN(435, "유효하지 않은 JWT 토큰"),
     INVALID_MESSAGE_TYPE(436, "유효하지 않은 쪽지 타입"),
     INVALID_CHAT_ROOM(436, "유효하지 않은 채팅방"),
+    INVALID_USER_PORTFOLIO(436, "유효하지 않은 유저선택정보"),
 
     ALREADY_REGISTRED_USER(450, "이미 가입된 유저"),
     ALREADY_REGISTRED_NICKNAME(451, "이미 존재하는 닉네임"),

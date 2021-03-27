@@ -9,6 +9,7 @@ import MakeUs.Moira.domain.user.User;
 import MakeUs.Moira.domain.user.UserRepo;
 import MakeUs.Moira.domain.userPortfolio.UserPortfolio;
 import MakeUs.Moira.domain.userPortfolio.userLink.UserLink;
+import MakeUs.Moira.domain.userPortfolio.userLink.UserLinkRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +22,8 @@ import java.util.stream.Collectors;
 @Service
 public class UserLinkService {
 
-    private final UserRepo userRepo;
+    private final UserRepo     userRepo;
+    private final UserLinkRepo userLinkRepo;
 
     @Transactional
     public List<UserLinkResponseDto> addUserLink(Long userId, UserLinkAddRequestDto userLinkAddRequestDto) {
@@ -37,6 +39,14 @@ public class UserLinkService {
                          .stream()
                          .map(UserLinkResponseDto::new)
                          .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void deleteUserLink(Long userId, Long userLinkId) {
+        UserPortfolio userPortfolioEntity = getUserEntity(userId).getUserPortfolio();
+        UserLink userLink = userLinkRepo.findById(userLinkId)
+                                        .orElseThrow(() -> new CustomException(ErrorCode.INVALID_USER_PORTFOLIO));
+        userPortfolioEntity.deleteUserLink(userLink);
     }
 
     private User getUserEntity(Long userId) {
