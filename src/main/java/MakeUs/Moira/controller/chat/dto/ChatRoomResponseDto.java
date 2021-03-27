@@ -2,10 +2,12 @@ package MakeUs.Moira.controller.chat.dto;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.time.LocalDate;
 
 @Getter
+@ToString
 public class ChatRoomResponseDto {
 
     private Long      chatRoomId;

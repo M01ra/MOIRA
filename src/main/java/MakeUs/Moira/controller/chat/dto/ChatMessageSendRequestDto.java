@@ -7,8 +7,10 @@ import MakeUs.Moira.domain.chat.MessageType;
 import MakeUs.Moira.domain.chat.ReadStatus;
 import MakeUs.Moira.domain.user.User;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@ToString
 public class ChatMessageSendRequestDto {
     private Long   opponentId;
     private String messageType;

@@ -2,8 +2,10 @@ package MakeUs.Moira.controller.user.dto.myPageEdit;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@ToString
 public class MyPageEditPositionInfoDto {
     private Long   positionCategoryId;
     private String positionCategoryName;

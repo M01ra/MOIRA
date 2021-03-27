@@ -4,13 +4,14 @@ import MakeUs.Moira.controller.userPool.dto.ComplimentMarkWithCountDto;
 import MakeUs.Moira.domain.AuditorEntity;
 import MakeUs.Moira.domain.userReview.UserReview;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 @Getter
+@ToString
 public class UserReviewResponseDto {
     private Double                           avgMannerPoint;
     private String                           recentReviewContent;
@@ -19,7 +20,7 @@ public class UserReviewResponseDto {
     public UserReviewResponseDto(List<UserReview> userReviewList,
                                  List<ComplimentMarkWithCountDto> complimentMarkWithCountDtoList)
     {
-        
+
         this.avgMannerPoint = userReviewList.stream()
                                             .map(UserReview::getMannerPoint)
                                             .collect(Collectors.averagingDouble(mannerPoint -> (double) mannerPoint));
