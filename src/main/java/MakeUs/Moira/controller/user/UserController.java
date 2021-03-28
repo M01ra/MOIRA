@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Api(tags = {"7. 유저"})
+@Api(tags = {"7.유저"})
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/user")

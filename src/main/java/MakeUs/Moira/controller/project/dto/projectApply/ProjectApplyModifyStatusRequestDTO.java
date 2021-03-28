@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 @ToString
 public class ProjectApplyModifyStatusRequestDTO {
-    @ApiModelProperty(value = "변경할 상태", example = "ACCEPT")
+    @ApiModelProperty(value = "변경할 상태", example = "USER_ACCEPTED")
     @NotNull(message = "status에 빈 값을 넣을 수 없음")
     private ProjectApplyStatus status;
 }

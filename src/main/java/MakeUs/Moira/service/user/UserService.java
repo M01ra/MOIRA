@@ -47,9 +47,7 @@ public class UserService {
         User userEntity = findUserById(userId);
 
         // 2. 닉네임
-        if (isDuplicatedNickname(nickname)) {
-            throw new CustomException(ErrorCode.ALREADY_REGISTRED_NICKNAME);
-        }
+        if (isDuplicatedNickname(nickname)) throw new CustomException(ErrorCode.ALREADY_REGISTERED_NICKNAME);
         userEntity.updateNickname(nickname);
 
         // 3. 포지션
@@ -76,12 +74,6 @@ public class UserService {
 
         PositionResponseDto positionResponseDto = getPositionResponseDto(userEntity);
         List<HashtagResponseDto> hashtagResponseDtoList = getHashtagResponseDtoList(userEntity);
-
-        fcmService.send(PushNotificationRequest.builder()
-                                               .targetUserId(userId)
-                                               .title(FcmMessageTitleType.MESSAGE_RECEIVED.name())
-                                               .message(FcmMessageTitleType.MESSAGE_RECEIVED.name())
-                                               .build());
 
         return SignupResponseDto.builder()
                                 .userId(userEntity.getId())

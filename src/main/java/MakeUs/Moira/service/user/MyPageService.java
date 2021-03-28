@@ -54,7 +54,7 @@ public class MyPageService {
 
         int appliedPostCount = projectApplyRepo.countByApplicant_Id(userId);
 
-        return new MyPageResponseDto(userEntity, writtenPostCount, likedPostCount, appliedPostCount);
+        return new MyPageResponseDto(userEntity, writtenPostCount, appliedPostCount, likedPostCount);
     }
 
 
