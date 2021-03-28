@@ -93,7 +93,7 @@ public class UserReviewController {
     @GetMapping(value = "/review/detail/{targetId}")
     public ListResult<UserReviewDetailResponseDto> getUserReviewDetail(@RequestHeader(value = "X-AUTH-TOKEN") String token,
                                                                        @ApiParam(value = "조회하려는 유저의 userId", required = true) @PathVariable Long targetId,
-                                                                       @ApiParam(value = "정렬 방식", required = true) @RequestParam String sort)
+                                                                       @ApiParam(value = "정렬 방식 - date, point", required = true) @RequestParam String sort)
     {
         List<UserReviewDetailResponseDto> userReviewDetailResponseDtoList = userReviewService.getUserReviewDetail(targetId, sort);
         logger.info(userReviewDetailResponseDtoList.toString());

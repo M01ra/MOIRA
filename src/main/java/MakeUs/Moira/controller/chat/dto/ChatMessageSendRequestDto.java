@@ -6,6 +6,7 @@ import MakeUs.Moira.domain.chat.ChatMessage;
 import MakeUs.Moira.domain.chat.MessageType;
 import MakeUs.Moira.domain.chat.ReadStatus;
 import MakeUs.Moira.domain.user.User;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -13,6 +14,7 @@ import lombok.ToString;
 @ToString
 public class ChatMessageSendRequestDto {
     private Long   opponentId;
+    @ApiModelProperty(value = "TEXT, IMAGE", example = "TEXT")
     private String messageType;
     private String messageContent;
 
