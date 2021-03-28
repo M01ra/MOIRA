@@ -12,12 +12,14 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -80,5 +82,10 @@ public class S3Service {
         else{
             throw new CustomException(ErrorCode.NON_EXIST_FILE_NAME);
         }
+    }
+
+
+    public String createUUIDKey(String fileName){
+        return UUID.randomUUID().toString() + '.' + FilenameUtils.getExtension(fileName);
     }
 }

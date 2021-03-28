@@ -27,6 +27,11 @@ public class Project extends AuditorEntity {
 
     private String projectImageUrl;
 
+    private String projectImageKey;
+
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    private List<ProjectImage> projectImageList = new ArrayList<>();
+
     private String projectTitle;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -54,6 +59,24 @@ public class Project extends AuditorEntity {
 
     public void updateProjectImageUrl(String projectImageUrl) {
         this.projectImageUrl = projectImageUrl;
+    }
+
+    public void updateProjectImageKey(String projectImageKey) {
+        this.projectImageKey = projectImageKey;
+    }
+
+    public void addProjectImage(ProjectImage projectImage) {
+        projectImageList.add(projectImage);
+    }
+
+    public List<String> getProjectImageUrlList() {
+        List<String> imageUrlList = new ArrayList<>();
+        if(projectImageUrl != null){
+            imageUrlList.add(projectImageUrl);
+        }
+        projectImageList
+                .forEach(projectImage -> imageUrlList.add(projectImage.getProjectImageUrl()));
+        return imageUrlList;
     }
 
     public Project updateProjectTitle(String projectTitle) {

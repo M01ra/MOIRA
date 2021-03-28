@@ -13,6 +13,8 @@ import MakeUs.Moira.domain.project.projectDetail.*;
 import MakeUs.Moira.domain.user.*;
 import MakeUs.Moira.service.S3Service;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -108,18 +110,48 @@ public class ProjectService {
 
 
     @Transactional
-    public void uploadImage(MultipartFile file, Long projectId, Long userId) {
+    public void uploadImage(List<MultipartFile> files, Long projectId, Long userId) {
+        getValidUser(userId);
+        UserHistory userHistoryEntity = getValidUserHistory(userId);
+        Project projectEntity = getValidProject(projectId);
+        getAuthorizedUserProject(userHistoryEntity.getId(), projectId);
+
+        // 기존에 존재했을 경우
+        if (projectEntity.getProjectImageUrl() != null) {
+            throw new CustomException(ErrorCode.ALREADY_REGISTERED_PROJECT_IMAGE);
+        }
+        // 첫번째 이미지를 대표이미지로 저장
+        String key = s3Service.createUUIDKey(files.get(0).getOriginalFilename());
+        String imageUrl = s3Service.upload(files.get(0), key);
+        projectEntity.updateProjectImageUrl(imageUrl);
+        projectEntity.updateProjectImageKey(key);
+
+        // 그 외는 ProjectImage에 추가
+        if(files.size() > 1){
+            for (int i = 1; i < files.size(); i++) {
+                key = s3Service.createUUIDKey(files.get(i).getOriginalFilename());
+                imageUrl = s3Service.upload(files.get(i), key);
+                projectEntity.addProjectImage(new ProjectImage(projectEntity, imageUrl, key));
+            }
+        }
+    }
+
+
+    @Transactional
+    public void modifyImage(MultipartFile file, Long projectId, Long userId) {
         getValidUser(userId);
         UserHistory userHistoryEntity = getValidUserHistory(userId);
         Project projectEntity = getValidProject(projectId);
         getAuthorizedUserProject(userHistoryEntity.getId(), projectId);
 
         // 기존에 존재했을 경우 삭제
-        if (projectEntity.getProjectImageUrl() != null) {
-            s3Service.delete("project" + projectId);
+        if(projectEntity.getProjectImageUrl() != null){
+            s3Service.delete(projectEntity.getProjectImageKey());
         }
-        String imageUrl = s3Service.upload(file, "project-" + projectId);
+        String key = s3Service.createUUIDKey(file.getOriginalFilename());
+        String imageUrl = s3Service.upload(file, key);
         projectEntity.updateProjectImageUrl(imageUrl);
+        projectEntity.updateProjectImageKey(key);
     }
 
 
@@ -129,6 +161,14 @@ public class ProjectService {
         UserHistory userHistoryEntity = getValidUserHistory(userId);
         Project projectEntity = getValidProject(projectId);
         getAuthorizedUserProject(userHistoryEntity.getId(), projectId);
+
+        // 프로젝트 완료시 참여자들 완주 count 증가
+        if(status == ProjectStatus.COMPLETED){
+            projectEntity.getUserProjectList()
+                         .stream()
+                         .filter(userProject -> userProject.getUserProjectStatus() != UserProjectStatus.DROP)
+                         .forEach(userProject -> userProject.getUserHistory().addCompletionCount());
+        }
 
         projectEntity.updateProjectStatus(status);
     }
@@ -244,7 +284,7 @@ public class ProjectService {
                 .content(projectDetailEntity.getProjectContent())
                 .writer(getWriter(projectEntity.getUserProjectList()))
                 .hashtagList(getHashtagList(projectEntity.getProjectHashtagList()))
-                .imageUrl(projectEntity.getProjectImageUrl())
+                .imageUrlList(projectEntity.getProjectImageUrlList())
                 .hitCount(projectEntity.getHitCount())
                 .likeCount(projectEntity.getLikeCount())
                 .duration(projectEntity.getProjectDetail().getProjectDuration().toString())
