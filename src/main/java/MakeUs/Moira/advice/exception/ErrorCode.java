@@ -31,14 +31,15 @@ public enum ErrorCode {
     INVALID_CHAT_ROOM(436, "유효하지 않은 채팅방"),
     INVALID_USER_PORTFOLIO(436, "유효하지 않은 유저선택정보"),
 
+
     ALREADY_REGISTRED_USER(450, "이미 가입된 유저"),
     ALREADY_REGISTRED_NICKNAME(451, "이미 존재하는 닉네임"),
 
     UNAUTHORIZED_USER(460, "권한이 없는 유저"),
     UNAUTHORIZED_JWT(461, "해당 리소스에 접근 권한이 없는 JWT"),
 
-    NON_EXIST_FILE_NAME(470, "존재하지 않는 파일 이름");
-
+    NON_EXIST_FILE_NAME(470, "존재하지 않는 파일 이름"),
+    NON_EXIST_FCM_TOKEN(471, "유저의 FCM 토큰이 존재하지 않음");
 
 
     private final int code;

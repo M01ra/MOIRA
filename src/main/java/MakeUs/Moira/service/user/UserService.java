@@ -11,11 +11,15 @@ import MakeUs.Moira.domain.hashtag.HashtagRepo;
 import MakeUs.Moira.domain.position.PositionRepo;
 import MakeUs.Moira.domain.position.UserPosition;
 import MakeUs.Moira.domain.user.*;
+import MakeUs.Moira.fcm.FcmService;
+import MakeUs.Moira.fcm.model.FcmMessageTitleType;
+import MakeUs.Moira.fcm.model.PushNotificationRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 
@@ -28,6 +32,7 @@ public class UserService {
     private final PositionRepo    positionRepo;
     private final UserHashtagRepo userHashtagRepo;
     private final HashtagRepo     hashtagRepo;
+    private final FcmService      fcmService;
 
 
     public boolean isDuplicatedNickname(String nickname) {
@@ -36,7 +41,7 @@ public class UserService {
     }
 
     @Transactional
-    public SignupResponseDto signup(Long userId, String nickname, Long positionId, List<Long> hashtagIdList) {
+    public SignupResponseDto signup(Long userId, String nickname, Long positionId, List<Long> hashtagIdList) throws ExecutionException, InterruptedException {
 
         // 1. 유저 엔티티
         User userEntity = findUserById(userId);
@@ -71,6 +76,12 @@ public class UserService {
 
         PositionResponseDto positionResponseDto = getPositionResponseDto(userEntity);
         List<HashtagResponseDto> hashtagResponseDtoList = getHashtagResponseDtoList(userEntity);
+
+        fcmService.send(PushNotificationRequest.builder()
+                                               .targetUserId(userId)
+                                               .title(FcmMessageTitleType.MESSAGE_RECEIVED.name())
+                                               .message(FcmMessageTitleType.MESSAGE_RECEIVED.name())
+                                               .build());
 
         return SignupResponseDto.builder()
                                 .userId(userEntity.getId())

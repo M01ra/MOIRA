@@ -2,6 +2,9 @@ package MakeUs.Moira.controller.security;
 
 import MakeUs.Moira.controller.security.dto.LoginRequestDto;
 import MakeUs.Moira.controller.security.dto.LoginResponseDto;
+import MakeUs.Moira.fcm.FcmService;
+import MakeUs.Moira.fcm.model.FcmMessageTitleType;
+import MakeUs.Moira.fcm.model.PushNotificationRequest;
 import MakeUs.Moira.response.ResponseService;
 import MakeUs.Moira.response.model.SingleResult;
 import MakeUs.Moira.service.security.LoginService;
@@ -23,7 +26,6 @@ public class LoginController {
     private final LoginService    loginService;
     private final ResponseService responseService;
     private final Logger          logger = LoggerFactory.getLogger(this.getClass());
-
 
     @ApiOperation(
             value = "Jwt토큰 발급",
