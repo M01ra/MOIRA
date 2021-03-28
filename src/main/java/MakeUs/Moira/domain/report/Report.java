@@ -21,6 +21,6 @@ public class Report {
     private String reportContent;
 
     @Enumerated(EnumType.STRING)
-    private reportStatus reportStatus;
+    private ReportStatus reportStatus;
 
 }

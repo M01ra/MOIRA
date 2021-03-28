@@ -1,5 +1,5 @@
 package MakeUs.Moira.domain.report;
 
-public enum reportStatus {
+public enum ReportStatus {
     PROCESSING, COMPLETED
 }
