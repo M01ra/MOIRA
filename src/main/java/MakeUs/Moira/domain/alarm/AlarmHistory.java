@@ -1,12 +1,11 @@
 package MakeUs.Moira.domain.alarm;
 
 import MakeUs.Moira.domain.user.User;
+import MakeUs.Moira.fcm.model.FcmMessageTitleType;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @NoArgsConstructor
 @Entity
@@ -16,6 +15,9 @@ public class AlarmHistory {
     private Long id;
 
     private Long userId;
+
+    @Enumerated(EnumType.STRING)
+    private FcmMessageTitleType type;
 
     private String alarmContent;
 
