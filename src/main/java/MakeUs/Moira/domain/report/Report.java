@@ -2,10 +2,15 @@ package MakeUs.Moira.domain.report;
 
 import MakeUs.Moira.domain.user.User;
 import MakeUs.Moira.domain.user.UserHistory;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
+@Getter
+@NoArgsConstructor
 public class Report {
 
     @Id
@@ -15,12 +20,24 @@ public class Report {
     @ManyToOne
     private UserHistory userHistory;
 
-    @ManyToOne
-    private User targetUser;
+    @Enumerated(EnumType.STRING)
+    private ReportTargetType targetType;
 
-    private String reportContent;
+    private Long targetId;
+
+    @Enumerated(EnumType.STRING)
+    private ReportType reportType;
 
     @Enumerated(EnumType.STRING)
     private ReportStatus reportStatus;
 
+
+    @Builder
+    public Report(UserHistory userHistory, ReportTargetType targetType, Long targetId, ReportType reportType, ReportStatus reportStatus){
+        this.userHistory = userHistory;
+        this.targetType = targetType;
+        this.targetId = targetId;
+        this.reportType = reportType;
+        this.reportStatus = reportStatus;
+    }
 }

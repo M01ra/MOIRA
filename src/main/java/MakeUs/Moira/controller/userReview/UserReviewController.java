@@ -10,6 +10,7 @@ import MakeUs.Moira.response.ResponseService;
 
 import MakeUs.Moira.response.model.ListResult;
 import MakeUs.Moira.response.model.SingleResult;
+import MakeUs.Moira.service.alarm.AlarmService;
 import MakeUs.Moira.service.userReview.UserReviewService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
@@ -28,9 +29,9 @@ public class UserReviewController {
 
     private final UserReviewService userReviewService;
     private final ResponseService   responseService;
-
-    private final JwtTokenProvider jwtTokenProvider;
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final AlarmService      alarmService;
+    private final JwtTokenProvider  jwtTokenProvider;
+    private final Logger            logger = LoggerFactory.getLogger(this.getClass());
 
 
     @ApiImplicitParams({
@@ -55,6 +56,7 @@ public class UserReviewController {
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(token));
         UserReviewAddResponseDto userReviewAddResponseDto = userReviewService.addUserReview(userId, userReviewAddRequestDto);
         logger.info(userReviewAddResponseDto.toString());
+        alarmService.saveUserReview(userId, userReviewAddResponseDto);
         return responseService.mappingSingleResult(userReviewAddResponseDto, "팀원 평가하기 - 특정 유저 평가하기");
     }
 
@@ -90,12 +92,12 @@ public class UserReviewController {
             value = "유저의 \"모든 리뷰 내용\" 조회",
             notes = "### targetId와 매칭되는 특정 유저의 모든 리뷰 내용을 조회합니다.\n"
     )
-    @GetMapping(value = "/review/detail/{userId}")
+    @GetMapping(value = "/review/detail/{targetId}")
     public ListResult<UserReviewDetailResponseDto> getUserReviewDetail(@RequestHeader(value = "X-AUTH-TOKEN") String token,
-                                                                       @ApiParam(value = "조회하려는 유저의 userId", required = true) @PathVariable Long userId,
-                                                                       @ApiParam(value = "정렬 방식 - date, point", required = true) @RequestParam String sort)
+                                                                       @ApiParam(value = "조회하려는 유저의 userId", required = true) @PathVariable Long targetId,
+                                                                       @ApiParam(value = "정렬 방식", required = true) @RequestParam String sort)
     {
-        List<UserReviewDetailResponseDto> userReviewDetailResponseDtoList = userReviewService.getUserReviewDetail(userId, sort);
+        List<UserReviewDetailResponseDto> userReviewDetailResponseDtoList = userReviewService.getUserReviewDetail(targetId, sort);
         logger.info(userReviewDetailResponseDtoList.toString());
         return responseService.mappingListResult(userReviewDetailResponseDtoList, "유저의 모든 리뷰 내용 조회");
     }

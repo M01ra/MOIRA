@@ -10,6 +10,7 @@ public enum ErrorCode {
     // 410 : HttpMessageNotReadableException -> enum 에러
     // 411 : HttpClientErrorException -> 잘못된 kakao 토큰
 
+
     INVALID_USER(420, "유효하지 않은 유저 혹은 유저 ID"),
     INVALID_PROJECT(421, "유효하지 않은 프로젝트 혹은 프로젝트 ID"),
     INVALID_COMMENT(422, "유효하지 않은 댓글 혹은 댓글 ID"),
@@ -30,6 +31,7 @@ public enum ErrorCode {
     INVALID_CHAT_ROOM(437, "유효하지 않은 채팅방"),
     INVALID_USER_PORTFOLIO(438, "유효하지 않은 유저선택정보"),
     INVALID_PROJECT_APPLY_STATUS_CHANGE(439, "유효하지 않은 프로젝트 지원 상태 변경"),
+    INVALID_REVIEW(440, "유효하지 않은 유저 리뷰"),
 
 
     ALREADY_REGISTERED_USER(450, "이미 가입된 유저"),
@@ -40,10 +42,12 @@ public enum ErrorCode {
 
     UNAUTHORIZED_USER(460, "권한이 없는 유저"),
     UNAUTHORIZED_JWT(461, "해당 리소스에 접근 권한이 없는 JWT"),
+    UNAUTHORIZED_REPORT_PROJECT(462, "자신 게시글에 신고할 수 없음"),
+    UNAUTHORIZED_REPORT_COMMENT(463, "자신 댓글에 신고할 수 없음"),
 
     NON_EXIST_FILE_NAME(470, "존재하지 않는 파일 이름"),
-    NON_EXIST_PROJECT_LEADER(471, "존재하지 않는 팀장");
-
+    NON_EXIST_PROJECT_LEADER(471, "존재하지 않는 팀장"),
+    NON_EXIST_FCM_TOKEN(471, "유저의 FCM 토큰이 존재하지 않음");
 
 
     private final int code;

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 
@@ -36,7 +37,7 @@ public class UserService {
     }
 
     @Transactional
-    public SignupResponseDto signup(Long userId, String nickname, Long positionId, List<Long> hashtagIdList) {
+    public SignupResponseDto signup(Long userId, String nickname, Long positionId, List<Long> hashtagIdList){
 
         // 1. 유저 엔티티
         User userEntity = findUserById(userId);

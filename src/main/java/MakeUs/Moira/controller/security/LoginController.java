@@ -24,7 +24,6 @@ public class LoginController {
     private final ResponseService responseService;
     private final Logger          logger = LoggerFactory.getLogger(this.getClass());
 
-
     @ApiOperation(
             value = "Jwt토큰 발급",
             notes = "### Post의 Body로 socialProvider, AccessToken 값을 받은 후에 Jwt 토큰을 리턴\n" +
