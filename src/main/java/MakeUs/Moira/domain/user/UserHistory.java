@@ -69,4 +69,12 @@ public class UserHistory {
     public void removeProjectLike(ProjectLike projectLike){
         projectLikes.remove(projectLike);
     }
+
+    public void addParticipationCount(){
+        participationCount++;
+    }
+
+    public void addCompletionCount(){
+        completionCount++;
+    }
 }

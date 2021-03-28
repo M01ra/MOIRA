@@ -62,7 +62,7 @@ public class ProjectApplyService {
 
         // 이미 지원한 유저인지 확인
         projectEntity.getProjectDetail().getProjectApplyList()
-                        .forEach(projectApplyEntity -> checkProjectApplicant(projectApplyEntity, userId));
+                        .forEach(projectApplyEntity -> checkAlreadyProjectApplicant(projectApplyEntity, userId));
 
         // 이미 가입된 유저인지 확인
         if(isProjectUser(userHistoryEntity.getId(), projectEntity.getId())){
@@ -73,7 +73,7 @@ public class ProjectApplyService {
         ProjectApply projectApplyEntity = ProjectApply.builder()
                 .applicant(userEntity)
                 .userPosition(userEntity.getUserPosition())
-                .projectApplyStatus(ProjectApplyStatus.APPLY)
+                .projectApplyStatus(ProjectApplyStatus.USER_APPLIED)
                 .projectDetail(projectEntity.getProjectDetail())
                 .build();
         projectApplyRepo.save(projectApplyEntity);
@@ -99,8 +99,11 @@ public class ProjectApplyService {
             checkProjectTeammate(userHistoryEntity.getId(), projectEntity.getId());
         }
         else{
+            // 팀의 리더가 아닐경우
             if(!isProjectLeader(userHistoryEntity.getId(), projectEntity.getId())){
-                throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
+                // 자신의 지원서를 보는 것이 아닐경우
+                if(!userId.equals(userEntity.getId()))
+                    throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
             }
         }
 
@@ -140,10 +143,29 @@ public class ProjectApplyService {
         ProjectApply projectApplyEntity = getValidProjectApply(projectApplyId);
         Project projectEntity = projectApplyEntity.getProjectDetail().getProject();
         switch (status){
-            case ACCEPT:
+            case APPLY_REJECTED:
+                // 팀장인지 확인
+                if(!isProjectLeader(userHistoryEntity.getId(), projectApplyId)){
+                    throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
+                }
+                // 유효한 상태 변경인지 검증
+                checkValidProjectApplyStatus(projectApplyEntity.getProjectApplyStatus(), ProjectApplyStatus.USER_APPLIED);
+                break;
+
+            case TEAM_INVITED:
+                // 팀장인지 확인
+                if(!isProjectLeader(userHistoryEntity.getId(), projectApplyId)){
+                    throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
+                }
+                // 유효한 상태 변경인지 검증
+                checkValidProjectApplyStatus(projectApplyEntity.getProjectApplyStatus(), ProjectApplyStatus.USER_APPLIED);
+                break;
+
+            case USER_ACCEPTED:
                 // 본인의 지원서인지 검증
                 checkProjectApplicant(projectApplyEntity, userId);
-
+                // 유효한 상태 변경인지 검증
+                checkValidProjectApplyStatus(projectApplyEntity.getProjectApplyStatus(), ProjectApplyStatus.TEAM_INVITED);
                 // UserProject 생성
                 if(!isExistUserProject(userHistoryEntity.getId(), projectEntity.getId())){
                     UserProject userProjectEntity = UserProject.builder()
@@ -156,16 +178,29 @@ public class ProjectApplyService {
                     // UserProject 양방향 추가
                     projectEntity.addUserProjectList(userProjectEntity);
                     userHistoryEntity.addUserProject(userProjectEntity);
+
+                    // 지원자 참여횟수 증가
+                    userHistoryEntity.addParticipationCount();
+
+                    // 리더 참여횟수 증가
+                    if(projectEntity.getUserProjectList().size() == 2){
+                        projectEntity.getUserProjectList().stream()
+                                     .filter(userProject -> userProject.getRoleType() == UserProjectRoleType.LEADER)
+                                     .findFirst()
+                                     .orElseThrow(() -> new CustomException(ErrorCode.NON_EXIST_PROJECT_LEADER))
+                                     .getUserHistory()
+                                     .addParticipationCount();
+                    }
                 }
                 else{
-                    throw new CustomException(ErrorCode.ALREADY_REGISTRED_USER);
+                    throw new CustomException(ErrorCode.ALREADY_REGISTERED_USER);
                 }
                 break;
-            case REJECT: checkProjectApplicant(projectApplyEntity, userId); break;
-            case INVITE:
-                if(!isProjectLeader(userHistoryEntity.getId(), projectApplyId)){
-                    throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
-                }
+            case USER_REJECTED:
+                // 본인의 지원서인지 검증
+                checkProjectApplicant(projectApplyEntity, userId);
+                // 유효한 상태 변경인지 검증
+                checkValidProjectApplyStatus(projectApplyEntity.getProjectApplyStatus(), ProjectApplyStatus.TEAM_INVITED);
                 break;
         }
 
@@ -381,6 +416,12 @@ public class ProjectApplyService {
         }
     }
 
+    private void checkAlreadyProjectApplicant(ProjectApply projectApplyEntity, Long userId) {
+        if (projectApplyEntity.getApplicant().getId().equals(userId)) {
+            throw new CustomException(ErrorCode.ALREADY_REGISTERED_PROJECT_APPLICANT);
+        }
+    }
+
 
     private void checkProjectTeammate(Long userHistoryId, Long projectId){
         UserProject UserProjectEntity = userProjectRepo.findByUserHistoryIdAndProjectId(userHistoryId, projectId)
@@ -389,7 +430,7 @@ public class ProjectApplyService {
 
 
     private void checkProjectApplicant(ProjectApply projectApplyEntity, Long userId) {
-        if (projectApplyEntity.getApplicant().getId().equals(userId)) {
+        if (!projectApplyEntity.getApplicant().getId().equals(userId)) {
             throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
         }
     }
@@ -397,6 +438,13 @@ public class ProjectApplyService {
 
     private boolean isExistUserProject(Long userHistoryId, Long projectId){
         return userProjectRepo.findByUserHistoryIdAndProjectId(userHistoryId, projectId).isPresent();
+    }
+
+
+    private void checkValidProjectApplyStatus(ProjectApplyStatus actualStatus, ProjectApplyStatus expectedStatus){
+        if(actualStatus != expectedStatus){
+            throw new CustomException(ErrorCode.INVALID_PROJECT_APPLY_STATUS_CHANGE);
+        }
     }
 
 

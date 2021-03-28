@@ -40,6 +40,10 @@ public class ProjectCommentService {
         // 부모 댓글 ID가 있을 경우
         if(parentId != null){
             parentProjectComment = getValidProjectComment(parentId);
+            // 부모 댓글이 대댓글일 경우
+            if(parentProjectComment.getParentComment() != null){
+                throw new CustomException(ErrorCode.ALREADY_EXIST_PARENT_COMMENT);
+            }
         }
 
         ProjectComment projectComment = ProjectComment.builder()

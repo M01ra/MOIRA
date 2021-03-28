@@ -27,14 +27,20 @@ public enum ErrorCode {
     INVALID_FILE_IO(433, "유효하지 않은 파일 입출력"),
     INVALID_TOKEN_PROVIDER(434, "유효하지 않은 토큰 제공자(kakao)"),
     INVALID_JWT_TOKEN(435, "유효하지 않은 JWT 토큰"),
+    INVALID_PROJECT_APPLY_STATUS_CHANGE(436, "유효하지 않은 프로젝트 지원 상태 변경"),
 
-    ALREADY_REGISTRED_USER(450, "이미 가입된 유저"),
-    ALREADY_REGISTRED_NICKNAME(451, "이미 존재하는 닉네임"),
+
+    ALREADY_REGISTERED_USER(450, "이미 가입된 유저"),
+    ALREADY_REGISTERED_NICKNAME(451, "이미 존재하는 닉네임"),
+    ALREADY_EXIST_PARENT_COMMENT(452, "이미 대댓글인 부모 댓글"),
+    ALREADY_REGISTERED_PROJECT_IMAGE(453, "이미 등록된 프로젝트 이미지"),
+    ALREADY_REGISTERED_PROJECT_APPLICANT(454, "이미 지원한 유저"),
 
     UNAUTHORIZED_USER(460, "권한이 없는 유저"),
     UNAUTHORIZED_JWT(461, "해당 리소스에 접근 권한이 없는 JWT"),
 
-    NON_EXIST_FILE_NAME(470, "존재하지 않는 파일 이름");
+    NON_EXIST_FILE_NAME(470, "존재하지 않는 파일 이름"),
+    NON_EXIST_PROJECT_LEADER(471, "존재하지 않는 팀장");
 
 
 
