@@ -10,7 +10,6 @@ public enum ErrorCode {
     // 410 : HttpMessageNotReadableException -> enum 에러
     // 411 : HttpClientErrorException -> 잘못된 kakao 토큰
 
-
     INVALID_USER(420, "유효하지 않은 유저 혹은 유저 ID"),
     INVALID_PROJECT(421, "유효하지 않은 프로젝트 혹은 프로젝트 ID"),
     INVALID_COMMENT(422, "유효하지 않은 댓글 혹은 댓글 ID"),
