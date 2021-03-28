@@ -9,6 +9,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -24,8 +25,10 @@ public class FcmInitializer {
 
         GoogleCredentials googleCredentials = null;
         try {
-            googleCredentials = GoogleCredentials.fromStream(new ClassPathResource(firebaseConfigPath).getInputStream());
+            googleCredentials = GoogleCredentials.fromStream(new FileInputStream(firebaseConfigPath));
         } catch (IOException e) {
+            logger.info("rkrkrkrkrkrkrkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
+            logger.info(e.getMessage());
             return;
         }
         FirebaseApp firebaseApp = null;
