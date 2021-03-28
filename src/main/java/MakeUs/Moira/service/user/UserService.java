@@ -11,7 +11,6 @@ import MakeUs.Moira.domain.hashtag.HashtagRepo;
 import MakeUs.Moira.domain.position.PositionRepo;
 import MakeUs.Moira.domain.position.UserPosition;
 import MakeUs.Moira.domain.user.*;
-import MakeUs.Moira.fcm.FcmService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +29,6 @@ public class UserService {
     private final PositionRepo    positionRepo;
     private final UserHashtagRepo userHashtagRepo;
     private final HashtagRepo     hashtagRepo;
-    private final FcmService      fcmService;
 
 
     public boolean isDuplicatedNickname(String nickname) {
@@ -39,7 +37,7 @@ public class UserService {
     }
 
     @Transactional
-    public SignupResponseDto signup(Long userId, String nickname, Long positionId, List<Long> hashtagIdList) throws ExecutionException, InterruptedException {
+    public SignupResponseDto signup(Long userId, String nickname, Long positionId, List<Long> hashtagIdList){
 
         // 1. 유저 엔티티
         User userEntity = findUserById(userId);

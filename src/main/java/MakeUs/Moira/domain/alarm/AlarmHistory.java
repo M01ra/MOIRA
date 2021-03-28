@@ -1,5 +1,7 @@
 package MakeUs.Moira.domain.alarm;
 
+import MakeUs.Moira.controller.home.dto.AlarmResponseDto;
+import MakeUs.Moira.domain.AuditorEntity;
 import MakeUs.Moira.domain.chat.ReadStatus;
 import lombok.Builder;
 import lombok.Getter;
@@ -8,9 +10,9 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @NoArgsConstructor
-@Entity
 @Getter
-public class AlarmHistory {
+@Entity
+public class AlarmHistory extends AuditorEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +30,6 @@ public class AlarmHistory {
     @Enumerated(EnumType.STRING)
     private ReadStatus readStatus;
 
-
     @Builder
     public AlarmHistory(Long userId, AlarmType type, Long alarmTargetId, String alarmContent) {
         this.userId = userId;
@@ -36,5 +37,19 @@ public class AlarmHistory {
         this.alarmTargetId = alarmTargetId;
         this.alarmContent = alarmContent;
         readStatus = ReadStatus.UNREAD;
+    }
+
+    public AlarmResponseDto toAlarmResponseDto() {
+        return AlarmResponseDto.builder()
+                               .alarmId(id)
+                               .alarmType(type.name())
+                               .alarmTargetId(alarmTargetId)
+                               .alarmContent(alarmContent)
+                               .readStatus(readStatus)
+                               .build();
+    }
+
+    public void updateReadStatus() {
+        this.readStatus = ReadStatus.READ;
     }
 }
