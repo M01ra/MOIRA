@@ -50,4 +50,8 @@ public class AlarmHistory extends AuditorEntity {
                                .readStatus(readStatus)
                                .build();
     }
+
+    public void updateReadStatus() {
+        this.readStatus = ReadStatus.READ;
+    }
 }

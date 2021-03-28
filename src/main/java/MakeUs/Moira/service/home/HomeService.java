@@ -41,11 +41,20 @@ public class HomeService {
     }
 
     public List<AlarmResponseDto> getAlarm(Long userId, int page) {
+
+        updateAlarmListReadStatus(userId);
+
         Pageable pageable = PageRequest.of(page - 1, 10);
         List<AlarmHistory> alarmHistoryList = alarmHistoryRepo.findByUserIdOrderByCreatedDateDesc(userId, pageable);
+
         return alarmHistoryList.stream()
                                .map(AlarmHistory::toAlarmResponseDto)
                                .collect(Collectors.toList());
 
+    }
+
+    private void updateAlarmListReadStatus(Long userId) {
+        alarmHistoryRepo.findByUserId(userId)
+                        .forEach(AlarmHistory::updateReadStatus);
     }
 }
