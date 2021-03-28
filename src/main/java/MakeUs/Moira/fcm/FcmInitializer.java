@@ -25,7 +25,7 @@ public class FcmInitializer {
         try {
             googleCredentials = GoogleCredentials.fromStream(new ClassPathResource(firebaseConfigPath).getInputStream());
         } catch (IOException e) {
-            e.printStackTrace();
+            return;
         }
         FirebaseOptions options = FirebaseOptions.builder()
                                                  .setCredentials(googleCredentials)
