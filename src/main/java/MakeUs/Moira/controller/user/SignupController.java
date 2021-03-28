@@ -41,6 +41,12 @@ public class SignupController {
     private final Logger           logger = LoggerFactory.getLogger(this.getClass());
 
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "X-AUTH-TOKEN",
+                    value = "로그인 성공 후 JWT_TOKEN",
+                    required = true, dataType = "String", paramType = "header")
+    })
     @ApiOperation(
             value = "닉네임 중복 검사",
             notes = "닉네임을 전달받아서 중복을 검사합니다\n"
@@ -57,6 +63,12 @@ public class SignupController {
     }
 
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "X-AUTH-TOKEN",
+                    value = "로그인 성공 후 JWT_TOKEN",
+                    required = true, dataType = "String", paramType = "header")
+    })
     @ApiOperation(
             value = "회원 가입 시 포지션 카테고리 목록",
             notes = "회원 가입 시 포지션 카테고리 목록을 불러옵니다. => id / name / image"
@@ -69,6 +81,12 @@ public class SignupController {
     }
 
 
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "X-AUTH-TOKEN",
+                    value = "로그인 성공 후 JWT_TOKEN",
+                    required = true, dataType = "String", paramType = "header")
+    })
     @ApiOperation(
             value = "선택한 포지션 카테고리의 상세 포지션 목록",
             notes = "선택한 포지션 카테고리의 상세 포지션 목록을 불러옵니다"
@@ -82,7 +100,12 @@ public class SignupController {
         return responseService.mappingListResult(resultList, "선택한 포지션 카테고리의 상세 포지션 목록 불러오기 성공");
     }
 
-
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "X-AUTH-TOKEN",
+                    value = "로그인 성공 후 JWT_TOKEN",
+                    required = true, dataType = "String", paramType = "header")
+    })
     @ApiOperation(
             value = "모든 관심 태그 목록",
             notes = "모든 관심 태그 목록을 불러옵니다."
