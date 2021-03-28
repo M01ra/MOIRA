@@ -1,10 +1,8 @@
 package MakeUs.Moira.controller.home;
 
 import MakeUs.Moira.config.security.JwtTokenProvider;
-import MakeUs.Moira.controller.fcm.dto.FcmTokenRequestDto;
 import MakeUs.Moira.controller.home.dto.HomeResponseDto;
 import MakeUs.Moira.response.ResponseService;
-import MakeUs.Moira.response.model.CommonResult;
 import MakeUs.Moira.response.model.SingleResult;
 import MakeUs.Moira.service.home.HomeService;
 import io.swagger.annotations.Api;
@@ -13,7 +11,6 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 

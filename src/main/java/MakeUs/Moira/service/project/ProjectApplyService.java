@@ -27,6 +27,8 @@ import MakeUs.Moira.controller.userPortfolio.userLicense.dto.UserLicenseResponse
 import MakeUs.Moira.controller.userPortfolio.userLink.dto.UserLinkResponseDto;
 import MakeUs.Moira.controller.userPortfolio.userSchool.dto.UserSchoolResponseDto;
 import MakeUs.Moira.domain.userPortfolio.userSchool.UserSchoolRepo;
+import MakeUs.Moira.domain.alarm.AlarmType;
+import MakeUs.Moira.service.alarm.AlarmService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,6 +54,7 @@ public class ProjectApplyService {
     private final UserLicenseRepo userLicenseRepo;
     private final UserAwardRepo userAwardRepo;
     private final UserLinkRepo userLinkRepo;
+    private final AlarmService alarmService;
 
 
     @Transactional
@@ -150,6 +153,14 @@ public class ProjectApplyService {
                 }
                 // 유효한 상태 변경인지 검증
                 checkValidProjectApplyStatus(projectApplyEntity.getProjectApplyStatus(), ProjectApplyStatus.USER_APPLIED);
+                // 알람 생성
+                alarmService.saveProjectApply(
+                        getProjectTitle(projectApplyEntity.getProjectDetail().getProject().getProjectTitle()) + "에 안타깝게 합류하지 못했습니다.",
+                        AlarmType.APPLY,
+                        projectApplyId,
+                        projectApplyEntity.getApplicant().getId()
+                );
+
                 break;
 
             case TEAM_INVITED:
@@ -159,6 +170,13 @@ public class ProjectApplyService {
                 }
                 // 유효한 상태 변경인지 검증
                 checkValidProjectApplyStatus(projectApplyEntity.getProjectApplyStatus(), ProjectApplyStatus.USER_APPLIED);
+                // 알람 생성
+                alarmService.saveProjectApply(
+                        getProjectTitle(projectApplyEntity.getProjectDetail().getProject().getProjectTitle()) + "에 합류하게 되었습니다.",
+                        AlarmType.INVITE_ANSWER,
+                        projectApplyId,
+                        projectApplyEntity.getApplicant().getId()
+                );
                 break;
 
             case USER_ACCEPTED:
@@ -182,15 +200,19 @@ public class ProjectApplyService {
                     // 지원자 참여횟수 증가
                     userHistoryEntity.addParticipationCount();
 
+                    User leader = getLeader(projectEntity);
+
                     // 리더 참여횟수 증가
                     if(projectEntity.getUserProjectList().size() == 2){
-                        projectEntity.getUserProjectList().stream()
-                                     .filter(userProject -> userProject.getRoleType() == UserProjectRoleType.LEADER)
-                                     .findFirst()
-                                     .orElseThrow(() -> new CustomException(ErrorCode.NON_EXIST_PROJECT_LEADER))
-                                     .getUserHistory()
-                                     .addParticipationCount();
+                        leader.getUserHistory().addParticipationCount();
                     }
+                    // 알람 생성
+                    alarmService.saveProjectApply(
+                            projectApplyEntity.getApplicant().getNickname() + "님이 " + getProjectTitle(projectApplyEntity.getProjectDetail().getProject().getProjectTitle()) + "에 합류하게 되었습니다.",
+                            AlarmType.APPLY,
+                            projectApplyId,
+                            leader.getId()
+                    );
                 }
                 else{
                     throw new CustomException(ErrorCode.ALREADY_REGISTERED_USER);
@@ -201,6 +223,14 @@ public class ProjectApplyService {
                 checkProjectApplicant(projectApplyEntity, userId);
                 // 유효한 상태 변경인지 검증
                 checkValidProjectApplyStatus(projectApplyEntity.getProjectApplyStatus(), ProjectApplyStatus.TEAM_INVITED);
+                // 알람 생성
+                User leader = getLeader(projectEntity);
+                alarmService.saveProjectApply(
+                        projectApplyEntity.getApplicant().getNickname() + "님이 " + getProjectTitle(projectApplyEntity.getProjectDetail().getProject().getProjectTitle()) + "에 안타깝게 합류하지 못했습니다.",
+                        AlarmType.APPLY,
+                        projectApplyId,
+                        leader.getId()
+                );
                 break;
         }
 
@@ -483,5 +513,23 @@ public class ProjectApplyService {
                                       break;
                               }
                           });
+    }
+
+
+    private String getProjectTitle(String projectTitle){
+        if(projectTitle.length() > 10){
+            projectTitle = projectTitle.substring(0, 10) + "...";
+        }
+        return projectTitle;
+    }
+
+
+    private User getLeader(Project projectEntity){
+        return projectEntity.getUserProjectList().stream()
+                                   .filter(userProject -> userProject.getRoleType() == UserProjectRoleType.LEADER)
+                                   .findFirst()
+                                   .orElseThrow(() -> new CustomException(ErrorCode.NON_EXIST_PROJECT_LEADER))
+                                   .getUserHistory()
+                                   .getUser();
     }
 }
