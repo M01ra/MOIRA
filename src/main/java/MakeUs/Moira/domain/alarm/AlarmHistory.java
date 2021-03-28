@@ -1,7 +1,6 @@
 package MakeUs.Moira.domain.alarm;
 
 import MakeUs.Moira.domain.chat.ReadStatus;
-import MakeUs.Moira.fcm.model.alarmType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,9 +21,9 @@ public class AlarmHistory {
     private Long userId;
 
     @Enumerated(EnumType.STRING)
-    private alarmType type;
+    private AlarmType type;
 
-    private String alarmTargetId;
+    private Long alarmTargetId;
 
     private String alarmContent;
 
@@ -32,7 +31,7 @@ public class AlarmHistory {
     private ReadStatus readStatus;
 
     @Builder
-    public AlarmHistory(Long userId, alarmType type, String alarmTargetId, String alarmContent) {
+    public AlarmHistory(Long userId, AlarmType type, Long alarmTargetId, String alarmContent) {
         this.userId = userId;
         this.type = type;
         this.alarmTargetId = alarmTargetId;

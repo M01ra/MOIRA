@@ -1,9 +1,9 @@
-package MakeUs.Moira.fcm.model;
+package MakeUs.Moira.domain.alarm;
 
 import lombok.Getter;
 
 @Getter
-public enum alarmType {
+public enum AlarmType {
     /*
     1. 나한테 쪽지옴
     2. 내가 쓴 모집글에 지원함

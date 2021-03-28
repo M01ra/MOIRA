@@ -63,6 +63,7 @@ public class ChatService {
 
         ChatMessage chatMessage = chatMessageSendRequestDto.toEntity(userEntity);
         chatMessage.updateChatRoom(chatRoom);
+
         return chatMessage.toChatMessageSendResponseDto(opponentId);
     }
 

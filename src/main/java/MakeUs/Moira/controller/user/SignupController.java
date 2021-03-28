@@ -7,7 +7,6 @@ import MakeUs.Moira.controller.user.dto.myPage.HashtagResponseDto;
 import MakeUs.Moira.controller.user.dto.signup.PositionCategoryResponseDto;
 import MakeUs.Moira.controller.user.dto.signup.PositionResponseDto;
 import MakeUs.Moira.controller.user.dto.signup.SignupResponseDto;
-import MakeUs.Moira.fcm.FcmService;
 import MakeUs.Moira.response.ResponseService;
 import MakeUs.Moira.response.model.CommonResult;
 import MakeUs.Moira.response.model.ListResult;
@@ -130,7 +129,7 @@ public class SignupController {
     )
     @PostMapping(value = "/signup")
     public CommonResult signup(@RequestHeader(value = "X-AUTH-TOKEN") String token,
-                               @Valid @ApiParam(required = true) @RequestBody SignupRequestDto signupRequestDto) throws ExecutionException, InterruptedException
+                               @Valid @ApiParam(required = true) @RequestBody SignupRequestDto signupRequestDto)
     {
         logger.info(signupRequestDto.toString());
 
