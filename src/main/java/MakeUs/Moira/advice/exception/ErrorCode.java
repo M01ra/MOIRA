@@ -40,6 +40,8 @@ public enum ErrorCode {
 
     UNAUTHORIZED_USER(460, "권한이 없는 유저"),
     UNAUTHORIZED_JWT(461, "해당 리소스에 접근 권한이 없는 JWT"),
+    UNAUTHORIZED_REPORT_PROJECT(462, "자신 게시글에 신고할 수 없음"),
+    UNAUTHORIZED_REPORT_COMMENT(463, "자신 댓글에 신고할 수 없음"),
 
     NON_EXIST_FILE_NAME(470, "존재하지 않는 파일 이름"),
     NON_EXIST_PROJECT_LEADER(471, "존재하지 않는 팀장");

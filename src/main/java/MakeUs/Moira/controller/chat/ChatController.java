@@ -15,6 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import java.util.List;
 
 @Api(tags = {"8.채팅"})
@@ -88,6 +90,6 @@ public class ChatController {
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(token));
         ChatMessageSendResponseDto chatMessageSendResponseDto = chatService.sendMessage(userId, chatMessageSendRequestDto);
         logger.info(chatMessageSendResponseDto.toString());
-        return responseService.mappingSingleResult(chatMessageSendResponseDto, "유저와 채팅 내용 불러오기");
+        return responseService.mappingSingleResult(chatMessageSendResponseDto, "채팅 보내기 성공");
     }
 }

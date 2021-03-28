@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -164,5 +165,29 @@ public class MyPageEditController {
         MyPageEditHashtagResponseDto myPageEditHashtagResponseDto = myPageEditService.updateMyPageEditHashtag(userId, myPageEditHashtagRequestDto);
         logger.info(myPageEditHashtagResponseDto.toString());
         return responseService.mappingSingleResult(myPageEditHashtagResponseDto, "마이페이지 - 내 정보 수정하기 - 프로필 - 관심 태그 수정");
+    }
+
+
+    // 5. 해시태그 리스트 수정
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "X-AUTH-TOKEN",
+                    value = "로그인 성공 후 JWT_TOKEN",
+                    required = true, dataType = "String", paramType = "header")
+    })
+    @ApiOperation(
+            value = "마이페이지 - 내 정보 수정하기 - 프로필 - 이미지 수정",
+            notes = "### 마이페이지 - 내 정보 수정하기 - 프로필 - 이미지를 수정합니다.\n"
+    )
+    @PutMapping(value = "/mypage/edit/image")
+    public SingleResult<String> updateMyPageEditImage(@RequestHeader(value = "X-AUTH-TOKEN") String token,
+                                                      @RequestPart MultipartFile image)
+    {
+        // 권한 설정은 시큐리티에서 하자
+        logger.info("fileName : " + image.getOriginalFilename() + " size : " + image.getSize());
+        Long userId = Long.parseLong(jwtTokenProvider.getUserPk(token));
+        String imageUrl = myPageEditService.updateMyPageEditImage(userId, image);
+        logger.info(imageUrl);
+        return responseService.mappingSingleResult(imageUrl, "마이페이지 - 내 정보 수정하기 - 프로필 - 이미지 수정");
     }
 }

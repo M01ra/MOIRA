@@ -6,11 +6,16 @@ import MakeUs.Moira.controller.user.dto.myPageEdit.*;
 import MakeUs.Moira.domain.hashtag.HashtagRepo;
 import MakeUs.Moira.domain.position.PositionRepo;
 import MakeUs.Moira.domain.position.UserPosition;
+import MakeUs.Moira.domain.project.Project;
+import MakeUs.Moira.domain.project.ProjectRepo;
+import MakeUs.Moira.domain.project.projectDetail.ProjectDetail;
 import MakeUs.Moira.domain.user.*;
 import MakeUs.Moira.domain.userPortfolio.UserPortfolio;
+import MakeUs.Moira.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,6 +29,7 @@ public class MyPageEditService {
     private final PositionRepo    positionRepo;
     private final UserHashtagRepo userHashtagRepo;
     private final HashtagRepo     hashtagRepo;
+    private final S3Service       s3Service;
 
 
     public MyPageEditResponseDto getMyPageEdit(Long userId) {
@@ -107,5 +113,22 @@ public class MyPageEditService {
     private boolean isDuplicatedNickname(String newNickname) {
         return userRepo.findByNickname(newNickname)
                        .isPresent();
+    }
+
+    @Transactional
+    public String updateMyPageEditImage(Long userId,
+                                         MultipartFile image)
+    {
+        User userEntity = getUserEntity(userId);
+
+        // 기존에 존재했을 경우 삭제
+        if(userEntity.getProfileImage() != null){
+            s3Service.delete(userEntity.getProfileImageKey());
+        }
+        String key = s3Service.createUUIDKey(image.getOriginalFilename());
+        String imageUrl = s3Service.upload(image, key);
+        userEntity.updateProfileImage(imageUrl);
+        userEntity.updateProfileImageKey(key);
+        return imageUrl;
     }
 }

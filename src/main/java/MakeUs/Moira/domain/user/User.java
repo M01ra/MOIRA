@@ -51,6 +51,8 @@ public class User implements UserDetails {
 
     private String profileImage;
 
+    private String profileImageKey;
+
     @ManyToOne
     private UserPosition userPosition;
 
@@ -136,6 +138,16 @@ public class User implements UserDetails {
 
     public User updateShorIntroduction(String shortIntroduction) {
         this.shortIntroduction = shortIntroduction;
+        return this;
+    }
+
+    public User updateProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+        return this;
+    }
+
+    public User updateProfileImageKey(String profileImageKey) {
+        this.profileImageKey = profileImageKey;
         return this;
     }
 
