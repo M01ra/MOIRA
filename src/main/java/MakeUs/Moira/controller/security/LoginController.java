@@ -2,9 +2,6 @@ package MakeUs.Moira.controller.security;
 
 import MakeUs.Moira.controller.security.dto.LoginRequestDto;
 import MakeUs.Moira.controller.security.dto.LoginResponseDto;
-import MakeUs.Moira.fcm.FcmService;
-import MakeUs.Moira.fcm.model.FcmMessageTitleType;
-import MakeUs.Moira.fcm.model.PushNotificationRequest;
 import MakeUs.Moira.response.ResponseService;
 import MakeUs.Moira.response.model.SingleResult;
 import MakeUs.Moira.service.security.LoginService;

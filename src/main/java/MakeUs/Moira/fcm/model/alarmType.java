@@ -3,7 +3,7 @@ package MakeUs.Moira.fcm.model;
 import lombok.Getter;
 
 @Getter
-public enum FcmMessageTitleType {
+public enum alarmType {
     /*
     1. 나한테 쪽지옴
     2. 내가 쓴 모집글에 지원함
@@ -16,7 +16,7 @@ public enum FcmMessageTitleType {
     9. 나에게 리뷰가 달림
      */
     MESSAGE_RECEIVED(1),
-    MY_PROJCET_APPLIED(2),
+    MY_PROJECT_APPLIED(2),
     COMMENT_TO_MY_PROJECT(3),
     COMMENT_TO_MY_COMMENT(4),
     OFFER_RECEIVED_FROM_TEAM_LEADER(5),
@@ -27,7 +27,7 @@ public enum FcmMessageTitleType {
 
     private final int code;
 
-    FcmMessageTitleType(int code) {
+    alarmType(int code) {
         this.code = code;
     }
 }

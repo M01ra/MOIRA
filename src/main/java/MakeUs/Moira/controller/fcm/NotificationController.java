@@ -3,7 +3,7 @@ package MakeUs.Moira.controller.fcm;
 import MakeUs.Moira.config.security.JwtTokenProvider;
 import MakeUs.Moira.controller.fcm.dto.FcmTokenRequestDto;
 import MakeUs.Moira.fcm.FcmService;
-import MakeUs.Moira.fcm.model.FcmMessageTitleType;
+import MakeUs.Moira.fcm.model.alarmType;
 import MakeUs.Moira.fcm.model.PushNotificationRequest;
 import MakeUs.Moira.response.ResponseService;
 import MakeUs.Moira.response.model.CommonResult;
@@ -63,8 +63,8 @@ public class NotificationController {
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(token));
         fcmService.send(PushNotificationRequest.builder()
                                                .targetUserId(userId)
-                                               .title(FcmMessageTitleType.MESSAGE_RECEIVED.name())
-                                               .message(FcmMessageTitleType.MESSAGE_RECEIVED.name())
+                                               .title(alarmType.MESSAGE_RECEIVED.name())
+                                               .message(alarmType.MESSAGE_RECEIVED.name())
                                                .build());
         return responseService.mappingSuccessCommonResultOnly("fcm 토큰 등록 성공");
     }
