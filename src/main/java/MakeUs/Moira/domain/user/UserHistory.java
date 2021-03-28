@@ -81,4 +81,12 @@ public class UserHistory {
                                                                     .collect(Collectors.toList()))
                                            .build();
     }
+
+    public void addParticipationCount(){
+        participationCount++;
+    }
+
+    public void addCompletionCount(){
+        completionCount++;
+    }
 }

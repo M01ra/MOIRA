@@ -45,16 +45,30 @@ public class ProjectController {
 
 
     @ApiOperation(
-            value = "팀원 모집 - 팀 만들기(이미지 추가)",
-            notes = "프로젝트(팀)에 이미지를 추가 혹은 수정합니다")
-    @PutMapping("/{projectId}/image")
+            value = "팀 만들기 - 이미지 리스트 추가",
+            notes = "프로젝트(팀)에 이미지 리스트를 추가합니다.\n처음 프로젝트를 생성한 직후만 호출하면 됩니다")
+    @PostMapping("/{projectId}/image")
     public CommonResult uploadImage(
+            @NotNull(message = "files에 빈 값을 넣을 수 없음") @ApiParam(value = "이미지 파일 리스트", required = true) @RequestPart List<MultipartFile> files,
+            @NotNull(message = "projectId에 빈 값을 넣을 수 없음") @ApiParam(value = "프로젝트(팀) ID", required = true) @PathVariable Long projectId,
+            @ApiParam(value = "JWT 토큰", required = true) @RequestHeader(value = "X-AUTH-TOKEN") String token){
+        files.forEach(file -> logger.info("fileName : " + file.getOriginalFilename() + " size : " + file.getSize()));
+        projectService.uploadImage(files, projectId, Long.valueOf(jwtTokenProvider.getUserPk(token)));
+        return responseService.mappingSuccessCommonResultOnly("프로젝트에 이미지 생성 성공");
+    }
+
+
+    @ApiOperation(
+            value = "나의 팀 - 상세 페이지(팀장) - 대표 이미지 수정하기",
+            notes = "프로젝트(팀)에 이미지를 수정합니다. 기존에 등록하지 않았을 경우 대표 이미지를 등록합니다")
+    @PutMapping("/{projectId}/image")
+    public CommonResult modifyImage(
             @NotNull(message = "file에 빈 값을 넣을 수 없음") @ApiParam(value = "이미지 파일", required = true) @RequestPart MultipartFile file,
             @NotNull(message = "projectId에 빈 값을 넣을 수 없음") @ApiParam(value = "프로젝트(팀) ID", required = true) @PathVariable Long projectId,
             @ApiParam(value = "JWT 토큰", required = true) @RequestHeader(value = "X-AUTH-TOKEN") String token){
         logger.info("fileName : " + file.getOriginalFilename() + " size : " + file.getSize());
-        projectService.uploadImage(file, projectId, Long.valueOf(jwtTokenProvider.getUserPk(token)));
-        return responseService.mappingSuccessCommonResultOnly("프로젝트에 이미지 추가 성공");
+        projectService.modifyImage(file, projectId, Long.valueOf(jwtTokenProvider.getUserPk(token)));
+        return responseService.mappingSuccessCommonResultOnly("프로젝트 대표 이미지 수정 성공");
     }
 
 
@@ -94,14 +108,14 @@ public class ProjectController {
     })
     @ApiOperation(
             value = "팀원 모집 - 모집글 리스트",
-            notes = "프로젝트(팀)들을 태그(tag), 정렬 방식(sort), 포지션(position), Page에 따라 10개씩 조회합니다.\n" +
-                    "태그, 정렬 방식, 포지션, Page,는 모두 필수가 아니며 미입력시 기본 값이 적용됩니다.\n" +
+            notes = "프로젝트(팀)들을 태그(tag), 정렬 방식(sort), 포지션 카테고리(position), Page에 따라 10개씩 조회합니다.\n" +
+                    "태그, 정렬 방식, 포지션 카테고리, Page,는 모두 필수가 아니며 미입력시 기본 값이 적용됩니다.\n" +
                     "키워드를 포함할 시 다른 조건(태그, 정렬, 포지션)는 무시되고 키워드로 검색됩니다.")
     @GetMapping
     public ListResult<ProjectsResponseDTO> getProjects(
             @ApiParam(value = "태그, 여러개 입력시 ,로 구분.\nex) tag=AOS,IOS,WEB") @RequestParam(name = "tag", required = false) String tag,
             @ApiParam(value = "정렬 방식(최신 순(기본 값): date, 조회순: hitCount, 좋아요순: likeCount)", allowableValues = "date, hitCount, likeCount") @RequestParam(name = "sort", required = false, defaultValue = "date") String sort,
-            @ApiParam(value = "포지션(기본 값 : 전체)") @RequestParam(name = "position", required = false) String position,
+            @ApiParam(value = "포지션 카테고리(기본 값 : 전체)") @RequestParam(name = "position", required = false) String position,
             @ApiParam(value = "페이지(기본 값 : 0)") @RequestParam(name = "page", required = false, defaultValue = "0") int page,
             @ApiParam(value = "검색어") @RequestParam(name = "keyword", required = false) String keyword){
         List<ProjectsResponseDTO> projectDTOList = projectService.getProjects(tag, sort, position, page, keyword);

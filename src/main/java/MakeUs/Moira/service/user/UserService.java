@@ -42,9 +42,7 @@ public class UserService {
         User userEntity = findUserById(userId);
 
         // 2. 닉네임
-        if (isDuplicatedNickname(nickname)) {
-            throw new CustomException(ErrorCode.ALREADY_REGISTRED_NICKNAME);
-        }
+        if (isDuplicatedNickname(nickname)) throw new CustomException(ErrorCode.ALREADY_REGISTERED_NICKNAME);
         userEntity.updateNickname(nickname);
 
         // 3. 포지션
