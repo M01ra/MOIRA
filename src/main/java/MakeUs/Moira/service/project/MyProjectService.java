@@ -32,16 +32,13 @@ public class MyProjectService {
                                                                                  .filter(userProject -> userProject.getUserProjectStatus() == status)
                                                                                  .map(userProject -> {
                                                                                      Project projectEntity = userProject.getProject();
-                                                                                     Long memberCount = projectEntity.getUserProjectList()
-                                                                                                                     .stream()
-                                                                                                                     .filter(myUserProject -> myUserProject.getUserProjectStatus() != UserProjectStatus.DROP)
-                                                                                                                     .count();
                                                                                      return MyProjectsResponseDTO.builder()
                                                                                                                  .projectId(projectEntity.getId())
                                                                                                                  .imageUrl(projectEntity.getProjectImageUrl())
                                                                                                                  .title(projectEntity.getProjectTitle())
                                                                                                                  .date(projectEntity.getCreatedDate())
-                                                                                                                 .memberCount(memberCount.intValue())
+                                                                                                                 .memberCount(getMemberCount(projectEntity))
+                                                                                                                 .isMembersReviewed(getIsMembersReviwed(projectEntity, userProject, userId))
                                                                                                                  .build();
                                                                                  })
                                                                                  .collect(Collectors.toList());
@@ -69,14 +66,14 @@ public class MyProjectService {
                                                      .imageUrl(userEntity.getProfileImage())
                                                      .isLeader(userProject.getRoleType() == UserProjectRoleType.LEADER)
                                                      .nickname(userEntity.getNickname())
-                                                     .position(userProject.getUserPosition().toString())
+                                                     .position(userProject.getUserPosition().getPositionName())
                                                      .build();
                      })
                      .collect(Collectors.toList());
 
         return MyProjectResponseDTO.builder()
                                    .title(projectEntity.getProjectTitle())
-                                   .imageUrl(projectEntity.getProjectImageUrl())
+                                   .imageUrlList(projectEntity.getProjectImageUrlList())
                                    .content(projectEntity.getProjectDetail().getProjectContent())
                                    .memberCount(myProjectTeammateResponseDTOList.size())
                                    .myProjectTeammateResponseDTOList(myProjectTeammateResponseDTOList)
@@ -95,6 +92,24 @@ public class MyProjectService {
         UserHistory userHistoryEntity = userHistoryRepo.findByUserId(userId)
                                                        .orElseThrow(() -> new CustomException(ErrorCode.INVALID_USER));
         return userHistoryEntity;
+    }
+
+
+    private int getMemberCount(Project projectEntity){
+        Long memberCount = projectEntity.getUserProjectList()
+                     .stream()
+                     .filter(myUserProject -> myUserProject.getUserProjectStatus() != UserProjectStatus.DROP)
+                     .count();
+        return memberCount.intValue();
+    }
+
+
+    private boolean getIsMembersReviwed(Project projectEntity, UserProject userProject, Long userId){
+        return projectEntity.getUserProjectList().stream()
+                     .filter(anotherUserProject -> !anotherUserProject.getId().equals(userProject.getId()))
+                     .allMatch(anotherUserProject -> anotherUserProject.getReviews()
+                                                                       .stream()
+                                                                       .anyMatch(userReview -> userReview.getWrittenUser().getId().equals(userId)));
     }
 
 }

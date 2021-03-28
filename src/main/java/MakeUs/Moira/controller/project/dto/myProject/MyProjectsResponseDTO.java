@@ -24,6 +24,8 @@ public class MyProjectsResponseDTO {
     private String imageUrl;
     @ApiModelProperty(value = "멤버 수", example = "5")
     private int memberCount;
+    @ApiModelProperty(value = "팀원들 리뷰를 모두 완료했는지 여부", example = "false")
+    private boolean isMembersReviewed;
     @JsonIgnore
     private LocalDateTime date;
 }

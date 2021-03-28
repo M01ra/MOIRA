@@ -26,7 +26,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 
-@Api(tags = {"2. 회원가입"})
+@Api(tags = {"2.회원가입"})
 @RequiredArgsConstructor
 @RestController
 public class SignupController {

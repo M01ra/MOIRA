@@ -38,7 +38,7 @@ public class MyPageEditService {
     {
         String newNickname = myPageEditNicknameRequestDto.getNickname();
         if (isDuplicatedNickname(newNickname)) {
-            throw new CustomException(ErrorCode.ALREADY_REGISTRED_NICKNAME);
+            throw new CustomException(ErrorCode.ALREADY_REGISTERED_NICKNAME);
         }
 
         User userEntity = getUserEntity(userId);
