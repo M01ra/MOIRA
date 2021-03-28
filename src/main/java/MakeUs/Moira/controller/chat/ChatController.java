@@ -88,6 +88,6 @@ public class ChatController {
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(token));
         ChatMessageSendResponseDto chatMessageSendResponseDto = chatService.sendMessage(userId, chatMessageSendRequestDto);
         logger.info(chatMessageSendResponseDto.toString());
-        return responseService.mappingSingleResult(chatMessageSendResponseDto, "유저와 채팅 내용 불러오기");
+        return responseService.mappingSingleResult(chatMessageSendResponseDto, "유저에게 메시지 보내기");
     }
 }
