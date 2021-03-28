@@ -1,5 +1,9 @@
 package MakeUs.Moira.domain.user;
 
+import MakeUs.Moira.controller.security.dto.LoginResponseDto;
+import MakeUs.Moira.controller.user.dto.myPageEdit.MyPageEditIntroductionResponseDto;
+import MakeUs.Moira.controller.user.dto.myPageEdit.MyPageEditNicknameResponseDto;
+import MakeUs.Moira.controller.user.dto.myPageEdit.MyPageEditPositionResponseDto;
 import MakeUs.Moira.domain.position.UserPosition;
 import MakeUs.Moira.domain.userPool.UserPool;
 import MakeUs.Moira.domain.userPortfolio.UserPortfolio;
@@ -40,8 +44,6 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private UserRole userRole;
-
-    private String email;
 
     private String shortIntroduction;
 
@@ -103,37 +105,59 @@ public class User implements UserDetails {
         return true;
     }
 
-    public User updateUserHistory(UserHistory userHistory){
+    public User updateUserHistory(UserHistory userHistory) {
         this.userHistory = userHistory;
         userHistory.updateUser(this);
         return this;
     }
 
-    public User updateUserPortfolio(UserPortfolio userPortfolio){
+    public User updateUserPortfolio(UserPortfolio userPortfolio) {
         this.userPortfolio = userPortfolio;
         userPortfolio.updateUser(this);
         return this;
     }
 
-    public User updateUserPool(UserPool userPool){
+    public User updateUserPool(UserPool userPool) {
         this.userPool = userPool;
         userPool.updateUser(this);
         return this;
     }
 
 
-    public User updateNickname(String nickname){
+    public User updateNickname(String nickname) {
         this.nickname = nickname;
         return this;
     }
 
-    public User updateUserPosition(UserPosition userPosition){
+    public User updateUserPosition(UserPosition userPosition) {
         this.userPosition = userPosition;
         return this;
     }
 
-    public User updateShorIntroduction(String shortIntroduction){
+    public User updateShorIntroduction(String shortIntroduction) {
         this.shortIntroduction = shortIntroduction;
         return this;
+    }
+
+    public MyPageEditNicknameResponseDto toMyPageEditNicknameResponseDto() {
+        return MyPageEditNicknameResponseDto.builder()
+                                            .userId(id)
+                                            .nickname(nickname)
+                                            .build();
+    }
+
+    public MyPageEditPositionResponseDto toMyPageEditPositionResponseDto() {
+        return MyPageEditPositionResponseDto.builder()
+                                            .userId(id)
+                                            .positionId(userPosition.getId())
+                                            .positionName(userPosition.getPositionName())
+                                            .build();
+    }
+
+    public MyPageEditIntroductionResponseDto toMyPageEditIntroductionResponseDto() {
+        return MyPageEditIntroductionResponseDto.builder()
+                                                .userId(id)
+                                                .shortIntroduction(getShortIntroduction())
+                                                .build();
     }
 }

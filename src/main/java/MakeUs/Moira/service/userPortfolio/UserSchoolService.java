@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 public class UserSchoolService {
 
     private final UserRepo       userRepo;
+    private final UserSchoolRepo userSchoolRepo;
     private final SchoolInfoRepo schoolInfoRepo;
     private final MajorInfoRepo  majorInfoRepo;
 
@@ -60,6 +61,15 @@ public class UserSchoolService {
                          .stream()
                          .map(UserSchoolResponseDto::new)
                          .collect(Collectors.toList());
+    }
+
+
+    @Transactional
+    public void deleteUserSchool(Long userId, Long userSchoolId) {
+        UserPortfolio userPortfolioEntity = getUserEntity(userId).getUserPortfolio();
+        UserSchool userSchool = userSchoolRepo.findById(userSchoolId)
+                                              .orElseThrow(() -> new CustomException(ErrorCode.INVALID_USER_PORTFOLIO));
+        userPortfolioEntity.deleteUserSchool(userSchool);
     }
 
     private User getUserEntity(Long userId) {

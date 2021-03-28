@@ -1,6 +1,6 @@
 package MakeUs.Moira.domain.userReview;
 
-import MakeUs.Moira.controller.userPool.UserPoolDetailReviewDetailResponseDto;
+import MakeUs.Moira.controller.userPool.dto.UserPoolDetailReviewDetailResponseDto;
 import MakeUs.Moira.controller.userReview.dto.UserReviewDetailResponseDto;
 import MakeUs.Moira.domain.AuditorEntity;
 import MakeUs.Moira.domain.user.User;

@@ -1,8 +1,9 @@
 package MakeUs.Moira.service.userPool;
 
-import MakeUs.Moira.controller.userPool.UserPoolDetailReviewDetailResponseDto;
+
 import MakeUs.Moira.advice.exception.CustomException;
 import MakeUs.Moira.advice.exception.ErrorCode;
+import MakeUs.Moira.controller.userPool.dto.UserPoolDetailReviewDetailResponseDto;
 import MakeUs.Moira.controller.userPool.dto.*;
 
 import MakeUs.Moira.domain.AuditorEntity;
@@ -52,9 +53,8 @@ public class UserPoolService {
     {
         User userEntity = getUserEntity(userId);
 
-        String positionCategoryFilter = parseToFilter(positionCategory);
         Pageable pageable = getPageableWithSortKeyword(page, sortKeyword);
-        List<UserPool> userPoolFilteredList = userPoolRepo.findAllByUser_UserPosition_PositionCategory_CategoryName(positionCategoryFilter, pageable);
+        List<UserPool> userPoolFilteredList = userPoolRepo.findAllByUser_UserPosition_PositionCategory_CategoryName(positionCategory, pageable);
 
         return userPoolFilteredList.stream()
                                    .filter(UserPool::isVisible)
@@ -110,7 +110,9 @@ public class UserPoolService {
     }
 
 
-    public List<UserPoolDetailReviewDetailResponseDto> getUserPoolDetailReviewDetail(Long userPoolId, String sortKeyword) {
+    public List<UserPoolDetailReviewDetailResponseDto> getUserPoolDetailReviewDetail(Long userPoolId,
+                                                                                     String sortKeyword)
+    {
         Long userHistoryId = getUserHistoryEntity(userPoolId).getId();
         List<UserReview> userReviewList = userReviewRepo.findAllByUserProject_UserHistory_Id(userHistoryId);
         sortUserReviewListByKeyword(userReviewList, sortKeyword);
@@ -157,18 +159,6 @@ public class UserPoolService {
         }
     }
 
-    private String parseToFilter(String positionCategory) {
-        switch (positionCategory) {
-            case "develop":
-                return positionCategory = "개발자";
-            case "director":
-                return positionCategory = "기획자";
-            case "designer":
-                return positionCategory = "디자이너";
-            default:
-                throw new CustomException(ErrorCode.INVALID_POSITION_CATEGORY);
-        }
-    }
 
     private UserPoolLike getUserPoolLikeEntity(Long userPoolId, UserHistory userHistoryEntity,
                                                UserPool userPoolEntity)
@@ -215,7 +205,7 @@ public class UserPoolService {
             userReviewList.sort(Comparator.comparing(UserReview::getMannerPoint)
                                           .reversed());
         } else {
-            throw new IllegalArgumentException("유효하지 않은 sort");
+            throw new CustomException(ErrorCode.INVALID_SORT);
         }
     }
 }

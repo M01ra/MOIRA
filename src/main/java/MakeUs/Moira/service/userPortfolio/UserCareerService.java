@@ -8,6 +8,7 @@ import MakeUs.Moira.domain.user.User;
 import MakeUs.Moira.domain.user.UserRepo;
 import MakeUs.Moira.domain.userPortfolio.UserPortfolio;
 import MakeUs.Moira.domain.userPortfolio.userCareer.UserCareer;
+import MakeUs.Moira.domain.userPortfolio.userCareer.UserCareerRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +20,8 @@ import java.util.stream.Collectors;
 @Service
 public class UserCareerService {
 
-    private final UserRepo userRepo;
+    private final UserRepo       userRepo;
+    private final UserCareerRepo userCareerRepo;
 
     @Transactional
     public List<UserCareerResponseDto> addUserCareer(Long userId, UserCareerAddRequestDto userCareerAddRequestDto) {
@@ -37,8 +39,18 @@ public class UserCareerService {
                          .collect(Collectors.toList());
     }
 
+    @Transactional
+    public void deleteUserCareer(Long userId, Long userCareerId) {
+        UserPortfolio userPortfolioEntity = getUserEntity(userId).getUserPortfolio();
+        UserCareer userCareer = userCareerRepo.findById(userCareerId)
+                                              .orElseThrow(() -> new CustomException(ErrorCode.INVALID_USER_PORTFOLIO));
+        userPortfolioEntity.deleteUserCareer(userCareer);
+    }
+
     private User getUserEntity(Long userId) {
         return userRepo.findById(userId)
                        .orElseThrow(() -> new CustomException(ErrorCode.INVALID_USER));
     }
+
+
 }

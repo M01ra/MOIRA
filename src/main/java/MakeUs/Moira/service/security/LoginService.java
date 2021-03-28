@@ -1,6 +1,9 @@
 package MakeUs.Moira.service.security;
 
 
+import MakeUs.Moira.config.security.JwtTokenProvider;
+import MakeUs.Moira.controller.security.dto.LoginRequestDto;
+import MakeUs.Moira.controller.security.dto.LoginResponseDto;
 import MakeUs.Moira.domain.security.token.TokenProvider;
 import MakeUs.Moira.domain.security.token.TokenProviderFactory;
 import MakeUs.Moira.domain.user.*;
@@ -15,26 +18,39 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class LoginService {
 
+    private final UserRepo             userRepo;
+    private final JwtTokenProvider     jwtTokenProvider;
     private final TokenProviderFactory tokenProviderFactory;
-    private final UserRepo userRepo;
 
 
     public String getUserSocialId(String providerName, String accessToken) {
-
         TokenProvider tokenProvider = tokenProviderFactory.getTokenProvider(providerName);
         return tokenProvider.getUserSocialId(accessToken);
-
-    }
-
-    public Long findUserPkBySocialIdAndSocialProvider(String socialId, String socialProvider) {
-        // 여기서 null 오던가 유저 pk가 넘어와야 함
-        return userRepo.findBySocialIdAndSocialProvider(socialId, socialProvider)
-                       .map(User::getId)
-                       .orElse(-1L);
     }
 
     @Transactional
-    public Long save(String socialId, String providerName) {
+    public LoginResponseDto getToken(LoginRequestDto loginRequestDto) {
+
+        String socialProvider = loginRequestDto.getSocialProvider();
+        String token = loginRequestDto.getAccessToken();
+
+        String socialId = getUserSocialId(socialProvider, token);
+        User userEntity = userRepo.findBySocialIdAndSocialProvider(socialId, socialProvider);
+
+        if (userEntity == null) { // 아예 처음인 유저
+            User newUserEntity = saveFirstVisitUser(socialId, socialProvider);
+            return toLoginResponseDto(newUserEntity, true);
+        }
+
+        if (userEntity.getNickname() == null) { // 소셜 로그인은 완료했지만, 회원가입이 완료되지 않은 유저
+            return toLoginResponseDto(userEntity, true);
+        }
+        // 회원가입을 완료한 유저
+        return toLoginResponseDto(userEntity, false);
+    }
+
+
+    private User saveFirstVisitUser(String socialId, String providerName) {
 
         User userEntity = User.builder() //
                               .socialId(socialId)
@@ -44,8 +60,18 @@ public class LoginService {
         userEntity.updateUserHistory(new UserHistory());
         userEntity.updateUserPortfolio(new UserPortfolio());
         userEntity.updateUserPool(new UserPool());
+        return userRepo.save(userEntity);
+    }
 
-        return userRepo.save(userEntity)
-                       .getId();
+    private String createJwtToken(User userEntity) {
+        return jwtTokenProvider.createToken(userEntity.getId()
+                                                      .toString(), UserRole.USER.name());
+    }
+
+    private LoginResponseDto toLoginResponseDto(User newUserEntity, boolean b) {
+        return LoginResponseDto.builder()
+                               .jwtToken(createJwtToken(newUserEntity))
+                               .needSignup(b)
+                               .build();
     }
 }

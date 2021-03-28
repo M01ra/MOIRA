@@ -1,17 +1,24 @@
 package MakeUs.Moira.controller.security.dto;
 
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @ToString
 public class LoginResponseDto {
 
     private String  jwtToken;
-    private boolean isFirstLogin;
+    private boolean needSignup;
 
-    public LoginResponseDto(String jwtToken, boolean isFirstLogin) {
+    @Builder
+    public LoginResponseDto(String jwtToken, boolean needSignup) {
         this.jwtToken = jwtToken;
-        this.isFirstLogin = isFirstLogin;
+        this.needSignup = needSignup;
+    }
+
+    public static LoginResponseDto of(String jwtToken, boolean needSignup) {
+        return LoginResponseDto.builder()
+                               .jwtToken(jwtToken)
+                               .needSignup(needSignup)
+                               .build();
     }
 }
