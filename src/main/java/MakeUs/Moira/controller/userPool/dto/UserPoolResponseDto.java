@@ -35,7 +35,7 @@ public class UserPoolResponseDto {
         this.profileImage = userPoolPost.getUser()
                                         .getProfileImage();
         this.shortIntroduction = userPoolPost.getUser()
-                                             .getProfileImage();
+                                             .getShortIntroduction();
         this.hashtagList = userPoolPost.getUser()
                                        .getUserHistory()
                                        .getUserHashtags()
