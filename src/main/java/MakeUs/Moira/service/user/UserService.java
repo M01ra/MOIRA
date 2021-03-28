@@ -12,8 +12,6 @@ import MakeUs.Moira.domain.position.PositionRepo;
 import MakeUs.Moira.domain.position.UserPosition;
 import MakeUs.Moira.domain.user.*;
 import MakeUs.Moira.fcm.FcmService;
-import MakeUs.Moira.fcm.model.FcmMessageTitleType;
-import MakeUs.Moira.fcm.model.PushNotificationRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

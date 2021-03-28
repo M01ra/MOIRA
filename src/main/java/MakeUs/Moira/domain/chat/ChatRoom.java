@@ -54,9 +54,21 @@ public class ChatRoom {
 
     public void updateChatMessageReadStatus(Long userId) {
         chatMessageList.stream()
-                       .filter(chatMessage -> !chatMessage.getSender().getId().equals(userId))
+                       .filter(chatMessage -> !chatMessage.getSender()
+                                                          .getId()
+                                                          .equals(userId))
                        .filter(chatMessage -> chatMessage.getReadStatus() == ReadStatus.UNREAD)
                        .forEach(ChatMessage::updateReadStatus);
+    }
+
+    public boolean existUnreadMessage(Long userId) {
+        User opponent = getOpponent(userId);
+        return chatMessageList.stream()
+                              .filter(chatMessage -> chatMessage.getReadStatus()
+                                                                .equals(ReadStatus.UNREAD))
+                              .anyMatch(chatMessage -> chatMessage.getSender()
+                                                                  .getId()
+                                                                  .equals(opponent.getId()));
     }
 
     private User getOpponent(Long userId) {
@@ -80,4 +92,6 @@ public class ChatRoom {
     private ChatMessage getLastMessage(List<ChatMessage> chatMessageList) {
         return chatMessageList.get(chatMessageList.size() - 1);
     }
+
+
 }
