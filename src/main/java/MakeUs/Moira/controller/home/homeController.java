@@ -12,10 +12,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Api(tags = {"1.홈"})
 @RequiredArgsConstructor
@@ -36,7 +33,7 @@ public class homeController {
             value = "홈화면",
             notes = "### 읽지 않은 알림과 메시지가 있는지 확인합니다.\n"
     )
-    @PostMapping("/register")
+    @GetMapping("/home")
     public SingleResult<HomeResponseDto> getHome(@RequestHeader(value = "X-AUTH-TOKEN") String token)
     {
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(token));

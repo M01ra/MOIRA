@@ -8,6 +8,7 @@ import MakeUs.Moira.controller.chat.dto.ChatRoomResponseDto;
 import MakeUs.Moira.response.ResponseService;
 import MakeUs.Moira.response.model.ListResult;
 import MakeUs.Moira.response.model.SingleResult;
+import MakeUs.Moira.service.alarm.AlarmService;
 import MakeUs.Moira.service.chat.ChatService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ public class ChatController {
     private final ChatService      chatService;
     private final JwtTokenProvider jwtTokenProvider;
     private final ResponseService  responseService;
+    private final AlarmService     alarmService;
     private final Logger           logger = LoggerFactory.getLogger(this.getClass());
 
     @ApiImplicitParams({
@@ -88,6 +90,7 @@ public class ChatController {
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(token));
         ChatMessageSendResponseDto chatMessageSendResponseDto = chatService.sendMessage(userId, chatMessageSendRequestDto);
         logger.info(chatMessageSendResponseDto.toString());
-        return responseService.mappingSingleResult(chatMessageSendResponseDto, "유저와 채팅 내용 불러오기");
+        alarmService.saveChatMessage(chatMessageSendResponseDto);
+        return responseService.mappingSingleResult(chatMessageSendResponseDto, "유저에게 메시지 보내기");
     }
 }

@@ -5,12 +5,12 @@ import lombok.Getter;
 
 @Getter
 public class HomeResponseDto {
-    private boolean existUnreadMessage;
-    private boolean existUnreadAlarm;
+    private boolean hasUnreadMessage;
+    private boolean hasUnreadAlarm;
 
     @Builder
-    public HomeResponseDto(boolean existUnreadMessage, boolean existUnreadAlarm) {
-        this.existUnreadMessage = existUnreadMessage;
-        this.existUnreadAlarm = existUnreadAlarm;
+    public HomeResponseDto(boolean hasUnreadMessage, boolean hasUnreadAlarm) {
+        this.hasUnreadMessage = hasUnreadMessage;
+        this.hasUnreadAlarm = hasUnreadAlarm;
     }
 }

@@ -1,9 +1,9 @@
-package MakeUs.Moira.fcm.model;
+package MakeUs.Moira.domain.alarm;
 
 import lombok.Getter;
 
 @Getter
-public enum alarmType {
+public enum AlarmType {
     /*
     1. 나한테 쪽지옴
     2. 내가 쓴 모집글에 지원함
@@ -15,19 +15,5 @@ public enum alarmType {
     8. 내가 팀장이고 내가 보낸 초대에 지원자가 거절함
     9. 나에게 리뷰가 달림
      */
-    MESSAGE_RECEIVED(1),
-    MY_PROJECT_APPLIED(2),
-    COMMENT_TO_MY_PROJECT(3),
-    COMMENT_TO_MY_COMMENT(4),
-    OFFER_RECEIVED_FROM_TEAM_LEADER(5),
-    REJECT_RECEIVED_FROM_TEAM_LEADER(6),
-    ACCEPT_RECEIVED_FROM_APPLICANT(7),
-    REJECT_RECEIVED_FROM_APPLICANT(8),
-    REVIEW_RECEIVED(9);
-
-    private final int code;
-
-    alarmType(int code) {
-        this.code = code;
-    }
+    PROJECT, APPLY, REVIEW, CHATROOM, COMMENT
 }

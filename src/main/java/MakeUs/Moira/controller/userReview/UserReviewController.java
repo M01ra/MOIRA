@@ -10,6 +10,7 @@ import MakeUs.Moira.response.ResponseService;
 
 import MakeUs.Moira.response.model.ListResult;
 import MakeUs.Moira.response.model.SingleResult;
+import MakeUs.Moira.service.alarm.AlarmService;
 import MakeUs.Moira.service.userReview.UserReviewService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
@@ -28,9 +29,9 @@ public class UserReviewController {
 
     private final UserReviewService userReviewService;
     private final ResponseService   responseService;
-
-    private final JwtTokenProvider jwtTokenProvider;
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final AlarmService      alarmService;
+    private final JwtTokenProvider  jwtTokenProvider;
+    private final Logger            logger = LoggerFactory.getLogger(this.getClass());
 
 
     @ApiImplicitParams({
@@ -55,6 +56,7 @@ public class UserReviewController {
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(token));
         UserReviewAddResponseDto userReviewAddResponseDto = userReviewService.addUserReview(userId, userReviewAddRequestDto);
         logger.info(userReviewAddResponseDto.toString());
+        alarmService.saveUserReview(userId, userReviewAddResponseDto);
         return responseService.mappingSingleResult(userReviewAddResponseDto, "팀원 평가하기 - 특정 유저 평가하기");
     }
 
