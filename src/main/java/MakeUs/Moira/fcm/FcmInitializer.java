@@ -27,7 +27,7 @@ public class FcmInitializer {
         try {
             googleCredentials = GoogleCredentials.fromStream(new FileInputStream(firebaseConfigPath));
         } catch (IOException e) {
-            logger.info("rkrkrkrkrkrkrkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
+            logger.info("rkrkrkrkrkrkrkkkkkkkkkkkkkkkkkkkmmkkkkkkkkkkk");
             logger.info(e.getMessage());
             return;
         }
