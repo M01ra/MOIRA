@@ -20,11 +20,11 @@ public class ProjectImage {
     private String projectImageUrl;
 
     // S3에 저장할 파일 명
-    private String key;
+    private String imageKey;
 
-    public ProjectImage(Project project, String projectImageUrl, String key){
+    public ProjectImage(Project project, String projectImageUrl, String imageKey){
         this.project = project;
         this.projectImageUrl = projectImageUrl;
-        this.key = key;
+        this.imageKey = imageKey;
     }
 }

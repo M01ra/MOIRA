@@ -75,12 +75,6 @@ public class UserService {
         PositionResponseDto positionResponseDto = getPositionResponseDto(userEntity);
         List<HashtagResponseDto> hashtagResponseDtoList = getHashtagResponseDtoList(userEntity);
 
-        fcmService.send(PushNotificationRequest.builder()
-                                               .targetUserId(userId)
-                                               .title(FcmMessageTitleType.MESSAGE_RECEIVED.name())
-                                               .message(FcmMessageTitleType.MESSAGE_RECEIVED.name())
-                                               .build());
-
         return SignupResponseDto.builder()
                                 .userId(userEntity.getId())
                                 .nickname(userEntity.getNickname())

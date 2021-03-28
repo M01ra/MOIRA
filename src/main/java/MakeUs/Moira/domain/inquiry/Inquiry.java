@@ -4,7 +4,7 @@ import MakeUs.Moira.domain.user.UserHistory;
 
 import javax.persistence.*;
 
-@Entity
+@Entity 
 public class Inquiry {
 
     @Id
