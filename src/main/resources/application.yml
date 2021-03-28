@@ -60,7 +60,7 @@ spring:
     show-sql: true
     hibernate:
       hbm2ddl:
-        auto: update
+        auto: create
     properties:
       hibernate:
         format_sql: true
@@ -78,7 +78,7 @@ spring:
     show-sql: true
     hibernate:
       hbm2ddl:
-        auto: update
+        auto: create
     properties:
       hibernate:
         format_sql: true
