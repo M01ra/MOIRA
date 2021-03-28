@@ -45,8 +45,6 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private UserRole userRole;
 
-    private String email;
-
     private String shortIntroduction;
 
     private String nickname;

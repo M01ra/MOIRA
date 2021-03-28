@@ -39,24 +39,16 @@ public class LoginService {
 
         if (userEntity == null) { // 아예 처음인 유저
             User newUserEntity = saveFirstVisitUser(socialId, socialProvider);
-            return LoginResponseDto.builder()
-                                   .jwtToken(createJwtToken(newUserEntity))
-                                   .needSignup(true)
-                                   .build();
+            return toLoginResponseDto(newUserEntity, true);
         }
 
         if (userEntity.getNickname() == null) { // 소셜 로그인은 완료했지만, 회원가입이 완료되지 않은 유저
-            return LoginResponseDto.builder()
-                                   .jwtToken(createJwtToken(userEntity))
-                                   .needSignup(true)
-                                   .build();
+            return toLoginResponseDto(userEntity, true);
         }
         // 회원가입을 완료한 유저
-        return LoginResponseDto.builder()
-                               .jwtToken(createJwtToken(userEntity))
-                               .needSignup(false)
-                               .build();
+        return toLoginResponseDto(userEntity, false);
     }
+
 
     private User saveFirstVisitUser(String socialId, String providerName) {
 
@@ -74,5 +66,12 @@ public class LoginService {
     private String createJwtToken(User userEntity) {
         return jwtTokenProvider.createToken(userEntity.getId()
                                                       .toString(), UserRole.USER.name());
+    }
+
+    private LoginResponseDto toLoginResponseDto(User newUserEntity, boolean b) {
+        return LoginResponseDto.builder()
+                               .jwtToken(createJwtToken(newUserEntity))
+                               .needSignup(b)
+                               .build();
     }
 }
