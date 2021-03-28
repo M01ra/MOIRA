@@ -41,8 +41,7 @@ public class AlarmHistory extends AuditorEntity {
 
     public AlarmResponseDto toAlarmResponseDto() {
         return AlarmResponseDto.builder()
-                               .alarmId(id)
-                               .alarmType(type.name())
+                               .alarmType(type)
                                .alarmTargetId(alarmTargetId)
                                .alarmContent(alarmContent)
                                .readStatus(readStatus)

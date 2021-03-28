@@ -43,6 +43,7 @@ public class homeController {
     {
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(token));
         HomeResponseDto homeResponseDto = homeService.getHome(userId);
+        logger.info(homeResponseDto.toString());
         return responseService.mappingSingleResult(homeResponseDto, "홈화면");
     }
 
@@ -61,9 +62,9 @@ public class homeController {
     public ListResult<AlarmResponseDto> getAlarm(@RequestHeader(value = "X-AUTH-TOKEN") String token,
                                                  @ApiParam(value = "페이지 Ex) page=1", required = true) @RequestParam int page)
     {
-
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(token));
         List<AlarmResponseDto> alarmResponseDtoList = homeService.getAlarm(userId, page);
+        logger.info(alarmResponseDtoList.toString());
         return responseService.mappingListResult(alarmResponseDtoList, "홈화면 - 알람 목록");
     }
 

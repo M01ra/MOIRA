@@ -86,6 +86,15 @@ public class ProjectApplyService {
 
         // Project에 ProjectApply 추가
         projectEntity.getProjectDetail().addProjectApply(projectApplyEntity);
+
+        // 알람 생성
+        alarmService.saveProjectApply(
+                userEntity.getNickname() + "님이 " + getProjectTitle(projectApplyEntity.getProjectDetail().getProject().getProjectTitle()) + "에 지원했습니다.",
+                AlarmType.APPLY_ANSWER,
+                projectApplyEntity.getId(),
+                getLeader(projectEntity).getId()
+        );
+
     }
 
 

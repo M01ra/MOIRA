@@ -20,9 +20,9 @@ import java.util.stream.Collectors;
 @Service
 public class HomeService {
 
-    private ChatRoomRepo     chatRoomRepo;
-    private ChatMessageRepo  chatMessageRepo;
-    private AlarmHistoryRepo alarmHistoryRepo;
+    private final ChatRoomRepo     chatRoomRepo;
+    private final ChatMessageRepo  chatMessageRepo;
+    private final AlarmHistoryRepo alarmHistoryRepo;
 
     public HomeResponseDto getHome(Long userId) {
 
