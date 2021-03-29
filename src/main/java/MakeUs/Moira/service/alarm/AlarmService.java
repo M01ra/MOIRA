@@ -1,4 +1,5 @@
 package MakeUs.Moira.service.alarm;
+
 import MakeUs.Moira.domain.alarm.AlarmHistory;
 import MakeUs.Moira.domain.alarm.AlarmHistoryRepo;
 
@@ -35,54 +36,57 @@ public class AlarmService {
         Long opponentId = chatMessageSendResponseDto.getOpponentId();
 
         User sender = getUserEntity(senderId);
+        User opponent = getUserEntity(opponentId);
 
         ChatRoom chatRoom = chatRoomRepo.findChatRoom(senderId, opponentId);
 
-        AlarmHistory alarmHistory = AlarmHistory.builder()
-                                                .userId(opponentId)
-                                                .type(AlarmType.CHATROOM)
-                                                .alarmTargetId(chatRoom.getId())
-                                                .alarmContent(sender.getNickname() + "로부터 쪽지가 왔어요!")
-                                                .build();
-        alarmHistoryRepo.save(alarmHistory);
+        alarmHistoryRepo.save(AlarmHistory.builder()
+                                          .userId(opponentId)
+                                          .type(AlarmType.CHATROOM)
+                                          .alarmTargetId(chatRoom.getId())
+                                          .alarmTargetImage(opponent.getProfileImage())
+                                          .alarmContent(sender.getNickname() + "로부터 쪽지가 왔어요!")
+                                          .build());
     }
 
 
     @Transactional
     public void saveUserReview(Long userId, UserReviewAddResponseDto userReviewAddResponseDto) {
+
         User writer = getUserEntity(userId);
         UserProject userProject = getUserProject(userReviewAddResponseDto);
         User opponent = userProject.getUserHistory()
                                    .getUser();
 
-        AlarmHistory alarmHistory = AlarmHistory.builder()
-                                                .userId(opponent.getId())
-                                                .type(AlarmType.REVIEW)
-                                                .alarmTargetId(opponent.getId())
-                                                .alarmContent(writer.getNickname() + "로부터 리뷰가 추가되었어요!")
-                                                .build();
-
-        alarmHistoryRepo.save(alarmHistory);
+        alarmHistoryRepo.save(AlarmHistory.builder()
+                                          .userId(opponent.getId())
+                                          .type(AlarmType.REVIEW)
+                                          .alarmTargetId(opponent.getId())
+                                          .alarmTargetImage(opponent.getProfileImage())
+                                          .alarmContent(writer.getNickname() + "로부터 리뷰가 추가되었어요!")
+                                          .build());
     }
 
 
     @Transactional
-    public void saveProjectApply(String content, AlarmType alarmType, Long projectApplyId, Long userId) {
+    public void saveProjectApply(String content, AlarmType alarmType, Long projectApplyId, Long userId, String alarmTargetImage) {
         alarmHistoryRepo.save(AlarmHistory.builder()
                                           .alarmContent(content)
                                           .type(alarmType)
                                           .alarmTargetId(projectApplyId)
+                                          .alarmTargetImage(alarmTargetImage)
                                           .userId(userId)
                                           .build());
     }
 
 
     @Transactional
-    public void saveComment(String projectTitle, Long projectId, Long userId) {
+    public void saveComment(String projectTitle, Long projectId, Long userId, String alarmTargetImage) {
         alarmHistoryRepo.save(AlarmHistory.builder()
                                           .alarmContent(projectTitle + "에 새 댓글이 달렸습니다.")
                                           .type(AlarmType.PROJECT)
                                           .alarmTargetId(projectId)
+                                          .alarmTargetImage(alarmTargetImage)
                                           .userId(userId)
                                           .build());
     }

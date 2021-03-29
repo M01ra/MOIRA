@@ -44,86 +44,94 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProjectApplyService {
 
-    private final UserRepo userRepo;
-    private final UserHistoryRepo userHistoryRepo;
-    private final UserProjectRepo userProjectRepo;
-    private final ProjectRepo projectRepo;
+    private final UserRepo         userRepo;
+    private final UserHistoryRepo  userHistoryRepo;
+    private final UserProjectRepo  userProjectRepo;
+    private final ProjectRepo      projectRepo;
     private final ProjectApplyRepo projectApplyRepo;
-    private final UserSchoolRepo userSchoolRepo;
-    private final UserCareerRepo userCareerRepo;
-    private final UserLicenseRepo userLicenseRepo;
-    private final UserAwardRepo userAwardRepo;
-    private final UserLinkRepo userLinkRepo;
-    private final AlarmService alarmService;
+    private final UserSchoolRepo   userSchoolRepo;
+    private final UserCareerRepo   userCareerRepo;
+    private final UserLicenseRepo  userLicenseRepo;
+    private final UserAwardRepo    userAwardRepo;
+    private final UserLinkRepo     userLinkRepo;
+    private final AlarmService     alarmService;
 
 
     @Transactional
-    public void applyProject(ProjectApplyRequestDTO projectApplyRequestDTO, Long userId){
+    public void applyProject(ProjectApplyRequestDTO projectApplyRequestDTO, Long userId) {
         User userEntity = getValidUser(userId);
         UserHistory userHistoryEntity = getValidUserHistory(userId);
         Project projectEntity = getValidProject(projectApplyRequestDTO.getProjectId());
 
         // 이미 지원한 유저인지 확인
-        projectEntity.getProjectDetail().getProjectApplyList()
-                        .forEach(projectApplyEntity -> checkAlreadyProjectApplicant(projectApplyEntity, userId));
+        projectEntity.getProjectDetail()
+                     .getProjectApplyList()
+                     .forEach(projectApplyEntity -> checkAlreadyProjectApplicant(projectApplyEntity, userId));
 
         // 이미 가입된 유저인지 확인
-        if(isProjectUser(userHistoryEntity.getId(), projectEntity.getId())){
+        if (isProjectUser(userHistoryEntity.getId(), projectEntity.getId())) {
             throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
         }
 
         // ProjectApply 생성
         ProjectApply projectApplyEntity = ProjectApply.builder()
-                .applicant(userEntity)
-                .userPosition(userEntity.getUserPosition())
-                .projectApplyStatus(ProjectApplyStatus.USER_APPLIED)
-                .projectDetail(projectEntity.getProjectDetail())
-                .build();
+                                                      .applicant(userEntity)
+                                                      .userPosition(userEntity.getUserPosition())
+                                                      .projectApplyStatus(ProjectApplyStatus.USER_APPLIED)
+                                                      .projectDetail(projectEntity.getProjectDetail())
+                                                      .build();
         projectApplyRepo.save(projectApplyEntity);
 
         // 선택 사항 추가
         addOptionalApplyInfo(projectApplyRequestDTO, userEntity, projectApplyEntity);
 
         // Project에 ProjectApply 추가
-        projectEntity.getProjectDetail().addProjectApply(projectApplyEntity);
+        projectEntity.getProjectDetail()
+                     .addProjectApply(projectApplyEntity);
 
         // 알람 생성
         alarmService.saveProjectApply(
-                userEntity.getNickname() + "님이 " + getProjectTitle(projectApplyEntity.getProjectDetail().getProject().getProjectTitle()) + "에 지원했습니다.",
+                userEntity.getNickname() + "님이 " + getProjectTitle(projectApplyEntity.getProjectDetail()
+                                                                                     .getProject()
+                                                                                     .getProjectTitle()) + "에 지원했습니다.",
                 AlarmType.APPLY_ANSWER,
                 projectApplyEntity.getId(),
-                getLeader(projectEntity).getId()
+                getLeader(projectEntity).getId(),
+                projectApplyEntity.getProjectDetail()
+                                  .getProject()
+                                  .getProjectImageUrl()
         );
 
     }
 
 
     @Transactional
-    public ProjectApplyResponseDTO getApplyProject(Long projectApplyId, Long userId){
+    public ProjectApplyResponseDTO getApplyProject(Long projectApplyId, Long userId) {
         ProjectApply projectApplyEntity = getValidProjectApply(projectApplyId);
         User userEntity = projectApplyEntity.getApplicant();
         UserHistory userHistoryEntity = getValidUserHistory(userId);
-        Project projectEntity = projectApplyEntity.getProjectDetail().getProject();
+        Project projectEntity = projectApplyEntity.getProjectDetail()
+                                                  .getProject();
 
         // 이미 가입된 유저인지 확인
         if(isExistUserProject(projectApplyEntity.getApplicant().getId(), projectEntity.getId())){
             // 조회하는 사람이 같은 팀원인지 확인
             checkProjectTeammate(userHistoryEntity.getId(), projectEntity.getId());
-        }
-        else{
+        } else {
             // 팀의 리더가 아닐경우
-            if(!isProjectLeader(userHistoryEntity.getId(), projectEntity.getId())){
+            if (!isProjectLeader(userHistoryEntity.getId(), projectEntity.getId())) {
                 // 자신의 지원서를 보는 것이 아닐경우
-                if(!userId.equals(userEntity.getId()))
+                if (!userId.equals(userEntity.getId())) {
                     throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
+                }
             }
         }
 
         // 해시태그
         List<HashtagResponseDto> hashtagResponseDtoList = projectEntity.getProjectHashtagList()
-                .stream()
-                .map(HashtagResponseDto::new)
-                .collect(Collectors.toList());
+                                                                       .stream()
+                                                                       .map(HashtagResponseDto::new)
+                                                                       .collect(Collectors.toList());
 
         // 포트폴리오
         List<UserSchoolResponseDto> userSchoolResponseDtoList = new ArrayList<>();
@@ -134,57 +142,67 @@ public class ProjectApplyService {
         setUserPortfolio(projectApplyEntity, userSchoolResponseDtoList, userCareerResponseDtoList, userLicenseResponseDtoList, userAwardResponseDtoList, userLinkResponseDtoList);
 
         return ProjectApplyResponseDTO.builder()
-                               .userId(userEntity.getId())
-                               .nickname(userEntity.getNickname())
-                               .imageUrl(userEntity.getProfileImage())
-                               .shortIntroduction(userEntity.getShortIntroduction())
-                               .userSchoolResponseDtoList(userSchoolResponseDtoList)
-                               .userCareerResponseDtoList(userCareerResponseDtoList)
-                               .userLicenseResponseDtoList(userLicenseResponseDtoList)
-                               .userAwardResponseDtoList(userAwardResponseDtoList)
-                               .userLinkResponseDtoList(userLinkResponseDtoList)
-                               .hashtagResponseDtoList(hashtagResponseDtoList)
-                               .build();
+                                      .userId(userEntity.getId())
+                                      .nickname(userEntity.getNickname())
+                                      .imageUrl(userEntity.getProfileImage())
+                                      .shortIntroduction(userEntity.getShortIntroduction())
+                                      .userSchoolResponseDtoList(userSchoolResponseDtoList)
+                                      .userCareerResponseDtoList(userCareerResponseDtoList)
+                                      .userLicenseResponseDtoList(userLicenseResponseDtoList)
+                                      .userAwardResponseDtoList(userAwardResponseDtoList)
+                                      .userLinkResponseDtoList(userLinkResponseDtoList)
+                                      .hashtagResponseDtoList(hashtagResponseDtoList)
+                                      .build();
     }
-
 
 
     @Transactional
     public void changeProjectApplyStatus(Long projectApplyId, Long userId, ProjectApplyStatus status){
         UserHistory userHistoryEntity = getValidUserHistory(userId);
         ProjectApply projectApplyEntity = getValidProjectApply(projectApplyId);
-        Project projectEntity = projectApplyEntity.getProjectDetail().getProject();
-        switch (status){
+        Project projectEntity = projectApplyEntity.getProjectDetail()
+                                                  .getProject();
+        switch (status) {
             case APPLY_REJECTED:
                 // 팀장인지 확인
-                if(!isProjectLeader(userHistoryEntity.getId(), projectApplyId)){
+                if (!isProjectLeader(userHistoryEntity.getId(), projectApplyId)) {
                     throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
                 }
                 // 유효한 상태 변경인지 검증
                 checkValidProjectApplyStatus(projectApplyEntity.getProjectApplyStatus(), ProjectApplyStatus.USER_APPLIED);
                 // 알람 생성
                 alarmService.saveProjectApply(
-                        getProjectTitle(projectApplyEntity.getProjectDetail().getProject().getProjectTitle()) + "에 안타깝게 합류하지 못했습니다.",
+                        getProjectTitle(projectApplyEntity.getProjectDetail()
+                                                          .getProject()
+                                                          .getProjectTitle()) + "에 안타깝게 합류하지 못했습니다.",
                         AlarmType.APPLY,
                         projectApplyId,
-                        projectApplyEntity.getApplicant().getId()
+                        projectApplyEntity.getApplicant()
+                                          .getId(),
+                        projectApplyEntity.getProjectDetail()
+                                          .getProject()
+                                          .getProjectImageUrl()
                 );
 
                 break;
 
             case TEAM_INVITED:
                 // 팀장인지 확인
-                if(!isProjectLeader(userHistoryEntity.getId(), projectApplyId)){
+                if (!isProjectLeader(userHistoryEntity.getId(), projectApplyId)) {
                     throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
                 }
                 // 유효한 상태 변경인지 검증
                 checkValidProjectApplyStatus(projectApplyEntity.getProjectApplyStatus(), ProjectApplyStatus.USER_APPLIED);
                 // 알람 생성
                 alarmService.saveProjectApply(
-                        getProjectTitle(projectApplyEntity.getProjectDetail().getProject().getProjectTitle()) + "에 합류하게 되었습니다.",
+                        getProjectTitle(projectApplyEntity.getProjectDetail()
+                                                          .getProject()
+                                                          .getProjectTitle()) + "에 합류하게 되었습니다.",
                         AlarmType.INVITE_ANSWER,
                         projectApplyId,
-                        projectApplyEntity.getApplicant().getId()
+                        projectApplyEntity.getApplicant()
+                                          .getId(),
+                        projectApplyEntity.getProjectDetail().getProject().getProjectImageUrl()
                 );
                 break;
 
@@ -194,7 +212,7 @@ public class ProjectApplyService {
                 // 유효한 상태 변경인지 검증
                 checkValidProjectApplyStatus(projectApplyEntity.getProjectApplyStatus(), ProjectApplyStatus.TEAM_INVITED);
                 // UserProject 생성
-                if(!isExistUserProject(userHistoryEntity.getId(), projectEntity.getId())){
+                if (!isExistUserProject(userHistoryEntity.getId(), projectEntity.getId())) {
                     UserProject userProjectEntity = UserProject.builder()
                                                                .project(projectEntity)
                                                                .userProjectStatus(UserProjectStatus.PROGRESS)
@@ -212,18 +230,23 @@ public class ProjectApplyService {
                     User leader = getLeader(projectEntity);
 
                     // 리더 참여횟수 증가
-                    if(projectEntity.getUserProjectList().size() == 2){
-                        leader.getUserHistory().addParticipationCount();
+                    if (projectEntity.getUserProjectList()
+                                     .size() == 2) {
+                        leader.getUserHistory()
+                              .addParticipationCount();
                     }
                     // 알람 생성
                     alarmService.saveProjectApply(
-                            projectApplyEntity.getApplicant().getNickname() + "님이 " + getProjectTitle(projectApplyEntity.getProjectDetail().getProject().getProjectTitle()) + "에 합류하게 되었습니다.",
+                            projectApplyEntity.getApplicant()
+                                              .getNickname() + "님이 " + getProjectTitle(projectApplyEntity.getProjectDetail()
+                                                                                                         .getProject()
+                                                                                                         .getProjectTitle()) + "에 합류하게 되었습니다.",
                             AlarmType.APPLY,
                             projectApplyId,
-                            leader.getId()
+                            leader.getId(),
+                            projectApplyEntity.getProjectDetail().getProject().getProjectImageUrl()
                     );
-                }
-                else{
+                } else {
                     throw new CustomException(ErrorCode.ALREADY_REGISTERED_USER);
                 }
                 break;
@@ -235,10 +258,14 @@ public class ProjectApplyService {
                 // 알람 생성
                 User leader = getLeader(projectEntity);
                 alarmService.saveProjectApply(
-                        projectApplyEntity.getApplicant().getNickname() + "님이 " + getProjectTitle(projectApplyEntity.getProjectDetail().getProject().getProjectTitle()) + "에 안타깝게 합류하지 못했습니다.",
+                        projectApplyEntity.getApplicant()
+                                          .getNickname() + "님이 " + getProjectTitle(projectApplyEntity.getProjectDetail()
+                                                                                                     .getProject()
+                                                                                                     .getProjectTitle()) + "에 안타깝게 합류하지 못했습니다.",
                         AlarmType.APPLY,
                         projectApplyId,
-                        leader.getId()
+                        leader.getId(),
+                        projectApplyEntity.getProjectDetail().getProject().getProjectImageUrl()
                 );
                 break;
         }
@@ -254,7 +281,9 @@ public class ProjectApplyService {
         ProjectDetail projectDetailEntity = projectApplyEntity.getProjectDetail();
 
         // 본인의 지원서가 아닐 경우
-        if(!projectApplyEntity.getApplicant().getId().equals(userId)){
+        if (!projectApplyEntity.getApplicant()
+                               .getId()
+                               .equals(userId)) {
             throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
         }
 
@@ -264,27 +293,34 @@ public class ProjectApplyService {
 
 
     @Transactional
-    public List<ProjectApplicantsResponseDTO> getProjectApplicants(Long projectId, Long userId){
+    public List<ProjectApplicantsResponseDTO> getProjectApplicants(Long projectId, Long userId) {
         Project projectEntity = getValidProject(projectId);
         UserHistory userHistoryEntity = getValidUserHistory(userId);
-        if(!isProjectLeader(userHistoryEntity.getId(), projectId)){
+        if (!isProjectLeader(userHistoryEntity.getId(), projectId)) {
             throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
         }
 
-        return projectEntity.getProjectDetail().getProjectApplyList()
+        return projectEntity.getProjectDetail()
+                            .getProjectApplyList()
                             .stream()
                             .map(projectApply -> ProjectApplicantsResponseDTO.builder()
                                                                              .projectApplyId(projectApply.getId())
-                                                                             .nickname(projectApply.getApplicant().getNickname())
-                                                                             .imageUrl(projectApply.getApplicant().getProfileImage())
-                                                                             .position(projectApply.getUserPosition().getPositionName())
+                                                                             .nickname(projectApply.getApplicant()
+                                                                                                   .getNickname())
+                                                                             .imageUrl(projectApply.getApplicant()
+                                                                                                   .getProfileImage())
+                                                                             .position(projectApply.getUserPosition()
+                                                                                                   .getPositionName())
                                                                              .build()
                             )
                             .collect(Collectors.toList());
     }
 
 
-    public void addOptionalApplyInfo(ProjectApplyRequestDTO projectApplyRequestDTO, User userEntity, ProjectApply projectApplyEntity){
+    public void addOptionalApplyInfo(ProjectApplyRequestDTO projectApplyRequestDTO,
+                                     User userEntity,
+                                     ProjectApply projectApplyEntity)
+    {
         if(projectApplyRequestDTO.getUserPortfolioTypeList() != null) {
             for (UserPortfolioType userPortfolioType : projectApplyRequestDTO.getUserPortfolioTypeList()) {
                 switch (userPortfolioType) {
@@ -353,150 +389,151 @@ public class ProjectApplyService {
     }
 
 
-    private String getTime(LocalDateTime localDateTime){
+    private String getTime(LocalDateTime localDateTime) {
         String time;
-        if(ChronoUnit.YEARS.between(localDateTime, LocalDateTime.now()) >= 1){
+        if (ChronoUnit.YEARS.between(localDateTime, LocalDateTime.now()) >= 1) {
             time = Long.toString(ChronoUnit.YEARS.between(localDateTime, LocalDateTime.now())) + "년 전";
-        }
-        else if(ChronoUnit.MONTHS.between(localDateTime, LocalDateTime.now()) >= 1){
+        } else if (ChronoUnit.MONTHS.between(localDateTime, LocalDateTime.now()) >= 1) {
             time = Long.toString(ChronoUnit.MONTHS.between(localDateTime, LocalDateTime.now())) + "개월 전";
-        }
-        else if(ChronoUnit.DAYS.between(localDateTime, LocalDateTime.now()) >= 1){
+        } else if (ChronoUnit.DAYS.between(localDateTime, LocalDateTime.now()) >= 1) {
             time = Long.toString(ChronoUnit.DAYS.between(localDateTime, LocalDateTime.now())) + "일 전";
-        }
-        else if(ChronoUnit.HOURS.between(localDateTime, LocalDateTime.now()) >= 1){
+        } else if (ChronoUnit.HOURS.between(localDateTime, LocalDateTime.now()) >= 1) {
             time = Long.toString(ChronoUnit.HOURS.between(localDateTime, LocalDateTime.now())) + "시간 전";
-        }
-        else if(ChronoUnit.MINUTES.between(localDateTime, LocalDateTime.now()) >= 1){
+        } else if (ChronoUnit.MINUTES.between(localDateTime, LocalDateTime.now()) >= 1) {
             time = Long.toString(ChronoUnit.MINUTES.between(localDateTime, LocalDateTime.now())) + "분 전";
-        }
-        else {
+        } else {
             time = "방금 전";
         }
         return time;
     }
 
 
-    private User getValidUser(Long userId){
+    private User getValidUser(Long userId) {
         User userEntity = userRepo.findById(userId)
                                   .orElseThrow(() -> new CustomException(ErrorCode.INVALID_USER));
         return userEntity;
     }
 
 
-    private UserHistory getValidUserHistory(Long userId){
+    private UserHistory getValidUserHistory(Long userId) {
         UserHistory userHistoryEntity = userHistoryRepo.findByUserId(userId)
                                                        .orElseThrow(() -> new CustomException(ErrorCode.INVALID_USER));
         return userHistoryEntity;
     }
 
 
-    private Project getValidProject(Long projectId){
+    private Project getValidProject(Long projectId) {
         Project projectEntity = projectRepo.findById(projectId)
                                            .orElseThrow(() -> new CustomException(ErrorCode.INVALID_PROJECT));
         return projectEntity;
     }
 
 
-    private ProjectApply getValidProjectApply(Long projectApplyId){
+    private ProjectApply getValidProjectApply(Long projectApplyId) {
         ProjectApply projectApplyEntity = projectApplyRepo.findById(projectApplyId)
-                                           .orElseThrow(() -> new CustomException(ErrorCode.INVALID_PROJECT_APPLY));
+                                                          .orElseThrow(() -> new CustomException(ErrorCode.INVALID_PROJECT_APPLY));
         return projectApplyEntity;
     }
 
 
-    private UserSchool getValidUserSchool(Long userSchoolId){
+    private UserSchool getValidUserSchool(Long userSchoolId) {
         UserSchool userSchoolEntity = userSchoolRepo.findById(userSchoolId)
                                                     .orElseThrow(() -> new CustomException(ErrorCode.INVALID_PROJECT_APPLY_OPTIONAL_INFO));
         return userSchoolEntity;
     }
 
 
-    private UserCareer getValidUserCareer(Long userCareerId){
+    private UserCareer getValidUserCareer(Long userCareerId) {
         UserCareer userCareerEntity = userCareerRepo.findById(userCareerId)
-                                                          .orElseThrow(() -> new CustomException(ErrorCode.INVALID_PROJECT_APPLY_OPTIONAL_INFO));
+                                                    .orElseThrow(() -> new CustomException(ErrorCode.INVALID_PROJECT_APPLY_OPTIONAL_INFO));
         return userCareerEntity;
     }
 
 
-    private UserLicense getValidUserLicense(Long userLicenseId){
+    private UserLicense getValidUserLicense(Long userLicenseId) {
         UserLicense userLicenseEntity = userLicenseRepo.findById(userLicenseId)
-                                                    .orElseThrow(() -> new CustomException(ErrorCode.INVALID_PROJECT_APPLY_OPTIONAL_INFO));
+                                                       .orElseThrow(() -> new CustomException(ErrorCode.INVALID_PROJECT_APPLY_OPTIONAL_INFO));
         return userLicenseEntity;
     }
 
 
-    private UserAward getValidUserAward(Long userAwardId){
+    private UserAward getValidUserAward(Long userAwardId) {
         UserAward userAwardEntity = userAwardRepo.findById(userAwardId)
-                                                    .orElseThrow(() -> new CustomException(ErrorCode.INVALID_PROJECT_APPLY_OPTIONAL_INFO));
+                                                 .orElseThrow(() -> new CustomException(ErrorCode.INVALID_PROJECT_APPLY_OPTIONAL_INFO));
         return userAwardEntity;
     }
 
 
-    private UserLink getValidUserLink(Long userLinkId){
+    private UserLink getValidUserLink(Long userLinkId) {
         UserLink userLinkEntity = userLinkRepo.findById(userLinkId)
-                                                    .orElseThrow(() -> new CustomException(ErrorCode.INVALID_PROJECT_APPLY_OPTIONAL_INFO));
+                                              .orElseThrow(() -> new CustomException(ErrorCode.INVALID_PROJECT_APPLY_OPTIONAL_INFO));
         return userLinkEntity;
     }
 
 
-    private boolean isProjectUser(Long userHistoryId, Long projectId){
+    private boolean isProjectUser(Long userHistoryId, Long projectId) {
         Optional<UserProject> optionalUserProjectEntity = userProjectRepo.findByUserHistoryIdAndProjectId(userHistoryId, projectId);
         return optionalUserProjectEntity.isPresent();
     }
 
 
-    private boolean isProjectLeader(Long userHistoryId, Long projectId){
+    private boolean isProjectLeader(Long userHistoryId, Long projectId) {
         Optional<UserProject> optionalUserProjectEntity = userProjectRepo.findByUserHistoryIdAndProjectId(userHistoryId, projectId);
-        if(!optionalUserProjectEntity.isPresent()){
+        if (!optionalUserProjectEntity.isPresent()) {
             return false;
-        }
-        else{
+        } else {
             UserProject userProjectEntity = optionalUserProjectEntity.get();
             return userProjectEntity.getRoleType() == UserProjectRoleType.LEADER;
         }
     }
 
     private void checkAlreadyProjectApplicant(ProjectApply projectApplyEntity, Long userId) {
-        if (projectApplyEntity.getApplicant().getId().equals(userId)) {
+        if (projectApplyEntity.getApplicant()
+                              .getId()
+                              .equals(userId)) {
             throw new CustomException(ErrorCode.ALREADY_REGISTERED_PROJECT_APPLICANT);
         }
     }
 
 
-    private void checkProjectTeammate(Long userHistoryId, Long projectId){
+    private void checkProjectTeammate(Long userHistoryId, Long projectId) {
         UserProject UserProjectEntity = userProjectRepo.findByUserHistoryIdAndProjectId(userHistoryId, projectId)
-                .orElseThrow(() -> new CustomException(ErrorCode.UNAUTHORIZED_USER));
+                                                       .orElseThrow(() -> new CustomException(ErrorCode.UNAUTHORIZED_USER));
     }
 
 
     private void checkProjectApplicant(ProjectApply projectApplyEntity, Long userId) {
-        if (!projectApplyEntity.getApplicant().getId().equals(userId)) {
+        if (!projectApplyEntity.getApplicant()
+                               .getId()
+                               .equals(userId)) {
             throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
         }
     }
 
 
-    private boolean isExistUserProject(Long userHistoryId, Long projectId){
-        return userProjectRepo.findByUserHistoryIdAndProjectId(userHistoryId, projectId).isPresent();
+    private boolean isExistUserProject(Long userHistoryId, Long projectId) {
+        return userProjectRepo.findByUserHistoryIdAndProjectId(userHistoryId, projectId)
+                              .isPresent();
     }
 
 
-    private void checkValidProjectApplyStatus(ProjectApplyStatus actualStatus, ProjectApplyStatus expectedStatus){
-        if(actualStatus != expectedStatus){
+    private void checkValidProjectApplyStatus(ProjectApplyStatus actualStatus, ProjectApplyStatus expectedStatus) {
+        if (actualStatus != expectedStatus) {
             throw new CustomException(ErrorCode.INVALID_PROJECT_APPLY_STATUS_CHANGE);
         }
     }
 
 
-    private void setUserPortfolio(ProjectApply projectApplyEntity, List<UserSchoolResponseDto> userSchoolResponseDtoList,
+    private void setUserPortfolio(ProjectApply projectApplyEntity,
+                                  List<UserSchoolResponseDto> userSchoolResponseDtoList,
                                   List<UserCareerResponseDto> userCareerResponseDtoList,
                                   List<UserLicenseResponseDto> userLicenseResponseDtoList,
                                   List<UserAwardResponseDto> userAwardResponseDtoList,
-                                  List<UserLinkResponseDto> userLinkResponseDtoList){
+                                  List<UserLinkResponseDto> userLinkResponseDtoList)
+    {
         projectApplyEntity.getOptionalApplyInfoList()
                           .forEach(optionalApplyInfo -> {
-                              switch(optionalApplyInfo.getUserPortfolioType()){
+                              switch (optionalApplyInfo.getUserPortfolioType()) {
                                   case SCHOOL:
                                       userSchoolResponseDtoList.add(
                                               new UserSchoolResponseDto(getValidUserSchool(optionalApplyInfo.getUserSelectedPortfolioId()))
@@ -527,20 +564,21 @@ public class ProjectApplyService {
     }
 
 
-    private String getProjectTitle(String projectTitle){
-        if(projectTitle.length() > 10){
+    private String getProjectTitle(String projectTitle) {
+        if (projectTitle.length() > 10) {
             projectTitle = projectTitle.substring(0, 10) + "...";
         }
         return projectTitle;
     }
 
 
-    private User getLeader(Project projectEntity){
-        return projectEntity.getUserProjectList().stream()
-                                   .filter(userProject -> userProject.getRoleType() == UserProjectRoleType.LEADER)
-                                   .findFirst()
-                                   .orElseThrow(() -> new CustomException(ErrorCode.NON_EXIST_PROJECT_LEADER))
-                                   .getUserHistory()
-                                   .getUser();
+    private User getLeader(Project projectEntity) {
+        return projectEntity.getUserProjectList()
+                            .stream()
+                            .filter(userProject -> userProject.getRoleType() == UserProjectRoleType.LEADER)
+                            .findFirst()
+                            .orElseThrow(() -> new CustomException(ErrorCode.NON_EXIST_PROJECT_LEADER))
+                            .getUserHistory()
+                            .getUser();
     }
 }
