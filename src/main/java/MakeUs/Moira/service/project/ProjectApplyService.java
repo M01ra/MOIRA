@@ -165,7 +165,7 @@ public class ProjectApplyService {
         switch (status) {
             case APPLY_REJECTED:
                 // 팀장인지 확인
-                if (!isProjectLeader(userHistoryEntity.getId(), projectApplyId)) {
+                if (!isProjectLeader(userHistoryEntity.getId(), projectEntity.getId())) {
                     throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
                 }
                 // 유효한 상태 변경인지 검증
@@ -188,7 +188,7 @@ public class ProjectApplyService {
 
             case TEAM_INVITED:
                 // 팀장인지 확인
-                if (!isProjectLeader(userHistoryEntity.getId(), projectApplyId)) {
+                if (!isProjectLeader(userHistoryEntity.getId(), projectEntity.getId())) {
                     throw new CustomException(ErrorCode.UNAUTHORIZED_USER);
                 }
                 // 유효한 상태 변경인지 검증
@@ -312,6 +312,8 @@ public class ProjectApplyService {
                                                                                                    .getProfileImage())
                                                                              .position(projectApply.getUserPosition()
                                                                                                    .getPositionName())
+                                                                             .shortIntroduction(projectApply.getApplicant()
+                                                                                                            .getShortIntroduction())
                                                                              .build()
                             )
                             .collect(Collectors.toList());
