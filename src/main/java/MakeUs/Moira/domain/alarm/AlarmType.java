@@ -15,5 +15,5 @@ public enum AlarmType {
     8. 내가 팀장이고 내가 보낸 초대에 지원자가 거절함
     9. 나에게 리뷰가 달림
      */
-    PROJECT, APPLY, APPLY_ANSWER, INVITE_ANSWER, REVIEW, CHATROOM, COMMENT
+    PROJECT, APPLY, APPLY_ANSWER, INVITE_ANSWER, REVIEW, CHATROOM
 }
