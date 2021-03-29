@@ -106,7 +106,7 @@ public class MyPageController {
     @GetMapping(value = "/mypage/like/project")
     public ListResult<LikedProjectResponseDto> getLikedProject(
             @RequestHeader(value = "X-AUTH-TOKEN", required = true) String token,
-            @ApiParam(value = "포지션 카테고리 필터", required = true, allowableValues = "develop, director, designer") @RequestParam String positionCategory,
+            @ApiParam(value = "포지션 카테고리 필터", required = true, allowableValues = "개발자, 기획자, 디자이너") @RequestParam String positionCategory,
             @ApiParam(value = "정렬 방식 필터", required = true, allowableValues = "date, hit") @RequestParam String sortby) {
         // 권한 설정은 시큐리티에서 하자
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(token));
@@ -130,7 +130,7 @@ public class MyPageController {
     @GetMapping(value = "/mypage/like/pool")
     public ListResult<LikedUserPoolResponseDto> getLikedUserPool(
             @RequestHeader(value = "X-AUTH-TOKEN", required = true) String token,
-            @ApiParam(value = "포지션 카테고리 필터", required = true, allowableValues = "develop, director, designer") @RequestParam String positionCategory,
+            @ApiParam(value = "포지션 카테고리 필터", required = true, allowableValues = "개발자, 기획자, 디자이너") @RequestParam String positionCategory,
             @ApiParam(value = "정렬 방식 필터", required = true, allowableValues = "date, hit, like") @RequestParam String sortby) {
         // 권한 설정은 시큐리티에서 하자
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(token));
