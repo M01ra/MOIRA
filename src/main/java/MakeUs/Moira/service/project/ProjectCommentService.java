@@ -49,14 +49,14 @@ public class ProjectCommentService {
             }
             // 자신이 쓴 댓글이 아닐 경우 알람
             if(!parentProjectComment.getWriter().getId().equals(userId)) {
-                alarmService.saveComment(getProjectTitle(projectEntity.getProjectTitle()), projectId, parentProjectComment.getWriter().getId());
+                alarmService.saveComment(getProjectTitle(projectEntity.getProjectTitle()), projectId, parentProjectComment.getWriter().getId(), projectEntity.getProjectImageUrl());
             }
         }
         else{
             // 자신이 쓴 댓글이 아닐 경우 알람
             User leader = getLeader(projectEntity);
             if(!leader.getId().equals(userId)) {
-                alarmService.saveComment(getProjectTitle(projectEntity.getProjectTitle()), projectId, getLeader(projectEntity).getId());
+                alarmService.saveComment(getProjectTitle(projectEntity.getProjectTitle()), projectId, getLeader(projectEntity).getId(), projectEntity.getProjectImageUrl());
             }
         }
 

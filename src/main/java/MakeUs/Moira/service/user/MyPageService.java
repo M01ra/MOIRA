@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
 @Service
 public class MyPageService {
 
-
     private final UserRepo         userRepo;
     private final UserHistoryRepo  userHistoryRepo;
     private final ProjectApplyRepo projectApplyRepo;
@@ -88,11 +87,10 @@ public class MyPageService {
         UserHistory userHistoryEntity = userHistoryRepo.findByUserId(userId)
                                                        .orElseThrow(() -> new CustomException(ErrorCode.INVALID_USER));
 
-        String positionCategoryFilter = parseToFilter(positionCategory);
         List<Project> likedProjectFilteredList = userHistoryEntity.getProjectLikes()
                                                                   .stream()
                                                                   .map(ProjectLike::getProject)
-                                                                  .filter(likedProject -> likedProject.isRecruitingPositionCategory(positionCategoryFilter))
+                                                                  .filter(likedProject -> likedProject.isRecruitingPositionCategory(positionCategory))
                                                                   .collect(Collectors.toList());
         sortProjectByKeyword(sortKeyword, likedProjectFilteredList);
         return likedProjectFilteredList.stream()
@@ -105,11 +103,10 @@ public class MyPageService {
 
         UserHistory userHistoryEntity = getUserEntity(userId).getUserHistory();
 
-        String positionCategoryFilter = parseToFilter(positionCategory);
         List<UserPool> likedUserPoolFilteredList = userHistoryEntity.getUserPoolLikes()
                                                                     .stream()
                                                                     .map(UserPoolLike::getUserPool)
-                                                                    .filter(likedUserPool -> likedUserPool.isDesiredPositionCategory(positionCategoryFilter))
+                                                                    .filter(likedUserPool -> likedUserPool.isDesiredPositionCategory(positionCategory))
                                                                     .collect(Collectors.toList());
         sortUserPoolByKeyword(sortKeyword, likedUserPoolFilteredList);
         return likedUserPoolFilteredList.stream()
@@ -122,38 +119,28 @@ public class MyPageService {
                        .orElseThrow(() -> new CustomException(ErrorCode.INVALID_USER));
     }
 
-    private String parseToFilter(String positionCategoryFilter) {
-        switch (positionCategoryFilter) {
-            case "develop":
-                positionCategoryFilter = "개발자";
-                break;
-            case "director":
-                positionCategoryFilter = "기획자";
-                break;
-            case "designer":
-                positionCategoryFilter = "디자이너";
-                break;
-            default:
-                throw new CustomException(ErrorCode.INVALID_POSITION_CATEGORY);
-        }
-        return positionCategoryFilter;
-    }
-
     private void sortProjectByKeyword(String sortKeyword, List<Project> likedProjectFilteredList) {
         if (sortKeyword.equals("date")) {
-            likedProjectFilteredList.sort(Comparator.comparing(AuditorEntity::getCreatedDate));
+            likedProjectFilteredList.sort(Comparator.comparing(AuditorEntity::getCreatedDate).reversed());
         } else if (sortKeyword.equals("hit")) {
-            likedProjectFilteredList.sort(Comparator.comparing(Project::getHitCount));
+            likedProjectFilteredList.sort(Comparator.comparing(Project::getHitCount).reversed());
         }
     }
 
     private void sortUserPoolByKeyword(String sortKeyword, List<UserPool> likedUserPoolFilteredList) {
-        if (sortKeyword.equals("date")) {
-            likedUserPoolFilteredList.sort(Comparator.comparing(AuditorEntity::getCreatedDate));
-        } else if (sortKeyword.equals("hit")) {
-            likedUserPoolFilteredList.sort(Comparator.comparing(UserPool::getHitCount));
-        } else if (sortKeyword.equals("like")) {
-            likedUserPoolFilteredList.sort(Comparator.comparing(UserPool::getLikeCount));
+        switch (sortKeyword) {
+            case "date":
+                likedUserPoolFilteredList.sort(Comparator.comparing(AuditorEntity::getCreatedDate)
+                                                         .reversed());
+                break;
+            case "hit":
+                likedUserPoolFilteredList.sort(Comparator.comparing(UserPool::getHitCount)
+                                                         .reversed());
+                break;
+            case "like":
+                likedUserPoolFilteredList.sort(Comparator.comparing(UserPool::getLikeCount)
+                                                         .reversed());
+                break;
         }
     }
 
