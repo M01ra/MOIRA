@@ -120,10 +120,21 @@ public class MyPageService {
     }
 
     private void sortProjectByKeyword(String sortKeyword, List<Project> likedProjectFilteredList) {
-        if (sortKeyword.equals("date")) {
-            likedProjectFilteredList.sort(Comparator.comparing(AuditorEntity::getCreatedDate).reversed());
-        } else if (sortKeyword.equals("hit")) {
-            likedProjectFilteredList.sort(Comparator.comparing(Project::getHitCount).reversed());
+        switch (sortKeyword) {
+            case "date":
+                likedProjectFilteredList.sort(Comparator.comparing(AuditorEntity::getCreatedDate)
+                                                        .reversed());
+                break;
+            case "hit":
+                likedProjectFilteredList.sort(Comparator.comparing(Project::getHitCount)
+                                                        .reversed());
+                break;
+            case "like":
+                likedProjectFilteredList.sort(Comparator.comparing(Project::getLikeCount)
+                                                        .reversed());
+                break;
+            default:
+                throw new CustomException(ErrorCode.INVALID_SORT);
         }
     }
 
