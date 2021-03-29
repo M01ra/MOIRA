@@ -304,6 +304,7 @@ public class ProjectApplyService {
                             .getProjectApplyList()
                             .stream()
                             .map(projectApply -> ProjectApplicantsResponseDTO.builder()
+                                                                             .userId(projectApply.getApplicant().getId())
                                                                              .projectApplyId(projectApply.getId())
                                                                              .nickname(projectApply.getApplicant()
                                                                                                    .getNickname())
