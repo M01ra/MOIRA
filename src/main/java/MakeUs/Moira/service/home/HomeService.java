@@ -1,13 +1,20 @@
 package MakeUs.Moira.service.home;
 
+import MakeUs.Moira.advice.exception.CustomException;
+import MakeUs.Moira.advice.exception.ErrorCode;
 import MakeUs.Moira.controller.home.dto.AlarmResponseDto;
 import MakeUs.Moira.controller.home.dto.HomeResponseDto;
 import MakeUs.Moira.domain.alarm.AlarmHistory;
 import MakeUs.Moira.domain.alarm.AlarmHistoryRepo;
+import MakeUs.Moira.domain.alarm.AlarmType;
 import MakeUs.Moira.domain.chat.ChatMessageRepo;
 import MakeUs.Moira.domain.chat.ChatRoom;
 import MakeUs.Moira.domain.chat.ChatRoomRepo;
 import MakeUs.Moira.domain.chat.ReadStatus;
+import MakeUs.Moira.domain.project.Project;
+import MakeUs.Moira.domain.project.ProjectRepo;
+import MakeUs.Moira.domain.userReview.UserReview;
+import MakeUs.Moira.domain.userReview.UserReviewRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +30,8 @@ public class HomeService {
     private final ChatRoomRepo     chatRoomRepo;
     private final ChatMessageRepo  chatMessageRepo;
     private final AlarmHistoryRepo alarmHistoryRepo;
+    private final ProjectRepo      projectRepo;
+    private final UserReviewRepo   userReviewRepo;
 
     public HomeResponseDto getHome(Long userId) {
 

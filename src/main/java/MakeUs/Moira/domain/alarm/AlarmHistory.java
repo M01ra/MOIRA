@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @Getter
@@ -25,16 +26,19 @@ public class AlarmHistory extends AuditorEntity {
 
     private Long alarmTargetId;
 
+    private String alarmTargetImage;
+
     private String alarmContent;
 
     @Enumerated(EnumType.STRING)
     private ReadStatus readStatus;
 
     @Builder
-    public AlarmHistory(Long userId, AlarmType type, Long alarmTargetId, String alarmContent) {
+    public AlarmHistory(Long userId, AlarmType type, Long alarmTargetId, String alarmTargetImage, String alarmContent) {
         this.userId = userId;
         this.type = type;
         this.alarmTargetId = alarmTargetId;
+        this.alarmTargetImage = alarmTargetImage;
         this.alarmContent = alarmContent;
         readStatus = ReadStatus.UNREAD;
     }
@@ -43,8 +47,10 @@ public class AlarmHistory extends AuditorEntity {
         return AlarmResponseDto.builder()
                                .alarmType(type)
                                .alarmTargetId(alarmTargetId)
+                               .alarmTargetImage(alarmTargetImage)
                                .alarmContent(alarmContent)
                                .readStatus(readStatus)
+                               .writtenTime(getCreatedDate())
                                .build();
     }
 
