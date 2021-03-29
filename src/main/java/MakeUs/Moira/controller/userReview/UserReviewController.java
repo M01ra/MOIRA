@@ -92,12 +92,12 @@ public class UserReviewController {
             value = "유저의 \"모든 리뷰 내용\" 조회",
             notes = "### targetId와 매칭되는 특정 유저의 모든 리뷰 내용을 조회합니다.\n"
     )
-    @GetMapping(value = "/review/detail/{targetId}")
+    @GetMapping(value = "/review/detail/{userId}")
     public ListResult<UserReviewDetailResponseDto> getUserReviewDetail(@RequestHeader(value = "X-AUTH-TOKEN") String token,
-                                                                       @ApiParam(value = "조회하려는 유저의 userId", required = true) @PathVariable Long targetId,
+                                                                       @ApiParam(value = "조회하려는 유저의 userId", required = true) @PathVariable Long userId,
                                                                        @ApiParam(value = "정렬 방식", required = true) @RequestParam String sort)
     {
-        List<UserReviewDetailResponseDto> userReviewDetailResponseDtoList = userReviewService.getUserReviewDetail(targetId, sort);
+        List<UserReviewDetailResponseDto> userReviewDetailResponseDtoList = userReviewService.getUserReviewDetail(userId, sort);
         logger.info(userReviewDetailResponseDtoList.toString());
         return responseService.mappingListResult(userReviewDetailResponseDtoList, "유저의 모든 리뷰 내용 조회");
     }
