@@ -13,6 +13,8 @@ import lombok.ToString;
 @ToString
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProjectApplicantsResponseDTO {
+    @ApiModelProperty(value = "유저 ID", example = "1")
+    private Long userId;
     @ApiModelProperty(value = "프로젝트 지원 ID", example = "1")
     private Long projectApplyId;
     @ApiModelProperty(value = "지원자 프로필 URL", example = "https://moira-springboot.s3.ap-northeast-2.amazonaws.com/project-3-Sketchpad.png")
