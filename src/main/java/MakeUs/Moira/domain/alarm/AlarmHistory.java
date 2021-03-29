@@ -1,21 +1,21 @@
 package MakeUs.Moira.domain.alarm;
 
+import MakeUs.Moira.controller.home.dto.AlarmResponseDto;
+import MakeUs.Moira.domain.AuditorEntity;
 import MakeUs.Moira.domain.chat.ReadStatus;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @NoArgsConstructor
 @Getter
 @Entity
-public class AlarmHistory {
+public class AlarmHistory extends AuditorEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private Long userId;
@@ -37,5 +37,18 @@ public class AlarmHistory {
         this.alarmTargetId = alarmTargetId;
         this.alarmContent = alarmContent;
         readStatus = ReadStatus.UNREAD;
+    }
+
+    public AlarmResponseDto toAlarmResponseDto() {
+        return AlarmResponseDto.builder()
+                               .alarmType(type)
+                               .alarmTargetId(alarmTargetId)
+                               .alarmContent(alarmContent)
+                               .readStatus(readStatus)
+                               .build();
+    }
+
+    public void updateReadStatus() {
+        this.readStatus = ReadStatus.READ;
     }
 }

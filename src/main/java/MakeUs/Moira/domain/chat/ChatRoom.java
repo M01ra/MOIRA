@@ -47,8 +47,7 @@ public class ChatRoom {
                                   .opponentProfileImage(opponent.getProfileImage())
                                   .lastMessageContent(lastMessage.getMessageContent())
                                   .unReadCount(countUnReadMessage(opponent))
-                                  .writtenDate(lastMessage.getCreatedDate()
-                                                          .toLocalDate())
+                                  .writtenDate(lastMessage.getCreatedDate())
                                   .build();
     }
 

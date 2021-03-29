@@ -10,7 +10,9 @@ import MakeUs.Moira.domain.project.projectDetail.ProjectComment;
 import MakeUs.Moira.domain.project.projectDetail.ProjectCommentRepo;
 import MakeUs.Moira.domain.project.projectDetail.ProjectDetail;
 import MakeUs.Moira.domain.user.User;
+import MakeUs.Moira.domain.user.UserProjectRoleType;
 import MakeUs.Moira.domain.user.UserRepo;
+import MakeUs.Moira.service.alarm.AlarmService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +30,7 @@ public class ProjectCommentService {
     private final ProjectCommentRepo projectCommentRepo;
     private final ProjectRepo projectRepo;
     private final UserRepo userRepo;
+    private final AlarmService alarmService;
 
 
     @Transactional
@@ -43,6 +46,17 @@ public class ProjectCommentService {
             // 부모 댓글이 대댓글일 경우
             if(parentProjectComment.getParentComment() != null){
                 throw new CustomException(ErrorCode.ALREADY_EXIST_PARENT_COMMENT);
+            }
+            // 자신이 쓴 댓글이 아닐 경우 알람
+            if(!parentProjectComment.getWriter().getId().equals(userId)) {
+                alarmService.saveComment(getProjectTitle(projectEntity.getProjectTitle()), projectId, parentProjectComment.getWriter().getId());
+            }
+        }
+        else{
+            // 자신이 쓴 댓글이 아닐 경우 알람
+            User leader = getLeader(projectEntity);
+            if(!leader.getId().equals(userId)) {
+                alarmService.saveComment(getProjectTitle(projectEntity.getProjectTitle()), projectId, getLeader(projectEntity).getId());
             }
         }
 
@@ -145,6 +159,24 @@ public class ProjectCommentService {
             time = "방금 전";
         }
         return time;
+    }
+
+
+    private String getProjectTitle(String projectTitle){
+        if(projectTitle.length() > 10){
+            projectTitle = projectTitle.substring(0, 10) + "...";
+        }
+        return projectTitle;
+    }
+
+
+    private User getLeader(Project projectEntity){
+        return projectEntity.getUserProjectList().stream()
+                            .filter(userProject -> userProject.getRoleType() == UserProjectRoleType.LEADER)
+                            .findFirst()
+                            .orElseThrow(() -> new CustomException(ErrorCode.NON_EXIST_PROJECT_LEADER))
+                            .getUserHistory()
+                            .getUser();
     }
 
 }
