@@ -16,6 +16,7 @@ public class UserPoolDetailReviewResponseDto {
     private Double                           avgMannerPoint;
     private String                           recentReviewContent;
     private List<ComplimentMarkWithCountDto> complimentMarkWithCountDtoList;
+    private Long                             maxComplimentMarkId;
 
     public UserPoolDetailReviewResponseDto(List<UserReview> userReviewList,
                                            List<ComplimentMarkWithCountDto> complimentMarkWithCountDtoList)
@@ -26,6 +27,10 @@ public class UserPoolDetailReviewResponseDto {
                                             .collect(Collectors.averagingDouble(mannerPoint -> (double) mannerPoint));
         this.recentReviewContent = getFirstReviewContent(userReviewList);
         this.complimentMarkWithCountDtoList = complimentMarkWithCountDtoList;
+        this.maxComplimentMarkId = complimentMarkWithCountDtoList.stream()
+                                                                 .max(Comparator.comparing(ComplimentMarkWithCountDto::getComplimentMarkCount))
+                                                                 .get()
+                                                                 .getComplimentMarkId();
     }
 
     private String getFirstReviewContent(List<UserReview> userReviewList) {
