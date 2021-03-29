@@ -14,9 +14,11 @@ import java.time.temporal.ChronoUnit;
 @ToString
 public class AlarmResponseDto {
 
+    @ApiModelProperty(value = "고유한 알람 Id", example = "1")
+    private Long      alarmId;
     @ApiModelProperty(value = "알람 타입", example = "APPLY")
     private AlarmType alarmType;
-    @ApiModelProperty(value = "알람 ID", example = "1")
+    @ApiModelProperty(value = "리다이렉트 할 게시물의 id", example = "1")
     private Long      alarmTargetId;
     @ApiModelProperty(value = "알람 이미지", example = "이미지url")
     private String    alarmTargetImage;
@@ -28,13 +30,15 @@ public class AlarmResponseDto {
     private String    writtenTime;
 
     @Builder
-    public AlarmResponseDto(AlarmType alarmType,
+    public AlarmResponseDto(Long alarmId,
+                            AlarmType alarmType,
                             Long alarmTargetId,
                             String alarmTargetImage,
                             String alarmContent,
                             ReadStatus readStatus,
                             LocalDateTime writtenTime)
     {
+        this.alarmId = alarmId;
         this.alarmType = alarmType;
         this.alarmTargetId = alarmTargetId;
         this.alarmTargetImage = alarmTargetImage;

@@ -31,7 +31,7 @@ public enum ErrorCode {
     INVALID_CHAT_ROOM(437, "유효하지 않은 채팅방"),
     INVALID_USER_PORTFOLIO(438, "유효하지 않은 유저선택정보"),
     INVALID_PROJECT_APPLY_STATUS_CHANGE(439, "유효하지 않은 프로젝트 지원 상태 변경"),
-    INVALID_REVIEW(440, "유효하지 않은 유저 리뷰"),
+    INVALID_ALARM(441, "유효하지 않은 알람"),
 
 
     ALREADY_REGISTERED_USER(450, "이미 가입된 유저"),
