@@ -185,7 +185,7 @@ public class UserPoolController {
     public ListResult<UserPoolDetailReviewDetailResponseDto> getUserPoolDetailReviewDetail(
             @RequestHeader(value = "X-AUTH-TOKEN") String token,
             @NotNull(message = "userPoolId에 빈 값을 넣을 수 없음") @ApiParam(value = "인재풀 게시글 id", required = true) @PathVariable Long userPoolId,
-            @ApiParam(value = "정렬 방식", required = true) @RequestParam String sort)
+            @ApiParam(value = "정렬 방식: date, point", allowableValues = "date, point",required = true) @RequestParam String sort)
     {
         // 권한 설정은 시큐리티에서 하자
         List<UserPoolDetailReviewDetailResponseDto> userPoolDetailReviewDetailResponseDtoList = userPoolService.getUserPoolDetailReviewDetail(userPoolId, sort);
