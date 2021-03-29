@@ -76,6 +76,7 @@ public class MyProjectService {
                                    .imageUrlList(projectEntity.getProjectImageUrlList())
                                    .content(projectEntity.getProjectDetail().getProjectContent())
                                    .memberCount(myProjectTeammateResponseDTOList.size())
+                                   .isLeader(getLeader(projectEntity).getId().equals(userId))
                                    .myProjectTeammateResponseDTOList(myProjectTeammateResponseDTOList)
                                    .build();
     }
@@ -110,6 +111,16 @@ public class MyProjectService {
                      .allMatch(anotherUserProject -> anotherUserProject.getReviews()
                                                                        .stream()
                                                                        .anyMatch(userReview -> userReview.getWrittenUser().getId().equals(userId)));
+    }
+
+
+    private User getLeader(Project projectEntity){
+        return projectEntity.getUserProjectList().stream()
+                            .filter(userProject -> userProject.getRoleType() == UserProjectRoleType.LEADER)
+                            .findFirst()
+                            .orElseThrow(() -> new CustomException(ErrorCode.NON_EXIST_PROJECT_LEADER))
+                            .getUserHistory()
+                            .getUser();
     }
 
 }

@@ -285,67 +285,69 @@ public class ProjectApplyService {
 
 
     public void addOptionalApplyInfo(ProjectApplyRequestDTO projectApplyRequestDTO, User userEntity, ProjectApply projectApplyEntity){
-        for(UserPortfolioType userPortfolioType : projectApplyRequestDTO.getUserPortfolioTypeList()) {
-            switch (userPortfolioType) {
-                case SCHOOL:
-                    for (UserSchool userSchool : userEntity.getUserPortfolio()
-                                                           .getUserSchoolList()) {
-                        projectApplyEntity.addOptionalApplyInfo(
-                                OptionalApplyInfo.builder()
-                                                 .userPortfolioType(UserPortfolioType.SCHOOL)
-                                                 .userSelectedPortfolioId(userSchool.getId())
-                                                 .projectApply(projectApplyEntity)
-                                                 .build()
-                        );
-                    }
-                    break;
-                case CAREER:
-                    for (UserCareer userCareer : userEntity.getUserPortfolio()
-                                                           .getUserCareerList()) {
-                        projectApplyEntity.addOptionalApplyInfo(
-                                OptionalApplyInfo.builder()
-                                                 .userPortfolioType(UserPortfolioType.CAREER)
-                                                 .userSelectedPortfolioId(userCareer.getId())
-                                                 .projectApply(projectApplyEntity)
-                                                 .build()
-                        );
-                    }
-                    break;
-                case LICENSE:
-                    for (UserLicense userLicense : userEntity.getUserPortfolio()
-                                                             .getUserLicenseList()) {
-                        projectApplyEntity.addOptionalApplyInfo(
-                                OptionalApplyInfo.builder()
-                                                 .userPortfolioType(UserPortfolioType.LICENSE)
-                                                 .userSelectedPortfolioId(userLicense.getId())
-                                                 .projectApply(projectApplyEntity)
-                                                 .build()
-                        );
-                    }
-                    break;
-                case AWARD:
-                    for (UserAward userAward : userEntity.getUserPortfolio()
-                                                         .getUserAwardList()) {
-                        projectApplyEntity.addOptionalApplyInfo(
-                                OptionalApplyInfo.builder()
-                                                 .userPortfolioType(UserPortfolioType.AWARD)
-                                                 .userSelectedPortfolioId(userAward.getId())
-                                                 .projectApply(projectApplyEntity)
-                                                 .build()
-                        );
-                    }
-                    break;
-                case LINK:
-                    for (UserLink userLink : userEntity.getUserPortfolio()
-                                                       .getUserLinkList()) {
-                        projectApplyEntity.addOptionalApplyInfo(
-                                OptionalApplyInfo.builder()
-                                                 .userPortfolioType(UserPortfolioType.LINK)
-                                                 .userSelectedPortfolioId(userLink.getId())
-                                                 .projectApply(projectApplyEntity)
-                                                 .build()
-                        );
-                    }
+        if(projectApplyRequestDTO.getUserPortfolioTypeList() != null) {
+            for (UserPortfolioType userPortfolioType : projectApplyRequestDTO.getUserPortfolioTypeList()) {
+                switch (userPortfolioType) {
+                    case SCHOOL:
+                        for (UserSchool userSchool : userEntity.getUserPortfolio()
+                                                               .getUserSchoolList()) {
+                            projectApplyEntity.addOptionalApplyInfo(
+                                    OptionalApplyInfo.builder()
+                                                     .userPortfolioType(UserPortfolioType.SCHOOL)
+                                                     .userSelectedPortfolioId(userSchool.getId())
+                                                     .projectApply(projectApplyEntity)
+                                                     .build()
+                            );
+                        }
+                        break;
+                    case CAREER:
+                        for (UserCareer userCareer : userEntity.getUserPortfolio()
+                                                               .getUserCareerList()) {
+                            projectApplyEntity.addOptionalApplyInfo(
+                                    OptionalApplyInfo.builder()
+                                                     .userPortfolioType(UserPortfolioType.CAREER)
+                                                     .userSelectedPortfolioId(userCareer.getId())
+                                                     .projectApply(projectApplyEntity)
+                                                     .build()
+                            );
+                        }
+                        break;
+                    case LICENSE:
+                        for (UserLicense userLicense : userEntity.getUserPortfolio()
+                                                                 .getUserLicenseList()) {
+                            projectApplyEntity.addOptionalApplyInfo(
+                                    OptionalApplyInfo.builder()
+                                                     .userPortfolioType(UserPortfolioType.LICENSE)
+                                                     .userSelectedPortfolioId(userLicense.getId())
+                                                     .projectApply(projectApplyEntity)
+                                                     .build()
+                            );
+                        }
+                        break;
+                    case AWARD:
+                        for (UserAward userAward : userEntity.getUserPortfolio()
+                                                             .getUserAwardList()) {
+                            projectApplyEntity.addOptionalApplyInfo(
+                                    OptionalApplyInfo.builder()
+                                                     .userPortfolioType(UserPortfolioType.AWARD)
+                                                     .userSelectedPortfolioId(userAward.getId())
+                                                     .projectApply(projectApplyEntity)
+                                                     .build()
+                            );
+                        }
+                        break;
+                    case LINK:
+                        for (UserLink userLink : userEntity.getUserPortfolio()
+                                                           .getUserLinkList()) {
+                            projectApplyEntity.addOptionalApplyInfo(
+                                    OptionalApplyInfo.builder()
+                                                     .userPortfolioType(UserPortfolioType.LINK)
+                                                     .userSelectedPortfolioId(userLink.getId())
+                                                     .projectApply(projectApplyEntity)
+                                                     .build()
+                            );
+                        }
+                }
             }
         }
     }

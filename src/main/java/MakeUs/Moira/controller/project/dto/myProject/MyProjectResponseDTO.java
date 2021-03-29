@@ -23,6 +23,8 @@ public class MyProjectResponseDTO {
     private String content;
     @ApiModelProperty(value = "팀원 수", example = "4")
     private int memberCount;
+    @ApiModelProperty(value = "팀장인지 여부", example = "true")
+    private boolean isLeader;
     @ApiModelProperty(value = "팀원 리스트")
     private List<MyProjectTeammateResponseDTO> myProjectTeammateResponseDTOList;
 }
