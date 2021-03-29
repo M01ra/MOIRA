@@ -2,23 +2,19 @@ package MakeUs.Moira.service.home;
 
 import MakeUs.Moira.advice.exception.CustomException;
 import MakeUs.Moira.advice.exception.ErrorCode;
+import MakeUs.Moira.controller.home.dto.AlarmReadStatusUpdateResponseDto;
 import MakeUs.Moira.controller.home.dto.AlarmResponseDto;
 import MakeUs.Moira.controller.home.dto.HomeResponseDto;
 import MakeUs.Moira.domain.alarm.AlarmHistory;
 import MakeUs.Moira.domain.alarm.AlarmHistoryRepo;
-import MakeUs.Moira.domain.alarm.AlarmType;
-import MakeUs.Moira.domain.chat.ChatMessageRepo;
 import MakeUs.Moira.domain.chat.ChatRoom;
 import MakeUs.Moira.domain.chat.ChatRoomRepo;
 import MakeUs.Moira.domain.chat.ReadStatus;
-import MakeUs.Moira.domain.project.Project;
-import MakeUs.Moira.domain.project.ProjectRepo;
-import MakeUs.Moira.domain.userReview.UserReview;
-import MakeUs.Moira.domain.userReview.UserReviewRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,10 +24,7 @@ import java.util.stream.Collectors;
 public class HomeService {
 
     private final ChatRoomRepo     chatRoomRepo;
-    private final ChatMessageRepo  chatMessageRepo;
     private final AlarmHistoryRepo alarmHistoryRepo;
-    private final ProjectRepo      projectRepo;
-    private final UserReviewRepo   userReviewRepo;
 
     public HomeResponseDto getHome(Long userId) {
 
@@ -51,8 +44,6 @@ public class HomeService {
 
     public List<AlarmResponseDto> getAlarm(Long userId, int page) {
 
-        updateAlarmListReadStatus(userId);
-
         Pageable pageable = PageRequest.of(page - 1, 10);
         List<AlarmHistory> alarmHistoryList = alarmHistoryRepo.findByUserIdOrderByCreatedDateDesc(userId, pageable);
 
@@ -62,8 +53,15 @@ public class HomeService {
 
     }
 
-    private void updateAlarmListReadStatus(Long userId) {
-        alarmHistoryRepo.findByUserId(userId)
-                        .forEach(AlarmHistory::updateReadStatus);
+    @Transactional
+    public AlarmReadStatusUpdateResponseDto updateReadStatus(Long alarmId) {
+        AlarmHistory alarmHistory = getAlarmHistory(alarmId);
+        alarmHistory.updateReadStatus();
+        return alarmHistory.toAlarmReadStatusUpdateResponseDto();
+    }
+
+    private AlarmHistory getAlarmHistory(Long alarmId) {
+        return alarmHistoryRepo.findById(alarmId)
+                               .orElseThrow(() -> new CustomException(ErrorCode.INVALID_ALARM));
     }
 }

@@ -1,6 +1,7 @@
 package MakeUs.Moira.controller.home;
 
 import MakeUs.Moira.config.security.JwtTokenProvider;
+import MakeUs.Moira.controller.home.dto.AlarmReadStatusUpdateResponseDto;
 import MakeUs.Moira.controller.home.dto.HomeResponseDto;
 import MakeUs.Moira.response.ResponseService;
 import MakeUs.Moira.controller.home.dto.AlarmResponseDto;
@@ -81,4 +82,23 @@ public class homeController {
         return responseService.mappingListResult(alarmResponseDtoList, "홈화면 - 알람 목록");
     }
 
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "X-AUTH-TOKEN",
+                    value = "로그인 성공 후 JWT_TOKEN",
+                    required = true, dataType = "String", paramType = "header")
+    })
+    @ApiOperation(
+            value = "홈화면 - 알람목록 - 특정 알람 읽음 처리",
+            notes = "### 알람으로 리다이렉션이 일어날 때, 해당 알람을 읽음 처리합니다.\n"
+    )
+    @PutMapping("/home/alarm/{alarmId}")
+    public SingleResult<AlarmReadStatusUpdateResponseDto> updateReadStatus(@RequestHeader(value = "X-AUTH-TOKEN") String token,
+                                                                           @ApiParam(value = "읽음 처리할 alarmId", required = true) @PathVariable Long alarmId )
+    {
+        AlarmReadStatusUpdateResponseDto alarmReadStatusUpdateResponseDto = homeService.updateReadStatus(alarmId);
+        logger.info(alarmReadStatusUpdateResponseDto.toString());
+        return responseService.mappingSingleResult(alarmReadStatusUpdateResponseDto, "홈화면 - 알람목록 - 특정 알람 읽음 처리");
+    }
 }

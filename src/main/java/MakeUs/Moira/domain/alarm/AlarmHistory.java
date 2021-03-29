@@ -1,5 +1,6 @@
 package MakeUs.Moira.domain.alarm;
 
+import MakeUs.Moira.controller.home.dto.AlarmReadStatusUpdateResponseDto;
 import MakeUs.Moira.controller.home.dto.AlarmResponseDto;
 import MakeUs.Moira.domain.AuditorEntity;
 import MakeUs.Moira.domain.chat.ReadStatus;
@@ -8,7 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @Getter
@@ -45,6 +45,7 @@ public class AlarmHistory extends AuditorEntity {
 
     public AlarmResponseDto toAlarmResponseDto() {
         return AlarmResponseDto.builder()
+                               .alarmId(id)
                                .alarmType(type)
                                .alarmTargetId(alarmTargetId)
                                .alarmTargetImage(alarmTargetImage)
@@ -52,6 +53,17 @@ public class AlarmHistory extends AuditorEntity {
                                .readStatus(readStatus)
                                .writtenTime(getCreatedDate())
                                .build();
+    }
+
+    public AlarmReadStatusUpdateResponseDto toAlarmReadStatusUpdateResponseDto(){
+        return AlarmReadStatusUpdateResponseDto.builder()
+                                               .alarmId(id)
+                                               .read(readStatusToBoolean())
+                                               .build();
+    }
+
+    private boolean readStatusToBoolean(){
+        return this.readStatus.equals(ReadStatus.READ);
     }
 
     public void updateReadStatus() {
