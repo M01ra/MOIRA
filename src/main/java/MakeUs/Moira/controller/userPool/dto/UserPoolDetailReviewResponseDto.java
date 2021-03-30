@@ -13,15 +13,17 @@ import java.util.stream.Collectors;
 @ToString
 public class UserPoolDetailReviewResponseDto {
 
+    private String                           nickname;
     private Double                           avgMannerPoint;
     private String                           recentReviewContent;
     private List<ComplimentMarkWithCountDto> complimentMarkWithCountDtoList;
     private Long                             maxComplimentMarkId;
 
-    public UserPoolDetailReviewResponseDto(List<UserReview> userReviewList,
+    public UserPoolDetailReviewResponseDto(String nickname,
+                                           List<UserReview> userReviewList,
                                            List<ComplimentMarkWithCountDto> complimentMarkWithCountDtoList)
     {
-
+        this.nickname = nickname;
         this.avgMannerPoint = userReviewList.stream()
                                             .map(UserReview::getMannerPoint)
                                             .collect(Collectors.averagingDouble(mannerPoint -> (double) mannerPoint));

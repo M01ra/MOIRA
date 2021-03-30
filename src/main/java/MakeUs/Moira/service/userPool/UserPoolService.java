@@ -98,7 +98,8 @@ public class UserPoolService {
 
 
     public UserPoolDetailReviewResponseDto getUserPoolDetailReview(Long userPoolId) {
-        Long userHistoryId = getUserHistoryEntity(userPoolId).getId();
+        UserHistory userHistory = getUserHistoryEntity(userPoolId);
+        Long userHistoryId = userHistory.getId();
 
         List<UserReview> userReviewList = getUserReviewList(userHistoryId);
         List<ComplimentMarkInfo> complimentMarkInfoList = complimentMarkInfoRepo.findAll();
@@ -106,7 +107,8 @@ public class UserPoolService {
         List<ComplimentMarkWithCountDto> complimentMarkWithCountDtoList
                 = getComplimentMarkWithCountDtoList(userReviewList, complimentMarkInfoList);
 
-        return new UserPoolDetailReviewResponseDto(userReviewList, complimentMarkWithCountDtoList);
+        return new UserPoolDetailReviewResponseDto(userHistory.getUser()
+                                                              .getNickname(), userReviewList, complimentMarkWithCountDtoList);
     }
 
 
