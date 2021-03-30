@@ -62,21 +62,39 @@ public class MyProjectService {
                      .filter(userProject -> !userProject.getId().equals(userId))
                      .map(userProject -> {
                          User userEntity = userProject.getUserHistory().getUser();
-                         return MyProjectTeammateResponseDTO.builder()
-                                                     .userId(userEntity.getId())
-                                                     .projectApplyId(projectEntity.getProjectDetail().getProjectApplyList()
-                                                                                  .stream()
-                                                                                  .filter(projectApply -> projectApply.getApplicant().getId().equals(userEntity.getId()))
-                                                                                  .findFirst()
-                                                                                  .orElseThrow(() -> new CustomException(ErrorCode.NON_EXIST_PROJECT_APPLY))
-                                                                                  .getId())
-                                                     .imageUrl(userEntity.getProfileImage())
-                                                     .isLeader(userProject.getRoleType() == UserProjectRoleType.LEADER)
-                                                     .nickname(userEntity.getNickname())
-                                                     .position(userProject.getUserPosition().getPositionName())
-                                                     .build();
+                         if(userProject.getRoleType() != UserProjectRoleType.LEADER) {
+                             return MyProjectTeammateResponseDTO.builder()
+                                                                .userId(userEntity.getId())
+                                                                .projectApplyId(projectEntity.getProjectDetail()
+                                                                                             .getProjectApplyList()
+                                                                                             .stream()
+                                                                                             .filter(projectApply -> projectApply.getApplicant()
+                                                                                                                                 .getId()
+                                                                                                                                 .equals(userEntity.getId()))
+                                                                                             .findFirst()
+                                                                                             .orElseThrow(() -> new CustomException(ErrorCode.NON_EXIST_PROJECT_APPLY))
+                                                                                             .getId())
+                                                                .imageUrl(userEntity.getProfileImage())
+                                                                .isLeader(userProject.getRoleType() == UserProjectRoleType.LEADER)
+                                                                .nickname(userEntity.getNickname())
+                                                                .position(userProject.getUserPosition()
+                                                                                     .getPositionName())
+                                                                .build();
+                         }
+                         else{
+                             return MyProjectTeammateResponseDTO.builder()
+                                                                .userId(userEntity.getId())
+                                                                .projectApplyId(-1L)
+                                                                .imageUrl(userEntity.getProfileImage())
+                                                                .isLeader(userProject.getRoleType() == UserProjectRoleType.LEADER)
+                                                                .nickname(userEntity.getNickname())
+                                                                .position(userProject.getUserPosition()
+                                                                                     .getPositionName())
+                                                                .build();
+                         }
                      })
                      .collect(Collectors.toList());
+
 
         return MyProjectResponseDTO.builder()
                                    .title(projectEntity.getProjectTitle())
