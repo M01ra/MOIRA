@@ -47,4 +47,8 @@ public class UserProject {
         this.userProjectStatus = userProjectStatus;
     }
 
+    public void updateUserProjectStatus(UserProjectStatus userProjectStatus){
+        this.userProjectStatus = userProjectStatus;
+    }
+
 }

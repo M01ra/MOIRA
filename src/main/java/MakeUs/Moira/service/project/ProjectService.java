@@ -167,7 +167,10 @@ public class ProjectService {
             projectEntity.getUserProjectList()
                          .stream()
                          .filter(userProject -> userProject.getUserProjectStatus() != UserProjectStatus.DROP)
-                         .forEach(userProject -> userProject.getUserHistory().addCompletionCount());
+                         .forEach(userProject -> {
+                             userProject.getUserHistory().addCompletionCount();
+                             userProject.updateUserProjectStatus(UserProjectStatus.COMPLETE);
+                         });
         }
 
         projectEntity.updateProjectStatus(status);
