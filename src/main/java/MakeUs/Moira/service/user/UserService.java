@@ -37,13 +37,15 @@ public class UserService {
     }
 
     @Transactional
-    public SignupResponseDto signup(Long userId, String nickname, Long positionId, List<Long> hashtagIdList){
+    public SignupResponseDto signup(Long userId, String nickname, Long positionId, List<Long> hashtagIdList) {
 
         // 1. 유저 엔티티
         User userEntity = findUserById(userId);
 
         // 2. 닉네임
-        if (isDuplicatedNickname(nickname)) throw new CustomException(ErrorCode.ALREADY_REGISTERED_NICKNAME);
+        if (isDuplicatedNickname(nickname)) {
+            throw new CustomException(ErrorCode.ALREADY_REGISTERED_NICKNAME);
+        }
         userEntity.updateNickname(nickname);
 
         // 3. 포지션
@@ -130,5 +132,12 @@ public class UserService {
                          .stream()
                          .map(HashtagResponseDto::new)
                          .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void updateUserStatusDeleted(Long userId) {
+        User userEntity = userRepo.findById(userId)
+                                  .orElseThrow(() -> new CustomException(ErrorCode.INVALID_USER));
+        userEntity.updateDeletedStatus(true);
     }
 }

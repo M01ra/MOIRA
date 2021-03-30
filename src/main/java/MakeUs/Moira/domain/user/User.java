@@ -56,6 +56,8 @@ public class User implements UserDetails {
     @ManyToOne
     private UserPosition userPosition;
 
+    private boolean isDeleted = false;
+
     @Builder
     public User(String socialProvider, String socialId, UserRole userRole) {
         this.socialProvider = socialProvider;
@@ -149,6 +151,10 @@ public class User implements UserDetails {
     public User updateProfileImageKey(String profileImageKey) {
         this.profileImageKey = profileImageKey;
         return this;
+    }
+
+    public void updateDeletedStatus(boolean status){
+        this.isDeleted = status;
     }
 
     public MyPageEditNicknameResponseDto toMyPageEditNicknameResponseDto() {

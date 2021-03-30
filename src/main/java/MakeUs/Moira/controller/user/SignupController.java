@@ -24,7 +24,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 
 @Api(tags = {"2.회원가입"})
@@ -142,5 +141,24 @@ public class SignupController {
         SignupResponseDto signupResponseDto = userService.signup(userId, nickname, positionId, hashtagIdList);
         logger.info(signupResponseDto.toString());
         return responseService.mappingSingleResult(signupResponseDto, "회원가입 성공");
+    }
+
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = "X-AUTH-TOKEN",
+                    value = "로그인 성공 후 JWT_TOKEN",
+                    required = true, dataType = "String", paramType = "header")
+    })
+    @ApiOperation(
+            value = "회원 탈퇴",
+            notes = "### 회원 탈퇴를 진행합니다.\n" +
+                    "### 다시 앱을 연결 후, 진행하면 같은 아이디로 로그인을 할 수 있습니다."
+    )
+    @DeleteMapping(value = "/user")
+    public CommonResult updateUserStatusDeleted(@RequestHeader(value = "X-AUTH-TOKEN") String token)
+    {
+        Long userId = Long.parseLong(jwtTokenProvider.getUserPk(token));
+        userService.updateUserStatusDeleted(userId);
+        return responseService.mappingSuccessCommonResultOnly("회원 탈퇴");
     }
 }
