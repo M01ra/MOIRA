@@ -21,6 +21,8 @@ public class ProjectApplicantsResponseDTO {
     private String imageUrl;
     @ApiModelProperty(value = "닉네임", example = "웰시고기")
     private String nickname;
+    @ApiModelProperty(value = "한줄 소개", example = "안녕하세요")
+    private String shortIntroduction;
     @ApiModelProperty(value = "지원 포지션", example = "IOS")
     private String position;
 }
