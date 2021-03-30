@@ -33,14 +33,14 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProjectService {
 
-    private final HashtagRepo     hashtagRepo;
-    private final ProjectRepo     projectRepo;
-    private final UserRepo        userRepo;
-    private final UserHistoryRepo userHistoryRepo;
-    private final UserProjectRepo userProjectRepo;
+    private final HashtagRepo          hashtagRepo;
+    private final ProjectRepo          projectRepo;
+    private final UserRepo             userRepo;
+    private final UserHistoryRepo      userHistoryRepo;
+    private final UserProjectRepo      userProjectRepo;
     private final PositionCategoryRepo positionCategoryRepo;
-    private final ProjectLikeRepo projectLikeRepo;
-    private final S3Service       s3Service;
+    private final ProjectLikeRepo      projectLikeRepo;
+    private final S3Service            s3Service;
 
 
     @Transactional
@@ -55,8 +55,8 @@ public class ProjectService {
         projectEntity = projectRepo.save(projectEntity);
 
         // 태그
-        if(projectRequestDTO.getHashtagList() != null){
-            for(String hashtagName : projectRequestDTO.getHashtagList()){
+        if (projectRequestDTO.getHashtagList() != null) {
+            for (String hashtagName : projectRequestDTO.getHashtagList()) {
                 projectEntity.addProjectHashtagList(
                         ProjectHashtag.builder()
                                       .projectHashtag(getValidHashtag(hashtagName))
@@ -69,15 +69,15 @@ public class ProjectService {
 
         // ProjectDetail 생성
         ProjectDetail projectDetailEntity = ProjectDetail.builder()
-                .project(projectEntity)
-                .projectContent(projectRequestDTO.getContent())
-                .projectDuration(projectRequestDTO.getDuration())
-                .projectLocalType(projectRequestDTO.getLocalType())
-                .build();
+                                                         .project(projectEntity)
+                                                         .projectContent(projectRequestDTO.getContent())
+                                                         .projectDuration(projectRequestDTO.getDuration())
+                                                         .projectLocalType(projectRequestDTO.getLocalType())
+                                                         .build();
 
 
         // 프로젝트 포지션 리스트
-        if(projectRequestDTO.getPositionCategoryList() != null) {
+        if (projectRequestDTO.getPositionCategoryList() != null) {
             for (ProjectPositionCategoryDTO projectPositionCategoryDTO : projectRequestDTO.getPositionCategoryList()) {
                 PositionCategory positionCategoryEntity = positionCategoryRepo.findByCategoryName(projectPositionCategoryDTO.getPositionCategoryName())
                                                                               .orElseThrow(() -> new CustomException(ErrorCode.INVALID_POSITION_CATEGORY));
@@ -121,15 +121,17 @@ public class ProjectService {
             throw new CustomException(ErrorCode.ALREADY_REGISTERED_PROJECT_IMAGE);
         }
         // 첫번째 이미지를 대표이미지로 저장
-        String key = s3Service.createUUIDKey(files.get(0).getOriginalFilename());
+        String key = s3Service.createUUIDKey(files.get(0)
+                                                  .getOriginalFilename());
         String imageUrl = s3Service.upload(files.get(0), key);
         projectEntity.updateProjectImageUrl(imageUrl);
         projectEntity.updateProjectImageKey(key);
 
         // 그 외는 ProjectImage에 추가
-        if(files.size() > 1){
+        if (files.size() > 1) {
             for (int i = 1; i < files.size(); i++) {
-                key = s3Service.createUUIDKey(files.get(i).getOriginalFilename());
+                key = s3Service.createUUIDKey(files.get(i)
+                                                   .getOriginalFilename());
                 imageUrl = s3Service.upload(files.get(i), key);
                 projectEntity.addProjectImage(new ProjectImage(projectEntity, imageUrl, key));
             }
@@ -145,7 +147,7 @@ public class ProjectService {
         getAuthorizedUserProject(userHistoryEntity.getId(), projectId);
 
         // 기존에 존재했을 경우 삭제
-        if(projectEntity.getProjectImageUrl() != null){
+        if (projectEntity.getProjectImageUrl() != null) {
             s3Service.delete(projectEntity.getProjectImageKey());
         }
         String key = s3Service.createUUIDKey(file.getOriginalFilename());
@@ -163,12 +165,13 @@ public class ProjectService {
         getAuthorizedUserProject(userHistoryEntity.getId(), projectId);
 
         // 프로젝트 완료시 참여자들 완주 count 증가
-        if(status == ProjectStatus.COMPLETED){
+        if (status == ProjectStatus.COMPLETED) {
             projectEntity.getUserProjectList()
                          .stream()
                          .filter(userProject -> userProject.getUserProjectStatus() != UserProjectStatus.DROP)
                          .forEach(userProject -> {
-                             userProject.getUserHistory().addCompletionCount();
+                             userProject.getUserHistory()
+                                        .addCompletionCount();
                              userProject.updateUserProjectStatus(UserProjectStatus.COMPLETE);
                          });
         }
@@ -222,33 +225,37 @@ public class ProjectService {
         List<ProjectRepo.ProjectsResponseInterface> projectsResponseInterfaceList;
 
         // 키워드가 있으면 키워드만으로 검색
-        if(keyword != null){
+        if (keyword != null) {
             projectsResponseInterfaceList = projectRepo.findProjectsByOrderPageKeyword(keyword, pageable);
         }
 
         // 검색 조건에 태그가 있을 경우
-        else if(tag != null) {
+        else if (tag != null) {
             String[] tags = tag.split("\\,");
             for (String tagName : tags) {
                 getValidHashtag(tagName);
             }
             // 검색 조건에 포지션이 있을 경우
-            if(position != null){
+            if (position != null) {
                 checkValidPosition(position);
                 projectsResponseInterfaceList = projectRepo.findProjectsByOrderPageTagPosition(tags, position, pageable);
             }
             // 검색 조건에 포지션이 없을 경우
-            else projectsResponseInterfaceList = projectRepo.findProjectsByOrderPageTag(tags, pageable);
+            else {
+                projectsResponseInterfaceList = projectRepo.findProjectsByOrderPageTag(tags, pageable);
+            }
         }
         // 검색 조건에 태그가 없을 경우
         else {
             // 검색 조건에 포지션이 있을 경우
-            if(position != null){
+            if (position != null) {
                 checkValidPosition(position);
                 projectsResponseInterfaceList = projectRepo.findProjectsByOrderPagePosition(position, pageable);
             }
             // 검색 조건에 포지션이 없을 경우
-            else projectsResponseInterfaceList = projectRepo.findProjectsByOrderPage(pageable);
+            else {
+                projectsResponseInterfaceList = projectRepo.findProjectsByOrderPage(pageable);
+            }
         }
 
         return projectsResponseInterfaceList
@@ -256,14 +263,14 @@ public class ProjectService {
                 .map(projectsResponseDTO -> {
                     Project projectEntity = getValidProject(projectsResponseDTO.getId());
                     return ProjectsResponseDTO.builder()
-                            .id(projectsResponseDTO.getId())
-                            .title(projectsResponseDTO.getTitle())
-                            .writer(projectsResponseDTO.getWriter())
-                            .imageUrl(projectsResponseDTO.getImageUrl())
-                            .hitCount(projectsResponseDTO.getHitCount())
-                            .time(getTime(projectsResponseDTO.getDate()))
-                            .hashtagList(getHashtagList(projectEntity.getProjectHashtagList()))
-                            .build();
+                                              .id(projectsResponseDTO.getId())
+                                              .title(projectsResponseDTO.getTitle())
+                                              .writer(projectsResponseDTO.getWriter())
+                                              .imageUrl(projectsResponseDTO.getImageUrl())
+                                              .hitCount(projectsResponseDTO.getHitCount())
+                                              .time(getTime(projectsResponseDTO.getDate()))
+                                              .hashtagList(getHashtagList(projectEntity.getProjectHashtagList()))
+                                              .build();
                 })
                 .collect(Collectors.toList());
     }
@@ -283,19 +290,22 @@ public class ProjectService {
         projectEntity.addHit();
 
         return ProjectResponseDTO.builder()
-                .title(projectEntity.getProjectTitle())
-                .content(projectDetailEntity.getProjectContent())
-                .writer(getWriter(projectEntity.getUserProjectList()))
-                .hashtagList(getHashtagList(projectEntity.getProjectHashtagList()))
-                .imageUrlList(projectEntity.getProjectImageUrlList())
-                .hitCount(projectEntity.getHitCount())
-                .likeCount(projectEntity.getLikeCount())
-                .duration(projectEntity.getProjectDetail().getProjectDuration())
-                .location(projectEntity.getProjectDetail().getProjectLocalType())
-                .positionCategoryList(getProjectPositionCategoryList(projectEntity.getProjectDetail().getProjectPositionList()))
-                .time(getTime(projectEntity.getModifiedDate()))
-                .isLike(isLike)
-                .build();
+                                 .title(projectEntity.getProjectTitle())
+                                 .content(projectDetailEntity.getProjectContent())
+                                 .writer(getWriter(projectEntity.getUserProjectList()))
+                                 .hashtagList(getHashtagList(projectEntity.getProjectHashtagList()))
+                                 .imageUrlList(projectEntity.getProjectImageUrlList())
+                                 .hitCount(projectEntity.getHitCount())
+                                 .likeCount(projectEntity.getLikeCount())
+                                 .duration(projectEntity.getProjectDetail()
+                                                        .getProjectDuration())
+                                 .location(projectEntity.getProjectDetail()
+                                                        .getProjectLocalType())
+                                 .positionCategoryList(getProjectPositionCategoryList(projectEntity.getProjectDetail()
+                                                                                                   .getProjectPositionList()))
+                                 .time(getTime(projectEntity.getModifiedDate()))
+                                 .isLike(isLike)
+                                 .build();
     }
 
 
@@ -327,9 +337,9 @@ public class ProjectService {
     }
 
 
-    private List<ProjectPositionCategoryDTO> getProjectPositionCategoryList(List<ProjectPosition> projectPositionCategoryList){
+    private List<ProjectPositionCategoryDTO> getProjectPositionCategoryList(List<ProjectPosition> projectPositionCategoryList) {
         List<ProjectPositionCategoryDTO> projectPositionCategoryDTOList = new ArrayList<>();
-        for(ProjectPosition projectPosition: projectPositionCategoryList){
+        for (ProjectPosition projectPosition : projectPositionCategoryList) {
             projectPositionCategoryDTOList.add(new ProjectPositionCategoryDTO(projectPosition.getRecruitingPositionCategoryName(), projectPosition.getRecruitPositionCount()));
         }
         return projectPositionCategoryDTOList;
@@ -412,21 +422,21 @@ public class ProjectService {
     }
 
 
-    private void checkValidSort(String sort){
-        if(!sort.equals("date") && !sort.equals("hitCount") && !sort.equals("likeCount")){
+    private void checkValidSort(String sort) {
+        if (!sort.equals("date") && !sort.equals("hitCount") && !sort.equals("likeCount")) {
             throw new CustomException(ErrorCode.INVALID_SORT);
         }
     }
 
 
-    private void checkValidPosition(String position){
-        if(!position.equals("개발자") && !position.equals("기획자") && !position.equals("디자이너")){
+    private void checkValidPosition(String position) {
+        if (!position.equals("개발자") && !position.equals("기획자") && !position.equals("디자이너")) {
             throw new CustomException(ErrorCode.INVALID_POSITION_CATEGORY);
         }
     }
 
 
-    private boolean isUserLikeProject(UserHistory userHistory, Project project){
+    private boolean isUserLikeProject(UserHistory userHistory, Project project) {
         Optional<ProjectLike> optionalProjectLike = projectLikeRepo.findByUserHistoryAndProject(userHistory, project);
         if (optionalProjectLike.isPresent()) {
             ProjectLike projectLike = optionalProjectLike.get();
