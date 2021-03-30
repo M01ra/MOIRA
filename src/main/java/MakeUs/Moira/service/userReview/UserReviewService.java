@@ -28,10 +28,10 @@ import java.util.stream.Collectors;
 @Service
 public class UserReviewService {
 
-    private final UserRepo                     userRepo;
-    private final UserProjectRepo              userProjectRepo;
-    private final UserReviewRepo               userReviewRepo;
-    private final ComplimentMarkInfoRepo       complimentMarkInfoRepo;
+    private final UserRepo               userRepo;
+    private final UserProjectRepo        userProjectRepo;
+    private final UserReviewRepo         userReviewRepo;
+    private final ComplimentMarkInfoRepo complimentMarkInfoRepo;
 
     @Transactional
     public UserReviewAddResponseDto addUserReview(Long userId, UserReviewAddRequestDto userReviewAddRequestDto) {
@@ -60,14 +60,16 @@ public class UserReviewService {
 
     public UserReviewResponseDto getUserReview(Long targetId) {
 
-        Long userHistoryId = getUserHistory(targetId).getId();
+        User userEntity = getUserEntity(targetId);
+        Long userHistoryId = userEntity.getUserHistory()
+                                       .getId();
 
         List<UserReview> userReviewList = userReviewRepo.findAllByUserProject_UserHistory_Id(userHistoryId);
         List<ComplimentMarkInfo> complimentMarkInfoList = complimentMarkInfoRepo.findAll();
 
         List<ComplimentMarkWithCountDto> complimentMarkWithCountDtoList = getComplimentMarkWithCountDtoList(userReviewList, complimentMarkInfoList);
 
-        return new UserReviewResponseDto(userReviewList, complimentMarkWithCountDtoList);
+        return new UserReviewResponseDto(userEntity.getNickname(), userReviewList, complimentMarkWithCountDtoList);
     }
 
 

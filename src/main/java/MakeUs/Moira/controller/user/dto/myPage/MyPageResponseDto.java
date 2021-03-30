@@ -7,6 +7,7 @@ import lombok.ToString;
 @Getter
 @ToString
 public class MyPageResponseDto {
+    private Long   userId;
     private String nickname;
     private String positionName;
     private String shortIntroduction;
@@ -17,6 +18,7 @@ public class MyPageResponseDto {
 
 
     public MyPageResponseDto(User user, int writtenPostCount, int appliedPostCount, int likedPostCount) {
+        this.userId = user.getId();
         this.nickname = user.getNickname();
         this.positionName = user.getUserPosition()
                                 .getPositionName();
