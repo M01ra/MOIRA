@@ -193,18 +193,58 @@ public class ProjectApplyService {
                 }
                 // 유효한 상태 변경인지 검증
                 checkValidProjectApplyStatus(projectApplyEntity.getProjectApplyStatus(), ProjectApplyStatus.USER_APPLIED);
-                // 알람 생성
-                alarmService.saveProjectApply(
-                        getProjectTitle(projectApplyEntity.getProjectDetail()
-                                                          .getProject()
-                                                          .getProjectTitle()) + "에 합류하게 되었습니다.",
-                        AlarmType.INVITE_ANSWER,
-                        projectApplyId,
-                        projectApplyEntity.getApplicant()
-                                          .getId(),
-                        projectApplyEntity.getProjectDetail().getProject().getProjectImageUrl()
-                );
+
+                // UserProject 생성
+                if (!isExistUserProject(projectApplyEntity.getApplicant().getId(), projectEntity.getId())) {
+                    UserProject userProjectEntity = UserProject.builder()
+                                                               .project(projectEntity)
+                                                               .userProjectStatus(UserProjectStatus.PROGRESS)
+                                                               .userHistory(projectApplyEntity.getApplicant().getUserHistory())
+                                                               .roleType(UserProjectRoleType.MEMBER)
+                                                               .userPosition(projectApplyEntity.getUserPosition())
+                                                               .build();
+                    // UserProject 양방향 추가
+                    projectEntity.addUserProjectList(userProjectEntity);
+                    projectApplyEntity.getApplicant().getUserHistory().addUserProject(userProjectEntity);
+
+                    // 지원자 참여횟수 증가
+                    projectApplyEntity.getApplicant().getUserHistory().addParticipationCount();
+
+                    // 리더 참여횟수 증가
+                    if (projectEntity.getUserProjectList()
+                                     .size() == 2) {
+                        userHistoryEntity.addParticipationCount();
+                    }
+
+                    // 알람 생성
+                    alarmService.saveProjectApply(
+                            getProjectTitle(projectApplyEntity.getProjectDetail()
+                                                              .getProject()
+                                                              .getProjectTitle()) + "에 합류하게 되었습니다.",
+                            AlarmType.INVITE_ANSWER,
+                            projectApplyId,
+                            projectApplyEntity.getApplicant()
+                                              .getId(),
+                            projectApplyEntity.getProjectDetail().getProject().getProjectImageUrl()
+                    );
+                } else {
+                    throw new CustomException(ErrorCode.ALREADY_REGISTERED_USER);
+                }
                 break;
+
+
+
+                // 알람 생성
+                //alarmService.saveProjectApply(
+                //        getProjectTitle(projectApplyEntity.getProjectDetail()
+                //                                         .getProject()
+                //                                          .getProjectTitle()) + "에 합류하게 되었습니다.",
+                //        AlarmType.INVITE_ANSWER,
+                //        projectApplyId,
+                //        projectApplyEntity.getApplicant()
+                //                          .getId(),
+                //        projectApplyEntity.getProjectDetail().getProject().getProjectImageUrl()
+                //);
 
             case USER_ACCEPTED:
                 // 본인의 지원서인지 검증
@@ -250,6 +290,7 @@ public class ProjectApplyService {
                     throw new CustomException(ErrorCode.ALREADY_REGISTERED_USER);
                 }
                 break;
+
             case USER_REJECTED:
                 // 본인의 지원서인지 검증
                 checkProjectApplicant(projectApplyEntity, userId);

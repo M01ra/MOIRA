@@ -7,6 +7,7 @@ import MakeUs.Moira.controller.project.dto.myProject.MyProjectTeammateResponseDT
 import MakeUs.Moira.controller.project.dto.myProject.MyProjectsResponseDTO;
 import MakeUs.Moira.domain.project.Project;
 import MakeUs.Moira.domain.project.ProjectRepo;
+import MakeUs.Moira.domain.project.projectApply.ProjectApplyRepo;
 import MakeUs.Moira.domain.user.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -63,6 +64,12 @@ public class MyProjectService {
                          User userEntity = userProject.getUserHistory().getUser();
                          return MyProjectTeammateResponseDTO.builder()
                                                      .userId(userEntity.getId())
+                                                     .projectApplyId(projectEntity.getProjectDetail().getProjectApplyList()
+                                                                                  .stream()
+                                                                                  .filter(projectApply -> projectApply.getApplicant().getId().equals(userEntity.getId()))
+                                                                                  .findFirst()
+                                                                                  .orElseThrow(() -> new CustomException(ErrorCode.NON_EXIST_PROJECT_APPLY))
+                                                                                  .getId())
                                                      .imageUrl(userEntity.getProfileImage())
                                                      .isLeader(userProject.getRoleType() == UserProjectRoleType.LEADER)
                                                      .nickname(userEntity.getNickname())

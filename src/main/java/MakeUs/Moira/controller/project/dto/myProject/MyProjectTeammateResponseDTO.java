@@ -15,6 +15,8 @@ import lombok.ToString;
 public class MyProjectTeammateResponseDTO {
     @ApiModelProperty(value = "유저 ID", example = "1")
     private Long userId;
+    @ApiModelProperty(value = "지원서 ID", example = "1")
+    private Long projectApplyId;
     @ApiModelProperty(value = "닉네임", example = "웰시고기")
     private String nickname;
     @ApiModelProperty(value = "이미지 URL", example = "https://moira-springboot.s3.ap-northeast-2.amazonaws.com/project-3-Sketchpad.png")
