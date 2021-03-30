@@ -184,7 +184,7 @@ public class ProjectApplyService {
                                           .getProjectImageUrl()
                 );
 
-                break; 
+                break;
 
             case TEAM_INVITED:
                 // 팀장인지 확인
