@@ -144,15 +144,15 @@ public class UserPoolService {
     private Pageable getPageableWithSortKeyword(int page, String sortby) {
         switch (sortby) {
             case "date": {
-                return PageRequest.of(page - 1, 10, Sort.by("modifiedDate")
+                return PageRequest.of(page - 1, 100, Sort.by("modifiedDate")
                                                         .descending());
             }
             case "hit": {
-                return PageRequest.of(page - 1, 10, Sort.by("hitCount")
+                return PageRequest.of(page - 1, 100, Sort.by("hitCount")
                                                         .descending());
             }
             case "like": {
-                return PageRequest.of(page - 1, 10, Sort.by("likeCount")
+                return PageRequest.of(page - 1, 100, Sort.by("likeCount")
                                                         .descending());
             }
             default: {

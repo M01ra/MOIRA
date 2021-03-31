@@ -220,7 +220,7 @@ public class ProjectService {
     public List<ProjectsResponseDTO> getProjects(String tag, String sort, String position, int page, String keyword) {
         checkValidSort(sort);
         // 10개씩 page부터 sort 정렬방식
-        Pageable pageable = PageRequest.of(page, 10, Sort.by(sort)
+        Pageable pageable = PageRequest.of(page, 100, Sort.by(sort)
                                                          .descending());
         List<ProjectRepo.ProjectsResponseInterface> projectsResponseInterfaceList;
 

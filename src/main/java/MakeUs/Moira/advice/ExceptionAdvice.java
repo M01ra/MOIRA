@@ -31,7 +31,6 @@ public class ExceptionAdvice {
         System.out.println(e.getClass());
         // 아무데서도 안 거르면, 여기서 거른다. -> 데이터가 없는 리스폰스
         logger.info("code : 500 " + e.getMessage());
-        logger.info(request.getContentType());
         return responseService.mappingFailCommonResultOnly(500, e.getMessage());
     }
 
