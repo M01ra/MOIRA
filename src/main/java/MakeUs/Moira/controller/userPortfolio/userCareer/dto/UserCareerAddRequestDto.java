@@ -24,7 +24,7 @@ public class UserCareerAddRequestDto {
     public UserCareer toEntity() {
         return UserCareer.builder()
                          .companyName(this.companyName)
-                         .task(this.companyName)
+                         .task(this.task)
                          .startAt(this.startAt)
                          .endAt(this.endAt)
                          .build();
