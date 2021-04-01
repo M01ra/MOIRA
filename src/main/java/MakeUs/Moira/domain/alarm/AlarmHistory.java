@@ -55,14 +55,14 @@ public class AlarmHistory extends AuditorEntity {
                                .build();
     }
 
-    public AlarmReadStatusUpdateResponseDto toAlarmReadStatusUpdateResponseDto(){
+    public AlarmReadStatusUpdateResponseDto toAlarmReadStatusUpdateResponseDto() {
         return AlarmReadStatusUpdateResponseDto.builder()
                                                .alarmId(id)
                                                .read(readStatusToBoolean())
                                                .build();
     }
 
-    private boolean readStatusToBoolean(){
+    private boolean readStatusToBoolean() {
         return this.readStatus.equals(ReadStatus.READ);
     }
 
