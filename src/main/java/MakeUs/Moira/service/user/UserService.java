@@ -3,9 +3,9 @@ package MakeUs.Moira.service.user;
 
 import MakeUs.Moira.advice.exception.CustomException;
 import MakeUs.Moira.advice.exception.ErrorCode;
-import MakeUs.Moira.controller.user.dto.myPage.HashtagResponseDto;
-import MakeUs.Moira.controller.user.dto.signup.PositionResponseDto;
-import MakeUs.Moira.controller.user.dto.signup.SignupResponseDto;
+import MakeUs.Moira.controller.myPage.dto.HashtagResponseDto;
+import MakeUs.Moira.controller.signup.dto.PositionResponseDto;
+import MakeUs.Moira.controller.signup.dto.SignupResponseDto;
 import MakeUs.Moira.domain.hashtag.Hashtag;
 import MakeUs.Moira.domain.hashtag.HashtagRepo;
 import MakeUs.Moira.domain.position.PositionRepo;
@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 

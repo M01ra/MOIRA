@@ -2,9 +2,7 @@ package MakeUs.Moira.controller.report;
 
 
 import MakeUs.Moira.config.security.JwtTokenProvider;
-import MakeUs.Moira.controller.project.dto.project.ProjectRequestDTO;
 import MakeUs.Moira.controller.report.dto.ReportRequestDTO;
-import MakeUs.Moira.domain.report.ReportRepo;
 import MakeUs.Moira.response.ResponseService;
 import MakeUs.Moira.response.model.CommonResult;
 import MakeUs.Moira.service.report.ReportService;

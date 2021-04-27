@@ -47,7 +47,7 @@ public enum ErrorCode {
 
     NON_EXIST_FILE_NAME(470, "존재하지 않는 파일 이름"),
     NON_EXIST_PROJECT_LEADER(471, "존재하지 않는 팀장"),
-    NON_EXIST_PROJECT_APPLY(472, "존재하지 않는 지원서")
+    NON_EXIST_PROJECT_APPLY(472, "존재하지 않는 지원서");
 
 
     private final int code;

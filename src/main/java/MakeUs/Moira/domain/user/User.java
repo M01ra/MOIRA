@@ -1,9 +1,8 @@
 package MakeUs.Moira.domain.user;
 
-import MakeUs.Moira.controller.security.dto.LoginResponseDto;
-import MakeUs.Moira.controller.user.dto.myPageEdit.MyPageEditIntroductionResponseDto;
-import MakeUs.Moira.controller.user.dto.myPageEdit.MyPageEditNicknameResponseDto;
-import MakeUs.Moira.controller.user.dto.myPageEdit.MyPageEditPositionResponseDto;
+import MakeUs.Moira.controller.myPageEdit.dto.MyPageEditIntroductionResponseDto;
+import MakeUs.Moira.controller.myPageEdit.dto.MyPageEditNicknameResponseDto;
+import MakeUs.Moira.controller.myPageEdit.dto.MyPageEditPositionResponseDto;
 import MakeUs.Moira.domain.position.UserPosition;
 import MakeUs.Moira.domain.userPool.UserPool;
 import MakeUs.Moira.domain.userPortfolio.UserPortfolio;

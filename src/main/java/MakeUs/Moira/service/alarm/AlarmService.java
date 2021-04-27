@@ -6,7 +6,7 @@ import MakeUs.Moira.domain.alarm.AlarmHistoryRepo;
 import MakeUs.Moira.advice.exception.CustomException;
 import MakeUs.Moira.advice.exception.ErrorCode;
 import MakeUs.Moira.controller.chat.dto.ChatMessageSendResponseDto;
-import MakeUs.Moira.controller.userReview.dto.UserReviewAddResponseDto;
+import MakeUs.Moira.controller.review.dto.UserReviewAddResponseDto;
 import MakeUs.Moira.domain.chat.ChatRoom;
 import MakeUs.Moira.domain.chat.ChatRoomRepo;
 import MakeUs.Moira.domain.user.User;

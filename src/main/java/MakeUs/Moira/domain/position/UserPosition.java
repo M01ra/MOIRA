@@ -1,6 +1,6 @@
 package MakeUs.Moira.domain.position;
 
-import MakeUs.Moira.controller.user.dto.myPageEdit.MyPageEditPositionInfoDto;
+import MakeUs.Moira.controller.myPageEdit.dto.MyPageEditPositionInfoDto;
 import lombok.Getter;
 
 import javax.persistence.*;

@@ -1,7 +1,7 @@
 package MakeUs.Moira.service.hashtag;
 
 import MakeUs.Moira.domain.hashtag.HashtagRepo;
-import MakeUs.Moira.controller.user.dto.myPage.HashtagResponseDto;
+import MakeUs.Moira.controller.myPage.dto.HashtagResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

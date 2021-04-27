@@ -2,7 +2,6 @@ package MakeUs.Moira.controller.project;
 
 import MakeUs.Moira.config.security.JwtTokenProvider;
 import MakeUs.Moira.controller.project.dto.*;
-import MakeUs.Moira.controller.project.dto.project.*;
 import MakeUs.Moira.response.ResponseService;
 import MakeUs.Moira.response.model.CommonResult;
 import MakeUs.Moira.response.model.ListResult;

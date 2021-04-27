@@ -2,8 +2,7 @@ package MakeUs.Moira.service.project;
 
 import MakeUs.Moira.advice.exception.ErrorCode;
 import MakeUs.Moira.advice.exception.CustomException;
-import MakeUs.Moira.controller.project.dto.ProjectMemberResponseDto;
-import MakeUs.Moira.controller.project.dto.project.*;
+import MakeUs.Moira.controller.project.dto.*;
 import MakeUs.Moira.domain.hashtag.Hashtag;
 import MakeUs.Moira.domain.hashtag.HashtagRepo;
 import MakeUs.Moira.domain.position.PositionCategory;
@@ -13,8 +12,6 @@ import MakeUs.Moira.domain.project.projectDetail.*;
 import MakeUs.Moira.domain.user.*;
 import MakeUs.Moira.service.S3Service;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;

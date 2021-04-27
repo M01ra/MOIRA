@@ -1,14 +1,12 @@
 package MakeUs.Moira.controller.userPool.dto;
 
-import MakeUs.Moira.controller.user.dto.myPage.HashtagResponseDto;
+import MakeUs.Moira.controller.myPage.dto.HashtagResponseDto;
 import MakeUs.Moira.controller.userPortfolio.userAward.dto.UserAwardResponseDto;
 import MakeUs.Moira.controller.userPortfolio.userCareer.dto.UserCareerResponseDto;
 import MakeUs.Moira.controller.userPortfolio.userLicense.dto.UserLicenseResponseDto;
 import MakeUs.Moira.controller.userPortfolio.userLink.dto.UserLinkResponseDto;
 import MakeUs.Moira.controller.userPortfolio.userSchool.dto.UserSchoolResponseDto;
-import MakeUs.Moira.domain.userPool.UserPool;
 import MakeUs.Moira.domain.userPortfolio.UserPortfolio;
-import MakeUs.Moira.domain.userPortfolio.userCareer.UserCareer;
 import lombok.Getter;
 import lombok.ToString;
 

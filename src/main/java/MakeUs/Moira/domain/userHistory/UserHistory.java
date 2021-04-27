@@ -1,7 +1,7 @@
 package MakeUs.Moira.domain.userHistory;
 
-import MakeUs.Moira.controller.user.dto.myPage.HashtagResponseDto;
-import MakeUs.Moira.controller.user.dto.myPageEdit.MyPageEditHashtagResponseDto;
+import MakeUs.Moira.controller.myPage.dto.HashtagResponseDto;
+import MakeUs.Moira.controller.myPageEdit.dto.MyPageEditHashtagResponseDto;
 import MakeUs.Moira.domain.club.ClubLike;
 import MakeUs.Moira.domain.inquiry.Inquiry;
 import MakeUs.Moira.domain.projectLike.ProjectLike;
