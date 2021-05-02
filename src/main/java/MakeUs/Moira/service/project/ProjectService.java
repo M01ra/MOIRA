@@ -1,15 +1,26 @@
 package MakeUs.Moira.service.project;
 
-import MakeUs.Moira.advice.exception.ErrorCode;
-import MakeUs.Moira.advice.exception.CustomException;
 import MakeUs.Moira.controller.project.dto.*;
 import MakeUs.Moira.domain.hashtag.Hashtag;
 import MakeUs.Moira.domain.hashtag.HashtagRepo;
 import MakeUs.Moira.domain.position.PositionCategory;
 import MakeUs.Moira.domain.position.PositionCategoryRepo;
 import MakeUs.Moira.domain.project.*;
-import MakeUs.Moira.domain.project.projectDetail.*;
+import MakeUs.Moira.domain.projectDetail.ProjectDetail;
+import MakeUs.Moira.domain.projectHashtag.ProjectHashtag;
+import MakeUs.Moira.domain.projectImage.ProjectImage;
+import MakeUs.Moira.domain.projectLike.ProjectLike;
+import MakeUs.Moira.domain.projectLike.ProjectLikeRepo;
+import MakeUs.Moira.domain.projectPosition.ProjectPosition;
 import MakeUs.Moira.domain.user.*;
+import MakeUs.Moira.domain.userHistory.UserHistory;
+import MakeUs.Moira.domain.userHistory.UserHistoryRepo;
+import MakeUs.Moira.domain.userProject.UserProject;
+import MakeUs.Moira.domain.userProject.UserProjectRepo;
+import MakeUs.Moira.domain.userProject.UserProjectRoleType;
+import MakeUs.Moira.domain.userProject.UserProjectStatus;
+import MakeUs.Moira.exception.CustomException;
+import MakeUs.Moira.exception.ErrorCode;
 import MakeUs.Moira.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -33,10 +44,10 @@ public class ProjectService {
     private final HashtagRepo          hashtagRepo;
     private final ProjectRepo          projectRepo;
     private final UserRepo             userRepo;
-    private final UserHistoryRepo      userHistoryRepo;
-    private final UserProjectRepo      userProjectRepo;
+    private final UserHistoryRepo userHistoryRepo;
+    private final UserProjectRepo userProjectRepo;
     private final PositionCategoryRepo positionCategoryRepo;
-    private final ProjectLikeRepo      projectLikeRepo;
+    private final ProjectLikeRepo projectLikeRepo;
     private final S3Service            s3Service;
 
 
@@ -69,7 +80,6 @@ public class ProjectService {
                                                          .project(projectEntity)
                                                          .projectContent(projectRequestDTO.getContent())
                                                          .projectDuration(projectRequestDTO.getDuration())
-                                                         .projectLocalType(projectRequestDTO.getLocalType())
                                                          .build();
 
 
@@ -94,7 +104,7 @@ public class ProjectService {
         // UserProject 양방향 추가
         UserProject userProject = UserProject.builder()
                                              .project(projectEntity)
-                                             .userProjectStatus(UserProjectStatus.PROGRESS)
+                                             .userProjectStatus(UserProjectStatus.PROGRESSING)
                                              .userHistory(userHistoryEntity)
                                              .roleType(UserProjectRoleType.LEADER)
                                              .userPosition(userEntity.getUserPosition())
@@ -165,11 +175,11 @@ public class ProjectService {
         if (status == ProjectStatus.COMPLETED) {
             projectEntity.getUserProjectList()
                          .stream()
-                         .filter(userProject -> userProject.getUserProjectStatus() != UserProjectStatus.DROP)
+                         .filter(userProject -> userProject.getUserProjectStatus() != UserProjectStatus.DROPPED)
                          .forEach(userProject -> {
                              userProject.getUserHistory()
                                         .addCompletionCount();
-                             userProject.updateUserProjectStatus(UserProjectStatus.COMPLETE);
+                             userProject.updateUserProjectStatus(UserProjectStatus.COMPLETED);
                          });
         }
 
@@ -296,8 +306,6 @@ public class ProjectService {
                                  .likeCount(projectEntity.getLikeCount())
                                  .duration(projectEntity.getProjectDetail()
                                                         .getProjectDuration())
-                                 .location(projectEntity.getProjectDetail()
-                                                        .getProjectLocalType())
                                  .positionCategoryList(getProjectPositionCategoryList(projectEntity.getProjectDetail()
                                                                                                    .getProjectPositionList()))
                                  .time(getTime(projectEntity.getModifiedDate()))

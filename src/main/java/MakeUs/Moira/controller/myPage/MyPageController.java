@@ -2,10 +2,10 @@ package MakeUs.Moira.controller.myPage;
 
 import MakeUs.Moira.config.security.JwtTokenProvider;
 import MakeUs.Moira.controller.myPage.dto.*;
-import MakeUs.Moira.response.ResponseService;
-import MakeUs.Moira.response.model.ListResult;
-import MakeUs.Moira.response.model.SingleResult;
 import MakeUs.Moira.service.myPage.MyPageService;
+import MakeUs.Moira.util.response.ResponseService;
+import MakeUs.Moira.util.response.model.ListResult;
+import MakeUs.Moira.util.response.model.SingleResult;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -22,7 +22,7 @@ public class MyPageController {
 
     private final MyPageService    myPageService;
     private final JwtTokenProvider jwtTokenProvider;
-    private final ResponseService  responseService;
+    private final ResponseService responseService;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @ApiImplicitParams({

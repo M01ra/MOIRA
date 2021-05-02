@@ -1,7 +1,7 @@
 package MakeUs.Moira.domain.alarm;
 
-import MakeUs.Moira.controller.home.dto.AlarmReadStatusUpdateResponseDto;
-import MakeUs.Moira.controller.home.dto.AlarmResponseDto;
+import MakeUs.Moira.controller.alarm.dto.AlarmReadStatusUpdateResponseDto;
+import MakeUs.Moira.controller.alarm.dto.AlarmResponseDto;
 import MakeUs.Moira.domain.AuditorEntity;
 import MakeUs.Moira.domain.chat.ReadStatus;
 import lombok.Builder;

@@ -5,11 +5,11 @@ import MakeUs.Moira.controller.chat.dto.ChatMessageResponseDto;
 import MakeUs.Moira.controller.chat.dto.ChatMessageSendRequestDto;
 import MakeUs.Moira.controller.chat.dto.ChatMessageSendResponseDto;
 import MakeUs.Moira.controller.chat.dto.ChatRoomResponseDto;
-import MakeUs.Moira.response.ResponseService;
-import MakeUs.Moira.response.model.ListResult;
-import MakeUs.Moira.response.model.SingleResult;
 import MakeUs.Moira.service.alarm.AlarmService;
 import MakeUs.Moira.service.chat.ChatService;
+import MakeUs.Moira.util.response.ResponseService;
+import MakeUs.Moira.util.response.model.ListResult;
+import MakeUs.Moira.util.response.model.SingleResult;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -25,7 +25,7 @@ public class ChatController {
 
     private final ChatService      chatService;
     private final JwtTokenProvider jwtTokenProvider;
-    private final ResponseService  responseService;
+    private final ResponseService responseService;
     private final AlarmService     alarmService;
     private final Logger           logger = LoggerFactory.getLogger(this.getClass());
 

@@ -1,18 +1,21 @@
 package MakeUs.Moira.service.myPage;
 
-import MakeUs.Moira.advice.exception.CustomException;
-import MakeUs.Moira.advice.exception.ErrorCode;
-
 import MakeUs.Moira.controller.myPage.dto.*;
 import MakeUs.Moira.domain.AuditorEntity;
 import MakeUs.Moira.domain.project.Project;
-import MakeUs.Moira.domain.project.ProjectLike;
-import MakeUs.Moira.domain.project.projectApply.ProjectApply;
-import MakeUs.Moira.domain.project.projectApply.ProjectApplyRepo;
+import MakeUs.Moira.domain.projectApply.ProjectApply;
+import MakeUs.Moira.domain.projectApply.ProjectApplyRepo;
+import MakeUs.Moira.domain.projectLike.ProjectLike;
 import MakeUs.Moira.domain.user.*;
+import MakeUs.Moira.domain.userHistory.UserHistory;
+import MakeUs.Moira.domain.userHistory.UserHistoryRepo;
 import MakeUs.Moira.domain.userPool.UserPool;
-import MakeUs.Moira.domain.userPool.UserPoolLike;
 import MakeUs.Moira.domain.userPool.UserPoolRepo;
+import MakeUs.Moira.domain.userPoolLike.UserPoolLike;
+import MakeUs.Moira.domain.userProject.UserProject;
+import MakeUs.Moira.domain.userProject.UserProjectRoleType;
+import MakeUs.Moira.exception.CustomException;
+import MakeUs.Moira.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +30,7 @@ import java.util.stream.Collectors;
 public class MyPageService {
 
     private final UserRepo         userRepo;
-    private final UserHistoryRepo  userHistoryRepo;
+    private final UserHistoryRepo userHistoryRepo;
     private final ProjectApplyRepo projectApplyRepo;
     private final UserPoolRepo     userPoolRepo;
 

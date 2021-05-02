@@ -3,9 +3,9 @@ package MakeUs.Moira.controller.report;
 
 import MakeUs.Moira.config.security.JwtTokenProvider;
 import MakeUs.Moira.controller.report.dto.ReportRequestDTO;
-import MakeUs.Moira.response.ResponseService;
-import MakeUs.Moira.response.model.CommonResult;
 import MakeUs.Moira.service.report.ReportService;
+import MakeUs.Moira.util.response.ResponseService;
+import MakeUs.Moira.util.response.model.CommonResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;

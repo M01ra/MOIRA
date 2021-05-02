@@ -4,6 +4,7 @@ import MakeUs.Moira.controller.userPool.dto.UserPoolOnOffResponseDto;
 import MakeUs.Moira.domain.AuditorEntity;
 
 import MakeUs.Moira.domain.user.User;
+import MakeUs.Moira.domain.userPoolOffer.UserPoolOffer;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

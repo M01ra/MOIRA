@@ -6,10 +6,10 @@ import MakeUs.Moira.controller.userPortfolio.userSchool.dto.UserSchoolAddRequest
 import MakeUs.Moira.controller.userPortfolio.userSchool.dto.UserSchoolResponseDto;
 import MakeUs.Moira.controller.userPortfolio.userSchool.dto.MajorInfoResponseDto;
 import MakeUs.Moira.controller.userPortfolio.userSchool.dto.SchoolInfoResponseDto;
-import MakeUs.Moira.response.ResponseService;
-import MakeUs.Moira.response.model.CommonResult;
-import MakeUs.Moira.response.model.ListResult;
 import MakeUs.Moira.service.userPortfolio.UserSchoolService;
+import MakeUs.Moira.util.response.ResponseService;
+import MakeUs.Moira.util.response.model.CommonResult;
+import MakeUs.Moira.util.response.model.ListResult;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -27,7 +27,7 @@ public class UserSchoolController {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final UserSchoolService userSchoolService;
-    private final ResponseService   responseService;
+    private final ResponseService responseService;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @ApiImplicitParams({
@@ -109,7 +109,7 @@ public class UserSchoolController {
     )
     @DeleteMapping(value = "/mypage/edit/school/{userSchoolId}")
     public CommonResult deleteUserSchool(@RequestHeader(value = "X-AUTH-TOKEN") String token,
-                                        @PathVariable Long userSchoolId)
+                                         @PathVariable Long userSchoolId)
     {
         // 권한 설정은 시큐리티에서 하자
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(token));

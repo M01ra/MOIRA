@@ -4,12 +4,10 @@ package MakeUs.Moira.controller.userPortfolio.userCareer;
 import MakeUs.Moira.config.security.JwtTokenProvider;
 import MakeUs.Moira.controller.userPortfolio.userCareer.dto.UserCareerAddRequestDto;
 import MakeUs.Moira.controller.userPortfolio.userCareer.dto.UserCareerResponseDto;
-import MakeUs.Moira.controller.userPortfolio.userSchool.dto.UserSchoolAddRequestDto;
-import MakeUs.Moira.controller.userPortfolio.userSchool.dto.UserSchoolResponseDto;
-import MakeUs.Moira.response.ResponseService;
-import MakeUs.Moira.response.model.CommonResult;
-import MakeUs.Moira.response.model.ListResult;
 import MakeUs.Moira.service.userPortfolio.UserCareerService;
+import MakeUs.Moira.util.response.ResponseService;
+import MakeUs.Moira.util.response.model.CommonResult;
+import MakeUs.Moira.util.response.model.ListResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -30,7 +28,7 @@ public class UserCareerController {
 
     private final UserCareerService userCareerService;
     private final JwtTokenProvider  jwtTokenProvider;
-    private final ResponseService   responseService;
+    private final ResponseService responseService;
     private final Logger            logger = LoggerFactory.getLogger(this.getClass());
 
     @ApiImplicitParams({

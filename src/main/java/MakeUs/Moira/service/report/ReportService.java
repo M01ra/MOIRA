@@ -1,19 +1,19 @@
 package MakeUs.Moira.service.report;
 
-import MakeUs.Moira.advice.exception.CustomException;
-import MakeUs.Moira.advice.exception.ErrorCode;
 import MakeUs.Moira.controller.report.dto.ReportRequestDTO;
 import MakeUs.Moira.domain.chat.ChatRoomRepo;
 import MakeUs.Moira.domain.project.Project;
 import MakeUs.Moira.domain.project.ProjectRepo;
-import MakeUs.Moira.domain.project.projectDetail.ProjectComment;
-import MakeUs.Moira.domain.project.projectDetail.ProjectCommentRepo;
+import MakeUs.Moira.domain.projectComment.ProjectComment;
+import MakeUs.Moira.domain.projectComment.ProjectCommentRepo;
 import MakeUs.Moira.domain.report.Report;
 import MakeUs.Moira.domain.report.ReportRepo;
 import MakeUs.Moira.domain.report.ReportStatus;
-import MakeUs.Moira.domain.user.UserHistory;
-import MakeUs.Moira.domain.user.UserHistoryRepo;
-import MakeUs.Moira.domain.user.UserProjectRoleType;
+import MakeUs.Moira.domain.userHistory.UserHistory;
+import MakeUs.Moira.domain.userHistory.UserHistoryRepo;
+import MakeUs.Moira.domain.userProject.UserProjectRoleType;
+import MakeUs.Moira.exception.CustomException;
+import MakeUs.Moira.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,7 +52,7 @@ public class ReportService {
 
             case COMMENT:
                 ProjectComment projectComment = projectCommentRepo.findById(reportRequestDTO.getTargetId())
-                            .orElseThrow(() -> new CustomException(ErrorCode.INVALID_COMMENT));
+                                                                  .orElseThrow(() -> new CustomException(ErrorCode.INVALID_COMMENT));
                 targetUserId = projectComment.getWriter().getId();
                 if(targetUserId.equals(userId)){
                     throw new CustomException(ErrorCode.UNAUTHORIZED_REPORT_COMMENT);

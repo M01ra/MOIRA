@@ -36,15 +36,11 @@ public class ProjectDetail {
     @Enumerated(EnumType.STRING)
     private ProjectDuration projectDuration;
 
-    @Enumerated(EnumType.STRING)
-    private ProjectLocalType projectLocalType;
-
     @Builder
-    public ProjectDetail(Project project, String projectContent, ProjectDuration projectDuration, ProjectLocalType projectLocalType) {
+    public ProjectDetail(Project project, String projectContent, ProjectDuration projectDuration) {
         this.project = project;
         this.projectContent = projectContent;
         this.projectDuration = projectDuration;
-        this.projectLocalType = projectLocalType;
     }
 
     public void addProjectComment(ProjectComment projectComment){

@@ -1,6 +1,6 @@
 package MakeUs.Moira.controller.projectApply.dto;
 
-import MakeUs.Moira.domain.project.projectApply.ProjectApplyStatus;
+import MakeUs.Moira.domain.projectApply.ProjectApplyStatus;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;

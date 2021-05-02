@@ -1,16 +1,18 @@
 package MakeUs.Moira.service.projectApply;
 
-import MakeUs.Moira.advice.exception.CustomException;
-import MakeUs.Moira.advice.exception.ErrorCode;
 import MakeUs.Moira.controller.projectApply.dto.ProjectApplicantsResponseDTO;
 import MakeUs.Moira.controller.projectApply.dto.ProjectApplyRequestDTO;
 import MakeUs.Moira.controller.projectApply.dto.ProjectApplyResponseDTO;
 import MakeUs.Moira.controller.myPage.dto.HashtagResponseDto;
 import MakeUs.Moira.domain.project.Project;
 import MakeUs.Moira.domain.project.ProjectRepo;
-import MakeUs.Moira.domain.project.projectApply.*;
-import MakeUs.Moira.domain.project.projectDetail.ProjectDetail;
+import MakeUs.Moira.domain.projectApply.ProjectApply;
+import MakeUs.Moira.domain.projectApply.ProjectApplyRepo;
+import MakeUs.Moira.domain.projectApply.ProjectApplyStatus;
+import MakeUs.Moira.domain.projectDetail.ProjectDetail;
 import MakeUs.Moira.domain.user.*;
+import MakeUs.Moira.domain.userHistory.UserHistory;
+import MakeUs.Moira.domain.userHistory.UserHistoryRepo;
 import MakeUs.Moira.domain.userPortfolio.UserPortfolioType;
 import MakeUs.Moira.domain.userPortfolio.userAward.UserAward;
 import MakeUs.Moira.domain.userPortfolio.userAward.UserAwardRepo;
@@ -28,6 +30,12 @@ import MakeUs.Moira.controller.userPortfolio.userLink.dto.UserLinkResponseDto;
 import MakeUs.Moira.controller.userPortfolio.userSchool.dto.UserSchoolResponseDto;
 import MakeUs.Moira.domain.userPortfolio.userSchool.UserSchoolRepo;
 import MakeUs.Moira.domain.alarm.AlarmType;
+import MakeUs.Moira.domain.userProject.UserProject;
+import MakeUs.Moira.domain.userProject.UserProjectRepo;
+import MakeUs.Moira.domain.userProject.UserProjectRoleType;
+import MakeUs.Moira.domain.userProject.UserProjectStatus;
+import MakeUs.Moira.exception.CustomException;
+import MakeUs.Moira.exception.ErrorCode;
 import MakeUs.Moira.service.alarm.AlarmService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -45,8 +53,8 @@ import java.util.stream.Collectors;
 public class ProjectApplyService {
 
     private final UserRepo         userRepo;
-    private final UserHistoryRepo  userHistoryRepo;
-    private final UserProjectRepo  userProjectRepo;
+    private final UserHistoryRepo userHistoryRepo;
+    private final UserProjectRepo userProjectRepo;
     private final ProjectRepo      projectRepo;
     private final ProjectApplyRepo projectApplyRepo;
     private final UserSchoolRepo   userSchoolRepo;
@@ -81,9 +89,6 @@ public class ProjectApplyService {
                                                       .projectDetail(projectEntity.getProjectDetail())
                                                       .build();
         projectApplyRepo.save(projectApplyEntity);
-
-        // 선택 사항 추가
-        addOptionalApplyInfo(projectApplyRequestDTO, userEntity, projectApplyEntity);
 
         // Project에 ProjectApply 추가
         projectEntity.getProjectDetail()
@@ -127,31 +132,12 @@ public class ProjectApplyService {
             }
         }
 
-        // 해시태그
-        List<HashtagResponseDto> hashtagResponseDtoList = projectEntity.getProjectHashtagList()
-                                                                       .stream()
-                                                                       .map(HashtagResponseDto::new)
-                                                                       .collect(Collectors.toList());
-
-        // 포트폴리오
-        List<UserSchoolResponseDto> userSchoolResponseDtoList = new ArrayList<>();
-        List<UserCareerResponseDto> userCareerResponseDtoList = new ArrayList<>();
-        List<UserLicenseResponseDto> userLicenseResponseDtoList = new ArrayList<>();
-        List<UserAwardResponseDto> userAwardResponseDtoList = new ArrayList<>();
-        List<UserLinkResponseDto> userLinkResponseDtoList = new ArrayList<>();
-        setUserPortfolio(projectApplyEntity, userSchoolResponseDtoList, userCareerResponseDtoList, userLicenseResponseDtoList, userAwardResponseDtoList, userLinkResponseDtoList);
 
         return ProjectApplyResponseDTO.builder()
                                       .userId(userEntity.getId())
                                       .nickname(userEntity.getNickname())
                                       .imageUrl(userEntity.getProfileImage())
                                       .shortIntroduction(userEntity.getShortIntroduction())
-                                      .userSchoolResponseDtoList(userSchoolResponseDtoList)
-                                      .userCareerResponseDtoList(userCareerResponseDtoList)
-                                      .userLicenseResponseDtoList(userLicenseResponseDtoList)
-                                      .userAwardResponseDtoList(userAwardResponseDtoList)
-                                      .userLinkResponseDtoList(userLinkResponseDtoList)
-                                      .hashtagResponseDtoList(hashtagResponseDtoList)
                                       .build();
     }
 
@@ -198,7 +184,7 @@ public class ProjectApplyService {
                 if (!isExistUserProject(projectApplyEntity.getApplicant().getId(), projectEntity.getId())) {
                     UserProject userProjectEntity = UserProject.builder()
                                                                .project(projectEntity)
-                                                               .userProjectStatus(UserProjectStatus.PROGRESS)
+                                                               .userProjectStatus(UserProjectStatus.PROGRESSING)
                                                                .userHistory(projectApplyEntity.getApplicant().getUserHistory())
                                                                .roleType(UserProjectRoleType.MEMBER)
                                                                .userPosition(projectApplyEntity.getUserPosition())
@@ -255,7 +241,7 @@ public class ProjectApplyService {
                 if (!isExistUserProject(userHistoryEntity.getId(), projectEntity.getId())) {
                     UserProject userProjectEntity = UserProject.builder()
                                                                .project(projectEntity)
-                                                               .userProjectStatus(UserProjectStatus.PROGRESS)
+                                                               .userProjectStatus(UserProjectStatus.PROGRESSING)
                                                                .userHistory(userHistoryEntity)
                                                                .roleType(UserProjectRoleType.MEMBER)
                                                                .userPosition(projectApplyEntity.getUserPosition())
@@ -358,78 +344,6 @@ public class ProjectApplyService {
                                                                              .build()
                             )
                             .collect(Collectors.toList());
-    }
-
-
-    public void addOptionalApplyInfo(ProjectApplyRequestDTO projectApplyRequestDTO,
-                                     User userEntity,
-                                     ProjectApply projectApplyEntity)
-    {
-        if(projectApplyRequestDTO.getUserPortfolioTypeList() != null) {
-            for (UserPortfolioType userPortfolioType : projectApplyRequestDTO.getUserPortfolioTypeList()) {
-                switch (userPortfolioType) {
-                    case SCHOOL:
-                        for (UserSchool userSchool : userEntity.getUserPortfolio()
-                                                               .getUserSchoolList()) {
-                            projectApplyEntity.addOptionalApplyInfo(
-                                    OptionalApplyInfo.builder()
-                                                     .userPortfolioType(UserPortfolioType.SCHOOL)
-                                                     .userSelectedPortfolioId(userSchool.getId())
-                                                     .projectApply(projectApplyEntity)
-                                                     .build()
-                            );
-                        }
-                        break;
-                    case CAREER:
-                        for (UserCareer userCareer : userEntity.getUserPortfolio()
-                                                               .getUserCareerList()) {
-                            projectApplyEntity.addOptionalApplyInfo(
-                                    OptionalApplyInfo.builder()
-                                                     .userPortfolioType(UserPortfolioType.CAREER)
-                                                     .userSelectedPortfolioId(userCareer.getId())
-                                                     .projectApply(projectApplyEntity)
-                                                     .build()
-                            );
-                        }
-                        break;
-                    case LICENSE:
-                        for (UserLicense userLicense : userEntity.getUserPortfolio()
-                                                                 .getUserLicenseList()) {
-                            projectApplyEntity.addOptionalApplyInfo(
-                                    OptionalApplyInfo.builder()
-                                                     .userPortfolioType(UserPortfolioType.LICENSE)
-                                                     .userSelectedPortfolioId(userLicense.getId())
-                                                     .projectApply(projectApplyEntity)
-                                                     .build()
-                            );
-                        }
-                        break;
-                    case AWARD:
-                        for (UserAward userAward : userEntity.getUserPortfolio()
-                                                             .getUserAwardList()) {
-                            projectApplyEntity.addOptionalApplyInfo(
-                                    OptionalApplyInfo.builder()
-                                                     .userPortfolioType(UserPortfolioType.AWARD)
-                                                     .userSelectedPortfolioId(userAward.getId())
-                                                     .projectApply(projectApplyEntity)
-                                                     .build()
-                            );
-                        }
-                        break;
-                    case LINK:
-                        for (UserLink userLink : userEntity.getUserPortfolio()
-                                                           .getUserLinkList()) {
-                            projectApplyEntity.addOptionalApplyInfo(
-                                    OptionalApplyInfo.builder()
-                                                     .userPortfolioType(UserPortfolioType.LINK)
-                                                     .userSelectedPortfolioId(userLink.getId())
-                                                     .projectApply(projectApplyEntity)
-                                                     .build()
-                            );
-                        }
-                }
-            }
-        }
     }
 
 
@@ -565,46 +479,6 @@ public class ProjectApplyService {
         if (actualStatus != expectedStatus) {
             throw new CustomException(ErrorCode.INVALID_PROJECT_APPLY_STATUS_CHANGE);
         }
-    }
-
-
-    private void setUserPortfolio(ProjectApply projectApplyEntity,
-                                  List<UserSchoolResponseDto> userSchoolResponseDtoList,
-                                  List<UserCareerResponseDto> userCareerResponseDtoList,
-                                  List<UserLicenseResponseDto> userLicenseResponseDtoList,
-                                  List<UserAwardResponseDto> userAwardResponseDtoList,
-                                  List<UserLinkResponseDto> userLinkResponseDtoList)
-    {
-        projectApplyEntity.getOptionalApplyInfoList()
-                          .forEach(optionalApplyInfo -> {
-                              switch (optionalApplyInfo.getUserPortfolioType()) {
-                                  case SCHOOL:
-                                      userSchoolResponseDtoList.add(
-                                              new UserSchoolResponseDto(getValidUserSchool(optionalApplyInfo.getUserSelectedPortfolioId()))
-                                      );
-                                      break;
-                                  case CAREER:
-                                      userCareerResponseDtoList.add(
-                                              new UserCareerResponseDto(getValidUserCareer(optionalApplyInfo.getUserSelectedPortfolioId()))
-                                      );
-                                      break;
-                                  case LICENSE:
-                                      userLicenseResponseDtoList.add(
-                                              new UserLicenseResponseDto(getValidUserLicense(optionalApplyInfo.getUserSelectedPortfolioId()))
-                                      );
-                                      break;
-                                  case AWARD:
-                                      userAwardResponseDtoList.add(
-                                              new UserAwardResponseDto(getValidUserAward(optionalApplyInfo.getUserSelectedPortfolioId()))
-                                      );
-                                      break;
-                                  case LINK:
-                                      userLinkResponseDtoList.add(
-                                              new UserLinkResponseDto(getValidUserLink(optionalApplyInfo.getUserSelectedPortfolioId()))
-                                      );
-                                      break;
-                              }
-                          });
     }
 
 

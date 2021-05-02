@@ -1,7 +1,6 @@
 package MakeUs.Moira.controller.project.dto;
 
-import MakeUs.Moira.domain.project.projectDetail.ProjectDuration;
-import MakeUs.Moira.domain.project.projectDetail.ProjectLocalType;
+import MakeUs.Moira.domain.projectDetail.ProjectDuration;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
@@ -31,8 +30,6 @@ public class ProjectResponseDTO {
     private int likeCount;
     @ApiModelProperty(value = "기간", example = "한달_미만")
     private ProjectDuration duration;
-    @ApiModelProperty(value = "지역", example = "서울_인천_경기")
-    private ProjectLocalType location;
     @ApiModelProperty(value = "포지션 리스트")
     private List<ProjectPositionCategoryDTO> positionCategoryList;
     @ApiModelProperty(value = "생성 시간", example = "방금전")

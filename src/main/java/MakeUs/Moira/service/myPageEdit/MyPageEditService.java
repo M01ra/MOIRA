@@ -1,13 +1,16 @@
 package MakeUs.Moira.service.myPageEdit;
 
-import MakeUs.Moira.advice.exception.CustomException;
-import MakeUs.Moira.advice.exception.ErrorCode;
 import MakeUs.Moira.controller.myPageEdit.dto.*;
 import MakeUs.Moira.domain.hashtag.HashtagRepo;
 import MakeUs.Moira.domain.position.PositionRepo;
 import MakeUs.Moira.domain.position.UserPosition;
 import MakeUs.Moira.domain.user.*;
+import MakeUs.Moira.domain.userHashtag.UserHashtag;
+import MakeUs.Moira.domain.userHashtag.UserHashtagRepo;
+import MakeUs.Moira.domain.userHistory.UserHistory;
 import MakeUs.Moira.domain.userPortfolio.UserPortfolio;
+import MakeUs.Moira.exception.CustomException;
+import MakeUs.Moira.exception.ErrorCode;
 import MakeUs.Moira.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

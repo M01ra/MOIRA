@@ -1,6 +1,6 @@
 package MakeUs.Moira.domain.inquiry;
 
-import MakeUs.Moira.domain.user.UserHistory;
+import MakeUs.Moira.domain.userHistory.UserHistory;
 
 import javax.persistence.*;
 

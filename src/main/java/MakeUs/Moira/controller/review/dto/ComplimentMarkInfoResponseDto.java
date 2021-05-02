@@ -1,4 +1,4 @@
-package MakeUs.Moira.controller.complimentMark.dto;
+package MakeUs.Moira.controller.review.dto;
 
 import MakeUs.Moira.domain.complimentMark.ComplimentMarkInfo;
 import lombok.Getter;

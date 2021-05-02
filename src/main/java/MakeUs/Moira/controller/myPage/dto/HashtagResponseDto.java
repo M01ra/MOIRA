@@ -1,7 +1,7 @@
 package MakeUs.Moira.controller.myPage.dto;
 
-import MakeUs.Moira.domain.project.ProjectHashtag;
-import MakeUs.Moira.domain.user.UserHashtag;
+import MakeUs.Moira.domain.projectHashtag.ProjectHashtag;
+import MakeUs.Moira.domain.userHashtag.UserHashtag;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;

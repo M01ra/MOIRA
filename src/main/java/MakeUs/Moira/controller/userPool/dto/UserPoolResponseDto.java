@@ -3,7 +3,7 @@ package MakeUs.Moira.controller.userPool.dto;
 
 import MakeUs.Moira.domain.user.User;
 import MakeUs.Moira.domain.userPool.UserPool;
-import MakeUs.Moira.domain.userPool.UserPoolLike;
+import MakeUs.Moira.domain.userPoolLike.UserPoolLike;
 import lombok.Getter;
 import lombok.ToString;
 

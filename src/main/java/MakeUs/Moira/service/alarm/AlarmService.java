@@ -3,17 +3,17 @@ package MakeUs.Moira.service.alarm;
 import MakeUs.Moira.domain.alarm.AlarmHistory;
 import MakeUs.Moira.domain.alarm.AlarmHistoryRepo;
 
-import MakeUs.Moira.advice.exception.CustomException;
-import MakeUs.Moira.advice.exception.ErrorCode;
 import MakeUs.Moira.controller.chat.dto.ChatMessageSendResponseDto;
 import MakeUs.Moira.controller.review.dto.UserReviewAddResponseDto;
 import MakeUs.Moira.domain.chat.ChatRoom;
 import MakeUs.Moira.domain.chat.ChatRoomRepo;
 import MakeUs.Moira.domain.user.User;
-import MakeUs.Moira.domain.user.UserProject;
-import MakeUs.Moira.domain.user.UserProjectRepo;
 import MakeUs.Moira.domain.user.UserRepo;
 import MakeUs.Moira.domain.alarm.AlarmType;
+import MakeUs.Moira.domain.userProject.UserProject;
+import MakeUs.Moira.domain.userProject.UserProjectRepo;
+import MakeUs.Moira.exception.CustomException;
+import MakeUs.Moira.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +26,7 @@ public class AlarmService {
     private final UserRepo         userRepo;
     private final ChatRoomRepo     chatRoomRepo;
     private final AlarmHistoryRepo alarmHistoryRepo;
-    private final UserProjectRepo  userProjectRepo;
+    private final UserProjectRepo userProjectRepo;
 
 
     @Transactional

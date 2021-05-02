@@ -1,4 +1,4 @@
-package MakeUs.Moira.controller.home.dto;
+package MakeUs.Moira.controller.alarm.dto;
 
 import MakeUs.Moira.domain.alarm.AlarmType;
 import MakeUs.Moira.domain.chat.ReadStatus;

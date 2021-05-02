@@ -30,22 +30,15 @@ public class ProjectApply extends AuditorEntity {
     @ManyToOne
     private UserPosition userPosition;
 
-    @OneToMany(mappedBy = "projectApply", cascade = CascadeType.ALL)
-    private List<OptionalApplyInfo> optionalApplyInfoList = new ArrayList<>();
-
     @Enumerated(EnumType.STRING)
     private ProjectApplyStatus projectApplyStatus;
 
     @Builder
-    public ProjectApply(ProjectDetail projectDetail, User applicant, UserPosition userPosition, List<OptionalApplyInfo> optionalApplyInfoList, ProjectApplyStatus projectApplyStatus) {
+    public ProjectApply(ProjectDetail projectDetail, User applicant, UserPosition userPosition, ProjectApplyStatus projectApplyStatus) {
         this.projectDetail = projectDetail;
         this.applicant = applicant;
         this.userPosition = userPosition;
         this.projectApplyStatus = projectApplyStatus;
-    }
-
-    public void addOptionalApplyInfo(OptionalApplyInfo optionalApplyInfo){
-        this.optionalApplyInfoList.add(optionalApplyInfo);
     }
 
     public void updateProjectApplyStatus(ProjectApplyStatus projectApplyStatus){

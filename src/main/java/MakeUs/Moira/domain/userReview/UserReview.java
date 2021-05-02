@@ -4,7 +4,7 @@ import MakeUs.Moira.controller.userPool.dto.UserPoolDetailReviewDetailResponseDt
 import MakeUs.Moira.controller.review.dto.UserReviewDetailResponseDto;
 import MakeUs.Moira.domain.AuditorEntity;
 import MakeUs.Moira.domain.user.User;
-import MakeUs.Moira.domain.user.UserProject;
+import MakeUs.Moira.domain.userProject.UserProject;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -7,12 +7,12 @@ import MakeUs.Moira.controller.myPage.dto.HashtagResponseDto;
 import MakeUs.Moira.controller.signup.dto.PositionCategoryResponseDto;
 import MakeUs.Moira.controller.signup.dto.PositionResponseDto;
 import MakeUs.Moira.controller.signup.dto.SignupResponseDto;
-import MakeUs.Moira.response.ResponseService;
-import MakeUs.Moira.response.model.CommonResult;
-import MakeUs.Moira.response.model.ListResult;
 import MakeUs.Moira.service.hashtag.HashTagService;
 import MakeUs.Moira.service.position.PositionService;
 import MakeUs.Moira.service.user.UserService;
+import MakeUs.Moira.util.response.ResponseService;
+import MakeUs.Moira.util.response.model.CommonResult;
+import MakeUs.Moira.util.response.model.ListResult;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -34,7 +34,7 @@ public class SignupController {
     private final UserService      userService;
     private final PositionService  positionService;
     private final HashTagService   hashTagService;
-    private final ResponseService  responseService;
+    private final ResponseService responseService;
     private final JwtTokenProvider jwtTokenProvider;
     private final Logger           logger = LoggerFactory.getLogger(this.getClass());
 

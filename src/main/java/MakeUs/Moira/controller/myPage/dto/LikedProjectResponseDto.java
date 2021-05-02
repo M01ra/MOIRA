@@ -1,11 +1,9 @@
 package MakeUs.Moira.controller.myPage.dto;
 
-
-
-import MakeUs.Moira.advice.exception.CustomException;
-import MakeUs.Moira.advice.exception.ErrorCode;
 import MakeUs.Moira.domain.project.Project;
-import MakeUs.Moira.domain.user.UserProjectRoleType;
+import MakeUs.Moira.domain.userProject.UserProjectRoleType;
+import MakeUs.Moira.exception.CustomException;
+import MakeUs.Moira.exception.ErrorCode;
 import lombok.Getter;
 import lombok.ToString;
 

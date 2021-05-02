@@ -1,7 +1,6 @@
 package MakeUs.Moira.domain.report;
 
-import MakeUs.Moira.domain.user.User;
-import MakeUs.Moira.domain.user.UserHistory;
+import MakeUs.Moira.domain.userHistory.UserHistory;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

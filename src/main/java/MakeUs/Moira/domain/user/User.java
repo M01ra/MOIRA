@@ -4,6 +4,7 @@ import MakeUs.Moira.controller.myPageEdit.dto.MyPageEditIntroductionResponseDto;
 import MakeUs.Moira.controller.myPageEdit.dto.MyPageEditNicknameResponseDto;
 import MakeUs.Moira.controller.myPageEdit.dto.MyPageEditPositionResponseDto;
 import MakeUs.Moira.domain.position.UserPosition;
+import MakeUs.Moira.domain.userHistory.UserHistory;
 import MakeUs.Moira.domain.userPool.UserPool;
 import MakeUs.Moira.domain.userPortfolio.UserPortfolio;
 import com.fasterxml.jackson.annotation.JsonProperty;

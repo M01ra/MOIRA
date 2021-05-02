@@ -4,10 +4,10 @@ package MakeUs.Moira.controller.myPageEdit;
 import MakeUs.Moira.config.security.JwtTokenProvider;
 import MakeUs.Moira.controller.myPageEdit.dto.*;
 
-import MakeUs.Moira.response.ResponseService;
-import MakeUs.Moira.response.model.ListResult;
-import MakeUs.Moira.response.model.SingleResult;
 import MakeUs.Moira.service.myPageEdit.MyPageEditService;
+import MakeUs.Moira.util.response.ResponseService;
+import MakeUs.Moira.util.response.model.ListResult;
+import MakeUs.Moira.util.response.model.SingleResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -25,7 +25,7 @@ import java.util.List;
 @RestController
 public class MyPageEditController {
 
-    private final ResponseService   responseService;
+    private final ResponseService responseService;
     private final JwtTokenProvider  jwtTokenProvider;
     private final MyPageEditService myPageEditService;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());

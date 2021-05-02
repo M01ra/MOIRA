@@ -2,7 +2,6 @@ package MakeUs.Moira.domain.userHistory;
 
 import MakeUs.Moira.controller.myPage.dto.HashtagResponseDto;
 import MakeUs.Moira.controller.myPageEdit.dto.MyPageEditHashtagResponseDto;
-import MakeUs.Moira.domain.club.ClubLike;
 import MakeUs.Moira.domain.inquiry.Inquiry;
 import MakeUs.Moira.domain.projectLike.ProjectLike;
 import MakeUs.Moira.domain.report.Report;
@@ -43,9 +42,6 @@ public class UserHistory {
     private List<UserPoolLike> userPoolLikes = new ArrayList<>();
 
     @OneToMany(mappedBy = "userHistory")
-    private List<ClubLike> clubLikes = new ArrayList<>();
-
-    @OneToMany(mappedBy = "userHistory")
     private List<Report> reports = new ArrayList<>();
 
     @OneToMany(mappedBy = "userHistory")
@@ -80,7 +76,10 @@ public class UserHistory {
         return MyPageEditHashtagResponseDto.builder()
                                            .userId(id)
                                            .hashtagList(userHashtags.stream()
-                                                                    .map(HashtagResponseDto::new)
+                                                                    .map(userHashtag -> HashtagResponseDto.builder()
+                                                                                                          .hashtagId(userHashtag.getHashtag().getId())
+                                                                                                          .hashtagName(userHashtag.getHashtag().getHashtagName())
+                                                                                                          .build())
                                                                     .collect(Collectors.toList()))
                                            .build();
     }

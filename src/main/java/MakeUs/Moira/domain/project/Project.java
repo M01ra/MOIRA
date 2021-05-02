@@ -1,14 +1,15 @@
 package MakeUs.Moira.domain.project;
 
 import MakeUs.Moira.domain.AuditorEntity;
-import MakeUs.Moira.domain.project.projectDetail.ProjectDetail;
-import MakeUs.Moira.domain.user.UserProject;
+import MakeUs.Moira.domain.projectDetail.ProjectDetail;
+import MakeUs.Moira.domain.projectHashtag.ProjectHashtag;
+import MakeUs.Moira.domain.projectImage.ProjectImage;
+import MakeUs.Moira.domain.userProject.UserProject;
 import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Entity
 @Getter

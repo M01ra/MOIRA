@@ -1,13 +1,10 @@
 package MakeUs.Moira.controller.myPage.dto;
 
-
-import MakeUs.Moira.domain.project.Project;
-import MakeUs.Moira.domain.project.projectApply.ProjectApply;
-import MakeUs.Moira.domain.project.projectDetail.ProjectDetail;
+import MakeUs.Moira.domain.projectApply.ProjectApply;
+import MakeUs.Moira.domain.projectDetail.ProjectDetail;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 

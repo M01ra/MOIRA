@@ -1,8 +1,7 @@
 package MakeUs.Moira.service.review;
 
+import MakeUs.Moira.controller.review.dto.ComplimentMarkInfoResponseDto;
 import MakeUs.Moira.controller.userPool.dto.ComplimentMarkWithCountDto;
-import MakeUs.Moira.advice.exception.CustomException;
-import MakeUs.Moira.advice.exception.ErrorCode;
 import MakeUs.Moira.controller.review.dto.UserReviewAddRequestDto;
 import MakeUs.Moira.controller.review.dto.UserReviewAddResponseDto;
 import MakeUs.Moira.controller.review.dto.UserReviewDetailResponseDto;
@@ -11,9 +10,14 @@ import MakeUs.Moira.domain.AuditorEntity;
 import MakeUs.Moira.domain.complimentMark.ComplimentMarkInfo;
 import MakeUs.Moira.domain.complimentMark.ComplimentMarkInfoRepo;
 import MakeUs.Moira.domain.user.*;
+import MakeUs.Moira.domain.userHistory.UserHistory;
+import MakeUs.Moira.domain.userProject.UserProject;
+import MakeUs.Moira.domain.userProject.UserProjectRepo;
 import MakeUs.Moira.domain.userReview.UserReview;
 import MakeUs.Moira.domain.userReview.UserReviewComplimentMark;
 import MakeUs.Moira.domain.userReview.UserReviewRepo;
+import MakeUs.Moira.exception.CustomException;
+import MakeUs.Moira.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +33,7 @@ import java.util.stream.Collectors;
 public class ReviewService {
 
     private final UserRepo               userRepo;
-    private final UserProjectRepo        userProjectRepo;
+    private final UserProjectRepo userProjectRepo;
     private final UserReviewRepo         userReviewRepo;
     private final ComplimentMarkInfoRepo complimentMarkInfoRepo;
 
@@ -110,5 +114,12 @@ public class ReviewService {
         } else {
             throw new CustomException(ErrorCode.INVALID_SORT);
         }
+    }
+
+    public List<ComplimentMarkInfoResponseDto> getComplimentMark() {
+        return complimentMarkInfoRepo.findAll()
+                                     .stream()
+                                     .map(ComplimentMarkInfoResponseDto::new)
+                                     .collect(Collectors.toList());
     }
 }

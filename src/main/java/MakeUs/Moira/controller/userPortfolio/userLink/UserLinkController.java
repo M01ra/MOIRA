@@ -4,10 +4,10 @@ package MakeUs.Moira.controller.userPortfolio.userLink;
 import MakeUs.Moira.config.security.JwtTokenProvider;
 import MakeUs.Moira.controller.userPortfolio.userLink.dto.UserLinkAddRequestDto;
 import MakeUs.Moira.controller.userPortfolio.userLink.dto.UserLinkResponseDto;
-import MakeUs.Moira.response.ResponseService;
-import MakeUs.Moira.response.model.CommonResult;
-import MakeUs.Moira.response.model.ListResult;
 import MakeUs.Moira.service.userPortfolio.UserLinkService;
+import MakeUs.Moira.util.response.ResponseService;
+import MakeUs.Moira.util.response.model.CommonResult;
+import MakeUs.Moira.util.response.model.ListResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -27,7 +27,7 @@ public class UserLinkController {
 
     private final UserLinkService  userLinkService;
     private final JwtTokenProvider jwtTokenProvider;
-    private final ResponseService  responseService;
+    private final ResponseService responseService;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @ApiImplicitParams({
@@ -67,7 +67,7 @@ public class UserLinkController {
     )
     @DeleteMapping(value = "/mypage/edit/link/{userLinkId}")
     public CommonResult deleteUserLink(@RequestHeader(value = "X-AUTH-TOKEN") String token,
-                                        @PathVariable Long userLinkId)
+                                       @PathVariable Long userLinkId)
     {
         // 권한 설정은 시큐리티에서 하자
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(token));

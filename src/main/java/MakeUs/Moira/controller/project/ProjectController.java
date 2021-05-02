@@ -2,11 +2,11 @@ package MakeUs.Moira.controller.project;
 
 import MakeUs.Moira.config.security.JwtTokenProvider;
 import MakeUs.Moira.controller.project.dto.*;
-import MakeUs.Moira.response.ResponseService;
-import MakeUs.Moira.response.model.CommonResult;
-import MakeUs.Moira.response.model.ListResult;
-import MakeUs.Moira.response.model.SingleResult;
 import MakeUs.Moira.service.project.ProjectService;
+import MakeUs.Moira.util.response.ResponseService;
+import MakeUs.Moira.util.response.model.CommonResult;
+import MakeUs.Moira.util.response.model.ListResult;
+import MakeUs.Moira.util.response.model.SingleResult;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

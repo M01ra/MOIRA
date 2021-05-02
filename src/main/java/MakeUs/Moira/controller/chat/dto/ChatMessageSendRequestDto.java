@@ -1,11 +1,11 @@
 package MakeUs.Moira.controller.chat.dto;
 
-import MakeUs.Moira.advice.exception.CustomException;
-import MakeUs.Moira.advice.exception.ErrorCode;
 import MakeUs.Moira.domain.chat.ChatMessage;
 import MakeUs.Moira.domain.chat.MessageType;
 import MakeUs.Moira.domain.chat.ReadStatus;
 import MakeUs.Moira.domain.user.User;
+import MakeUs.Moira.exception.CustomException;
+import MakeUs.Moira.exception.ErrorCode;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.ToString;

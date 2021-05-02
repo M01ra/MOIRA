@@ -1,8 +1,5 @@
 package MakeUs.Moira.service.userPool;
 
-
-import MakeUs.Moira.advice.exception.CustomException;
-import MakeUs.Moira.advice.exception.ErrorCode;
 import MakeUs.Moira.controller.userPool.dto.UserPoolDetailReviewDetailResponseDto;
 import MakeUs.Moira.controller.userPool.dto.*;
 
@@ -10,14 +7,17 @@ import MakeUs.Moira.domain.AuditorEntity;
 import MakeUs.Moira.domain.complimentMark.ComplimentMarkInfo;
 import MakeUs.Moira.domain.complimentMark.ComplimentMarkInfoRepo;
 import MakeUs.Moira.domain.user.*;
+import MakeUs.Moira.domain.userHistory.UserHistory;
 import MakeUs.Moira.domain.userPool.UserPool;
-import MakeUs.Moira.domain.userPool.UserPoolLike;
-import MakeUs.Moira.domain.userPool.UserPoolLikeRepo;
 import MakeUs.Moira.domain.userPool.UserPoolRepo;
+import MakeUs.Moira.domain.userPoolLike.UserPoolLike;
+import MakeUs.Moira.domain.userPoolLike.UserPoolLikeRepo;
 import MakeUs.Moira.domain.userPortfolio.UserPortfolio;
 
 import MakeUs.Moira.domain.userReview.UserReview;
 import MakeUs.Moira.domain.userReview.UserReviewRepo;
+import MakeUs.Moira.exception.CustomException;
+import MakeUs.Moira.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -35,7 +35,7 @@ public class UserPoolService {
 
     private final UserRepo               userRepo;
     private final UserPoolRepo           userPoolRepo;
-    private final UserPoolLikeRepo       userPoolLikeRepo;
+    private final UserPoolLikeRepo userPoolLikeRepo;
     private final UserReviewRepo         userReviewRepo;
     private final ComplimentMarkInfoRepo complimentMarkInfoRepo;
 

@@ -2,9 +2,9 @@ package MakeUs.Moira.controller.jwt;
 
 import MakeUs.Moira.controller.jwt.dto.LoginRequestDto;
 import MakeUs.Moira.controller.jwt.dto.LoginResponseDto;
-import MakeUs.Moira.response.ResponseService;
-import MakeUs.Moira.response.model.SingleResult;
 import MakeUs.Moira.service.jwt.JwtService;
+import MakeUs.Moira.util.response.ResponseService;
+import MakeUs.Moira.util.response.model.SingleResult;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

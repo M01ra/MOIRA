@@ -1,7 +1,5 @@
 package MakeUs.Moira.service.userPortfolio;
 
-import MakeUs.Moira.advice.exception.CustomException;
-import MakeUs.Moira.advice.exception.ErrorCode;
 import MakeUs.Moira.controller.userPortfolio.userCareer.dto.UserCareerAddRequestDto;
 import MakeUs.Moira.controller.userPortfolio.userCareer.dto.UserCareerResponseDto;
 import MakeUs.Moira.domain.user.User;
@@ -9,6 +7,8 @@ import MakeUs.Moira.domain.user.UserRepo;
 import MakeUs.Moira.domain.userPortfolio.UserPortfolio;
 import MakeUs.Moira.domain.userPortfolio.userCareer.UserCareer;
 import MakeUs.Moira.domain.userPortfolio.userCareer.UserCareerRepo;
+import MakeUs.Moira.exception.CustomException;
+import MakeUs.Moira.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

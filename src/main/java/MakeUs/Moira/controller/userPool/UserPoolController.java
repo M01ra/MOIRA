@@ -3,10 +3,10 @@ package MakeUs.Moira.controller.userPool;
 
 import MakeUs.Moira.config.security.JwtTokenProvider;
 import MakeUs.Moira.controller.userPool.dto.*;
-import MakeUs.Moira.response.ResponseService;
-import MakeUs.Moira.response.model.ListResult;
-import MakeUs.Moira.response.model.SingleResult;
 import MakeUs.Moira.service.userPool.UserPoolService;
+import MakeUs.Moira.util.response.ResponseService;
+import MakeUs.Moira.util.response.model.ListResult;
+import MakeUs.Moira.util.response.model.SingleResult;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -26,7 +26,7 @@ public class UserPoolController {
 
     private final UserPoolService  userPoolService;
     private final JwtTokenProvider jwtTokenProvider;
-    private final ResponseService  responseService;
+    private final ResponseService responseService;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @ApiImplicitParams({

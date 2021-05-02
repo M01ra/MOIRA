@@ -1,17 +1,17 @@
 package MakeUs.Moira.service.projectComment;
 
-import MakeUs.Moira.advice.exception.CustomException;
-import MakeUs.Moira.advice.exception.ErrorCode;
 import MakeUs.Moira.controller.projectComment.dto.ProjectCommentRequestDTO;
 import MakeUs.Moira.controller.projectComment.dto.ProjectCommentResponseDTO;
 import MakeUs.Moira.domain.project.Project;
 import MakeUs.Moira.domain.project.ProjectRepo;
-import MakeUs.Moira.domain.project.projectDetail.ProjectComment;
-import MakeUs.Moira.domain.project.projectDetail.ProjectCommentRepo;
-import MakeUs.Moira.domain.project.projectDetail.ProjectDetail;
+import MakeUs.Moira.domain.projectComment.ProjectComment;
+import MakeUs.Moira.domain.projectComment.ProjectCommentRepo;
+import MakeUs.Moira.domain.projectDetail.ProjectDetail;
 import MakeUs.Moira.domain.user.User;
-import MakeUs.Moira.domain.user.UserProjectRoleType;
 import MakeUs.Moira.domain.user.UserRepo;
+import MakeUs.Moira.domain.userProject.UserProjectRoleType;
+import MakeUs.Moira.exception.CustomException;
+import MakeUs.Moira.exception.ErrorCode;
 import MakeUs.Moira.service.alarm.AlarmService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -1,8 +1,8 @@
 package MakeUs.Moira.controller.exception;
 
-import MakeUs.Moira.advice.exception.CustomException;
-import MakeUs.Moira.advice.exception.ErrorCode;
-import MakeUs.Moira.response.model.CommonResult;
+import MakeUs.Moira.exception.CustomException;
+import MakeUs.Moira.exception.ErrorCode;
+import MakeUs.Moira.util.response.model.CommonResult;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

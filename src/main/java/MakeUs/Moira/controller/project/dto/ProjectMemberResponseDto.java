@@ -1,6 +1,6 @@
 package MakeUs.Moira.controller.project.dto;
 
-import MakeUs.Moira.domain.user.UserProject;
+import MakeUs.Moira.domain.userProject.UserProject;
 import lombok.Getter;
 import lombok.ToString;
 

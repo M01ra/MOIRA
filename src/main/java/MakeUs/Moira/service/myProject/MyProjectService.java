@@ -1,13 +1,18 @@
 package MakeUs.Moira.service.myProject;
 
-import MakeUs.Moira.advice.exception.CustomException;
-import MakeUs.Moira.advice.exception.ErrorCode;
 import MakeUs.Moira.controller.myProject.dto.MyProjectResponseDTO;
 import MakeUs.Moira.controller.myProject.dto.MyProjectTeammateResponseDTO;
 import MakeUs.Moira.controller.myProject.dto.MyProjectsResponseDTO;
 import MakeUs.Moira.domain.project.Project;
 import MakeUs.Moira.domain.project.ProjectRepo;
 import MakeUs.Moira.domain.user.*;
+import MakeUs.Moira.domain.userHistory.UserHistory;
+import MakeUs.Moira.domain.userHistory.UserHistoryRepo;
+import MakeUs.Moira.domain.userProject.UserProject;
+import MakeUs.Moira.domain.userProject.UserProjectRoleType;
+import MakeUs.Moira.domain.userProject.UserProjectStatus;
+import MakeUs.Moira.exception.CustomException;
+import MakeUs.Moira.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -123,7 +128,7 @@ public class MyProjectService {
     private int getMemberCount(Project projectEntity){
         Long memberCount = projectEntity.getUserProjectList()
                      .stream()
-                     .filter(myUserProject -> myUserProject.getUserProjectStatus() != UserProjectStatus.DROP)
+                     .filter(myUserProject -> myUserProject.getUserProjectStatus() != UserProjectStatus.DROPPED)
                      .count();
         return memberCount.intValue();
     }

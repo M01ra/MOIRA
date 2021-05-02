@@ -1,7 +1,5 @@
 package MakeUs.Moira.service.chat;
 
-import MakeUs.Moira.advice.exception.CustomException;
-import MakeUs.Moira.advice.exception.ErrorCode;
 import MakeUs.Moira.controller.chat.dto.ChatMessageResponseDto;
 import MakeUs.Moira.controller.chat.dto.ChatMessageSendRequestDto;
 import MakeUs.Moira.controller.chat.dto.ChatMessageSendResponseDto;
@@ -9,6 +7,8 @@ import MakeUs.Moira.controller.chat.dto.ChatRoomResponseDto;
 import MakeUs.Moira.domain.chat.*;
 import MakeUs.Moira.domain.user.User;
 import MakeUs.Moira.domain.user.UserRepo;
+import MakeUs.Moira.exception.CustomException;
+import MakeUs.Moira.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
