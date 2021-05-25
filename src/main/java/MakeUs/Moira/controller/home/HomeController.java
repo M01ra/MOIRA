@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(tags = {"1.홈"})
+@Api(tags = {"3.홈"})
 @RequiredArgsConstructor
 @RestController
 public class HomeController {

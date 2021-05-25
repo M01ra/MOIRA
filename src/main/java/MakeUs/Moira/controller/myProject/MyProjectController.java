@@ -20,9 +20,8 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 
-@Api(tags = {"3-4.나의 프로젝트(팀)"})
+@Api(tags = {"5-4.나의 프로젝트(팀)"})
 @RestController
-@RequestMapping("/myProject")
 @RequiredArgsConstructor
 public class MyProjectController {
 
@@ -35,7 +34,7 @@ public class MyProjectController {
     @ApiOperation(
             value = "팀 목록 - 나의팀 리스트 조회",
             notes = "유저가 정렬 방식(최신 순(기본 값): date, 가나다순: character)과 상태(진행중: PROGRESS, 완료: COMPLETE)를 통해 프로젝트(팀) 리스트를 조회합니다.")
-    @GetMapping
+    @GetMapping("/users/projects")
     public ListResult<MyProjectsResponseDTO> getMyProjects(
             @ApiParam(value = "정렬 방식(최신 순(기본 값): date, 가나다순: character)", allowableValues = "date, character") @RequestParam(name = "sort", required = false, defaultValue = "date") String sort,
             @ApiParam(value = "상태(진행중: PROGRESS, 완료: COMPLETE)", allowableValues = "PROGRESS, COMPLETE") @RequestParam(name = "status", required = true, defaultValue = "PROGRESS") UserProjectStatus status,
@@ -49,7 +48,7 @@ public class MyProjectController {
     @ApiOperation(
             value = "팀 목록 - 나의팀 상세 조회",
             notes = "유저의 프로젝트(팀)을 조회합니다.")
-    @GetMapping("/{projectId}")
+    @GetMapping("/users/projects/{projectId}")
     public SingleResult<MyProjectResponseDTO> getMyProject(
             @NotNull(message = "projectId에 빈 값을 넣을 수 없음") @ApiParam(value = "프로젝트(팀) ID", required = true) @PathVariable Long projectId,
             @ApiParam(value = "JWT 토큰", required = true) @RequestHeader(value = "X-AUTH-TOKEN") String token){

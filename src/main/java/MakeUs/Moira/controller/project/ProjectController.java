@@ -18,9 +18,9 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-@Api(tags = {"3-1.프로젝트(팀)"})
+@Api(tags = {"5-1.프로젝트(팀)"})
 @RestController
-@RequestMapping("/project")
+@RequestMapping("/projects")
 @RequiredArgsConstructor
 public class ProjectController {
 

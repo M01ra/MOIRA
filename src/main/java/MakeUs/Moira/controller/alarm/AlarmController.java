@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(tags = {"1.알람"})
+@Api(tags = {"4.알람"})
 @RequiredArgsConstructor
 @RestController
 public class AlarmController {
@@ -50,7 +50,7 @@ public class AlarmController {
                     "### INVITE_ANSWER\n" +
                     "- 팀장의 초대를 수락할지 거절할지 선택하여 alarmTargetId를 projectApplyId로 사용하여 /apply/{projectApplyId} 지원서의 상태를 변경을 통해 상태를 변경시킬 수 있도록 합니다."
     )
-    @GetMapping("/alarm")
+    @GetMapping("/alarms")
     public ListResult<AlarmResponseDto> getAlarm(@RequestHeader(value = "X-AUTH-TOKEN") String token,
                                                  @ApiParam(value = "페이지 Ex) page=1", required = true) @RequestParam int page)
     {
@@ -71,7 +71,7 @@ public class AlarmController {
             value = "홈화면 - 알람목록 - 특정 알람 읽음 처리",
             notes = "### 알람으로 리다이렉션이 일어날 때, 해당 알람을 읽음 처리합니다.\n"
     )
-    @PatchMapping("/alarm/{alarmId}")
+    @PatchMapping("/alarms/{alarmId}")
     public SingleResult<AlarmReadStatusUpdateResponseDto> updateReadStatus(@RequestHeader(value = "X-AUTH-TOKEN") String token,
                                                                            @ApiParam(value = "읽음 처리할 alarmId", required = true) @PathVariable Long alarmId )
     {

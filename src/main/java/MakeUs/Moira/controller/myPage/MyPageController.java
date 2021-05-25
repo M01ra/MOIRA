@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(tags = {"6-1.마이페이지"})
+@Api(tags = {"8-1.마이페이지"})
 @RequiredArgsConstructor
 @RestController
 public class MyPageController {
@@ -36,7 +36,7 @@ public class MyPageController {
             notes = "하단 네비게이션 바를 눌렀을 때, 마이페이지의 첫 화면입니다.\n" +
                     "비회원인 경우 에러가 발생합니다."
     )
-    @GetMapping(value = "/mypage")
+    @GetMapping(value = "/users/mypage")
     public SingleResult<MyPageResponseDto> getMyPage(
             @RequestHeader(value = "X-AUTH-TOKEN", required = true) String token) {
         // if (token == null) throw new CustomAuthorizationException("로그인이 필요한 기능");
@@ -59,7 +59,7 @@ public class MyPageController {
             notes = "마이페이지의 내가 작성한 글을 눌렀을 때 적용합니다.\n" +
                     "비회원인 경우 에러가 발생합니다."
     )
-    @GetMapping(value = "/mypage/written")
+    @GetMapping(value = "/users/projects/write")
     public ListResult<WrittenProjectInfoResponseDto> getWrittenPost(
             @RequestHeader(value = "X-AUTH-TOKEN", required = true) String token) {
         // 권한 설정은 시큐리티에서 하자
@@ -81,7 +81,7 @@ public class MyPageController {
             notes = "마이페이지의 지원한 글을 눌렀을 때 적용합니다.\n" +
                     "비회원인 경우 에러가 발생합니다."
     )
-    @GetMapping(value = "/mypage/applied")
+    @GetMapping(value = "/users/projects/apply")
     public ListResult<AppliedProjectInfoResponseDto> getAppliedPost(
             @RequestHeader(value = "X-AUTH-TOKEN", required = true) String token) {
         // 권한 설정은 시큐리티에서 하자
@@ -103,7 +103,7 @@ public class MyPageController {
             notes = "마이페이지의 스크랩을 눌렀을 때 적용합니다.\n" +
                     "비회원인 경우 에러가 발생합니다."
     )
-    @GetMapping(value = "/mypage/like/project")
+    @GetMapping(value = "/users/projects/like")
     public ListResult<LikedProjectResponseDto> getLikedProject(
             @RequestHeader(value = "X-AUTH-TOKEN", required = true) String token,
             @ApiParam(value = "포지션 카테고리 필터", required = true, allowableValues = "개발자, 기획자, 디자이너") @RequestParam String positionCategory,
@@ -127,7 +127,7 @@ public class MyPageController {
             notes = "마이페이지 - 스크랩을 눌렀을 때 적용합니다.\n" +
                     "비회원인 경우 에러가 발생합니다."
     )
-    @GetMapping(value = "/mypage/like/pool")
+    @GetMapping(value = "/users/userpools/like")
     public ListResult<LikedUserPoolResponseDto> getLikedUserPool(
             @RequestHeader(value = "X-AUTH-TOKEN", required = true) String token,
             @ApiParam(value = "포지션 카테고리 필터", required = true, allowableValues = "개발자, 기획자, 디자이너") @RequestParam String positionCategory,

@@ -20,7 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-@Api(tags = {"6-2.마이페이지-프로필 수정"})
+@Api(tags = {"8-2.마이페이지-프로필 수정"})
 @RequiredArgsConstructor
 @RestController
 public class MyPageEditController {
@@ -41,7 +41,7 @@ public class MyPageEditController {
             notes = "- 마이페이지 - 내 정보 수정하기의 첫 화면을 가져옵니다.\n" +
                     "- 비회원인 경우 에러가 발생합니다."
     )
-    @GetMapping(value = "/mypage/edit")
+    @GetMapping(value = "/users")
     public SingleResult<MyPageEditResponseDto> getMyPageEdit(@RequestHeader(value = "X-AUTH-TOKEN") String token) {
         // 권한 설정은 시큐리티에서 하자
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(token));
@@ -86,7 +86,7 @@ public class MyPageEditController {
             value = "마이페이지 - 내 정보 수정하기 - 프로필 - 포지션 목록",
             notes = "### 마이페이지 - 내 정보 수정하기 - 프로필 - 포지션 목록을 불러옵니다.\n"
     )
-    @GetMapping(value = "/mypage/edit/position")
+    @GetMapping(value = "/users/position")
     public ListResult<MyPageEditPositionInfoDto> getPositionList(@RequestHeader(value = "X-AUTH-TOKEN") String token)
     {
         // 권한 설정은 시큐리티에서 하자
@@ -107,7 +107,7 @@ public class MyPageEditController {
             value = "마이페이지 - 내 정보 수정하기 - 프로필 - 포지션 수정",
             notes = "### 마이페이지 - 내 정보 수정하기 - 프로필 - 포지션을 수정합니다.\n"
     )
-    @PutMapping(value = "/mypage/edit/position")
+    @PutMapping(value = "/users/position")
     public SingleResult<MyPageEditPositionResponseDto> updateMyPageEditPosition(@RequestHeader(value = "X-AUTH-TOKEN") String token,
                                                                                 @RequestBody MyPageEditPositionRequestDto myPageEditPositionRequestDto)
     {
@@ -130,7 +130,7 @@ public class MyPageEditController {
             value = "마이페이지 - 내 정보 수정하기 - 프로필 - 한 줄 소개 수정",
             notes = "### 마이페이지 - 내 정보 수정하기 - 프로필 - 한 줄 소개를 수정합니다.\n"
     )
-    @PutMapping(value = "/mypage/edit/introduction")
+    @PutMapping(value = "/users/introduction")
     public SingleResult<MyPageEditIntroductionResponseDto> updateMyPageEditIntroduction(@RequestHeader(value = "X-AUTH-TOKEN") String token,
                                                                                         @RequestBody MyPageEditIntroductionRequestDto myPageEditIntroductionRequestDto)
     {
@@ -154,7 +154,7 @@ public class MyPageEditController {
             value = "마이페이지 - 내 정보 수정하기 - 프로필 - 관심 태그 수정",
             notes = "### 마이페이지 - 내 정보 수정하기 - 프로필 - 관심 태그를 수정합니다.\n"
     )
-    @PutMapping(value = "/mypage/edit/hashtag")
+    @PutMapping(value = "/users/hashtag")
     public SingleResult<MyPageEditHashtagResponseDto> updateMyPageEditHashtag(@RequestHeader(value = "X-AUTH-TOKEN") String token,
                                                                               @RequestBody MyPageEditHashtagRequestDto myPageEditHashtagRequestDto)
     {
@@ -178,7 +178,7 @@ public class MyPageEditController {
             value = "마이페이지 - 내 정보 수정하기 - 프로필 - 이미지 수정",
             notes = "### 마이페이지 - 내 정보 수정하기 - 프로필 - 이미지를 수정합니다.\n"
     )
-    @PutMapping(value = "/mypage/edit/image")
+    @PutMapping(value = "/users/image")
     public SingleResult<String> updateMyPageEditImage(@RequestHeader(value = "X-AUTH-TOKEN") String token,
                                                       @RequestPart MultipartFile image)
     {

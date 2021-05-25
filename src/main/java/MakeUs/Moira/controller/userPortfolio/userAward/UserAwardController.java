@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-@Api(tags = {"6-3.마이페이지-프로필 수정-선택정보"})
+@Api(tags = {"8-3.마이페이지-프로필 수정-선택정보"})
 @RequiredArgsConstructor
 @RestController
 public class UserAwardController {
@@ -40,7 +40,7 @@ public class UserAwardController {
             value = "마이페이지 - 내 정보 수정하기 - 수상 추가 하기 팝업 - 등록하기",
             notes = "### 마이페이지 - 내 정보 수정하기 - 수상 추가 하기 팝업 - \"등록하기\"에 적용됩니다.\n"
     )
-    @PostMapping(value = "/mypage/edit/award")
+    @PostMapping(value = "/users/award")
     public ListResult<UserAwardResponseDto> addUserAward(@RequestHeader(value = "X-AUTH-TOKEN") String token,
                                                          @Valid @RequestBody UserAwardAddRequestDto userAwardAddRequestDto)
     {
@@ -62,7 +62,7 @@ public class UserAwardController {
             value = "마이페이지 - 내 정보 수정하기 - 수상 삭제",
             notes = "### 마이페이지 - 내 정보 수정하기 - 수상 내역을 삭제합니다.\n"
     )
-    @DeleteMapping(value = "/mypage/edit/award/{userAwardId}")
+    @DeleteMapping(value = "/users/award/{userAwardId}")
     public CommonResult deleteUserAward(@RequestHeader(value = "X-AUTH-TOKEN") String token,
                                         @PathVariable Long userAwardId)
     {

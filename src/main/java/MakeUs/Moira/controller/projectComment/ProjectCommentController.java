@@ -20,9 +20,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-@Api(tags = {"3-2.프로젝트(팀) 댓글"})
+@Api(tags = {"5-2.프로젝트(팀) 댓글"})
 @RestController
-@RequestMapping("/comment")
 @RequiredArgsConstructor
 public class ProjectCommentController {
 
@@ -34,7 +33,7 @@ public class ProjectCommentController {
     @ApiOperation(
             value = "댓글창 - 댓글 쓰기",
             notes = "프로젝트(팀)의 댓글을 추가합니다")
-    @PostMapping("/{projectId}")
+    @PostMapping("/projects/{projectId}/comments")
     public SingleResult<Long> createProjectComment(
             @Valid @RequestBody ProjectCommentRequestDTO projectCommentRequestDTO,
             @NotNull(message = "projectId에 빈 값을 넣을 수 없음") @ApiParam(value = "프로젝트(팀) ID", required = true) @PathVariable Long projectId,
@@ -49,7 +48,7 @@ public class ProjectCommentController {
     @ApiOperation(
             value = "댓글창 - 댓글 조회",
             notes = "프로젝트(팀)의 댓글을 조회합니다. 프로젝트에 생성된 모든 댓글을 최신순으로 제공합니다")
-    @GetMapping("/{projectId}")
+    @GetMapping("/projects/{projectId}/comments")
     public ListResult<ProjectCommentResponseDTO> getProjectComments(
             @NotNull(message = "projectId에 빈 값을 넣을 수 없음") @ApiParam(value = "프로젝트(팀) ID", required = true) @PathVariable Long projectId,
             @ApiParam(value = "JWT 토큰", required = true) @RequestHeader(value = "X-AUTH-TOKEN") String token){
@@ -61,7 +60,7 @@ public class ProjectCommentController {
     @ApiOperation(
             value = "댓글창 - 댓글 삭제",
             notes = "프로젝트(팀)의 댓글을 삭제합니다")
-    @DeleteMapping("/{commentId}")
+    @DeleteMapping("/projects/comments/{commentId}")
     public CommonResult deleteProjectComment(
             @NotNull(message = "commentId에 빈 값을 넣을 수 없음") @ApiParam(value = "댓글 ID", required = true) @PathVariable Long commentId,
             @ApiParam(value = "JWT 토큰", required = true) @RequestHeader(value = "X-AUTH-TOKEN") String token){

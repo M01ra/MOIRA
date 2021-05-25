@@ -29,7 +29,7 @@ public class JwtController {
             notes = "### Post의 Body로 socialProvider, AccessToken 값을 받은 후에 Jwt 토큰을 리턴\n" +
                     "### socialProvider는 kakao를 입력받습니다."
     )
-    @PostMapping(value = "/login")
+    @PostMapping(value = "/jwt")
     public SingleResult<LoginResponseDto> getToken(@Valid @ApiParam(required = true) @RequestBody LoginRequestDto loginRequestDto) {
 
         logger.info(loginRequestDto.toString());

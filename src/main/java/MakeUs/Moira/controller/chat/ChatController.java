@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(tags = {"8.채팅"})
+@Api(tags = {"9.채팅"})
 @RequiredArgsConstructor
 @RestController
 public class ChatController {

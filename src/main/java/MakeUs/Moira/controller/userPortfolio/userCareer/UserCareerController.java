@@ -21,7 +21,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 
-@Api(tags = {"6-3.마이페이지-프로필 수정-선택정보"})
+@Api(tags = {"8-3.마이페이지-프로필 수정-선택정보"})
 @RequiredArgsConstructor
 @RestController
 public class UserCareerController {
@@ -43,7 +43,7 @@ public class UserCareerController {
                     "- 등록하기를 누르지 않아도 적용됩니다.\n" +
                     "- 비회원인 경우 에러가 발생합니다."
     )
-    @PostMapping(value = "/mypage/edit/career")
+    @PostMapping(value = "/users/career")
     public ListResult<UserCareerResponseDto> addUserCareer(
             @RequestHeader(value = "X-AUTH-TOKEN") String token,
             @Valid @RequestBody UserCareerAddRequestDto userCareerAddRequestDto)
@@ -67,7 +67,7 @@ public class UserCareerController {
             value = "마이페이지 - 내 정보 수정하기 - 경력 삭제",
             notes = "### 마이페이지 - 내 정보 수정하기 - 경력 내역을 삭제합니다.\n"
     )
-    @DeleteMapping(value = "/mypage/edit/career/{userCareerId}")
+    @DeleteMapping(value = "/users/career/{userCareerId}")
     public CommonResult deleteUserCareer(@RequestHeader(value = "X-AUTH-TOKEN") String token,
                                          @PathVariable Long userCareerId)
     {

@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-@Api(tags = {"6-3.마이페이지-프로필 수정-선택정보"})
+@Api(tags = {"8-3.마이페이지-프로필 수정-선택정보"})
 @RequiredArgsConstructor
 @RestController
 public class UserLinkController {
@@ -42,7 +42,7 @@ public class UserLinkController {
                     "- 등록하기를 누르지 않아도 적용됩니다.\n" +
                     "- 비회원인 경우 에러가 발생합니다."
     )
-    @PostMapping(value = "/mypage/edit/link")
+    @PostMapping(value = "/users/link")
     public ListResult<UserLinkResponseDto> addUserLink(
             @RequestHeader(value = "X-AUTH-TOKEN") String token,
             @Valid @RequestBody UserLinkAddRequestDto userLinkAddRequestDto ) {
@@ -65,7 +65,7 @@ public class UserLinkController {
             value = "마이페이지 - 내 정보 수정하기 - 링크 삭제",
             notes = "### 마이페이지 - 내 정보 수정하기 - 링크 내역을 삭제합니다.\n"
     )
-    @DeleteMapping(value = "/mypage/edit/link/{userLinkId}")
+    @DeleteMapping(value = "/users/link/{userLinkId}")
     public CommonResult deleteUserLink(@RequestHeader(value = "X-AUTH-TOKEN") String token,
                                        @PathVariable Long userLinkId)
     {

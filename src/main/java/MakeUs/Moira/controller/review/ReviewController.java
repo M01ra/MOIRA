@@ -22,7 +22,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 
-@Api(tags = {"5.유저 리뷰"})
+@Api(tags = {"7.유저 리뷰"})
 @RequiredArgsConstructor
 @RestController
 public class ReviewController {
@@ -46,7 +46,7 @@ public class ReviewController {
                     "### 완료하기를 누르면 적용됩니다.\n" +
                     "### 비회원인 경우 에러가 발생합니다."
     )
-    @PostMapping(value = "/review")
+    @PostMapping(value = "/reviews")
     public SingleResult<UserReviewAddResponseDto> addUserReview(
             @RequestHeader(value = "X-AUTH-TOKEN") String token,
             @Valid @RequestBody UserReviewAddRequestDto userReviewAddRequestDto)
@@ -72,7 +72,7 @@ public class ReviewController {
             notes = "### userId와 매칭되는 특정 유저의 사용자 평가를 조회합니다.\n" +
                     "### 비회원인 경우 에러가 발생합니다."
     )
-    @GetMapping(value = "/review/{userId}")
+    @GetMapping(value = "/reviews/users/{userId}")
     public SingleResult<UserReviewResponseDto> getUserReview(@RequestHeader(value = "X-AUTH-TOKEN") String token,
                                                              @ApiParam(value = "조회하려는 유저의 userId", required = true) @PathVariable Long userId)
     {
@@ -92,7 +92,7 @@ public class ReviewController {
             value = "유저의 \"모든 리뷰 내용\" 조회",
             notes = "### targetId와 매칭되는 특정 유저의 모든 리뷰 내용을 조회합니다.\n"
     )
-    @GetMapping(value = "/review/detail/{userId}")
+    @GetMapping(value = "/reviews/detail/users/{userId}")
     public ListResult<UserReviewDetailResponseDto> getUserReviewDetail(@RequestHeader(value = "X-AUTH-TOKEN") String token,
                                                                        @ApiParam(value = "조회하려는 유저의 userId", required = true) @PathVariable Long userId,
                                                                        @ApiParam(value = "정렬 방식: date, point", allowableValues = "date, point", required = true) @RequestParam String sort)

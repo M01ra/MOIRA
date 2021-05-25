@@ -22,9 +22,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-@Api(tags = {"3-3.프로젝트(팀) 지원"})
+@Api(tags = {"5-3.프로젝트(팀) 지원"})
 @RestController
-@RequestMapping("/apply")
 @RequiredArgsConstructor
 public class ProjectApplyController {
 
@@ -37,7 +36,7 @@ public class ProjectApplyController {
     @ApiOperation(
             value = "모집글 - 지원하기",
             notes = "유저가 프로젝트(팀)에 지원합니다")
-    @PostMapping
+    @PostMapping("/applications")
     public CommonResult applyProject(
             @Valid @RequestBody ProjectApplyRequestDTO projectApplyRequestDTO,
             @ApiParam(value = "JWT 토큰", required = true) @RequestHeader(value = "X-AUTH-TOKEN") String token) {
@@ -50,7 +49,7 @@ public class ProjectApplyController {
     @ApiOperation(
             value = "마이페이지 - 지원한 글 - 지원 목록 - 지원 내역",
             notes = "특정 지원서(프로필)를 조회합니다")
-    @GetMapping("/{projectApplyId}")
+    @GetMapping("/applications/{projectApplyId}")
     public SingleResult<ProjectApplyResponseDTO> getApplyProject(
             @NotNull(message = "projectApplyId에 빈 값을 넣을 수 없음") @ApiParam(value = "프로젝트(팀) 지원 ID", required = true) @PathVariable Long projectApplyId,
             @ApiParam(value = "JWT 토큰", required = true) @RequestHeader(value = "X-AUTH-TOKEN") String token) {
@@ -63,7 +62,7 @@ public class ProjectApplyController {
     @ApiOperation(
             value = "마이페이지 - 작성한 글 - 지원자 목록",
             notes = "팀에 지원한 유저들을 조회합니다")
-    @GetMapping("/project/{projectId}")
+    @GetMapping("/applications/projects/{projectId}")
     public ListResult<ProjectApplicantsResponseDTO> getProjectApplicants(
             @NotNull(message = "projectId에 빈 값을 넣을 수 없음") @ApiParam(value = "프로젝트(팀) ID", required = true) @PathVariable Long projectId,
             @ApiParam(value = "JWT 토큰", required = true) @RequestHeader(value = "X-AUTH-TOKEN") String token){
@@ -76,7 +75,7 @@ public class ProjectApplyController {
     @ApiOperation(
             value = "지원서의 상태를 변경",
             notes = "팀장이 지원서의 상태를 변경합니다")
-    @PutMapping("/{projectApplyId}")
+    @PutMapping("/applications/{projectApplyId}")
     public CommonResult changeProjectApplyStatus(
             @NotNull(message = "projectApplyId에 빈 값을 넣을 수 없음") @ApiParam(value = "프로젝트(팀) 지원 ID", required = true) @PathVariable Long projectApplyId,
             @Valid @ApiParam(value = "변경할 상태", required = true) @RequestBody ProjectApplyModifyStatusRequestDTO projectApplyModifyStatusRequestDTO,
@@ -90,7 +89,7 @@ public class ProjectApplyController {
     @ApiOperation(
             value = "프로젝트(팀) 지원 취소",
             notes = "유저가 지원한 팀을 취소합니다")
-    @DeleteMapping("/{projectApplyId}")
+    @DeleteMapping("/applications/{projectApplyId}")
     public CommonResult cancelApplyProject(
             @NotNull(message = "projectApplyId에 빈 값을 넣을 수 없음") @ApiParam(value = "프로젝트(팀) 지원 ID", required = true) @PathVariable Long projectApplyId,
             @ApiParam(value = "JWT 토큰", required = true) @RequestHeader(value = "X-AUTH-TOKEN") String token){

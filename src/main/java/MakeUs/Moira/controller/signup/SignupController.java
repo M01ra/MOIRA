@@ -49,7 +49,7 @@ public class SignupController {
             value = "닉네임 중복 검사",
             notes = "닉네임을 전달받아서 중복을 검사합니다\n"
                     + "성공 : 200\n")
-    @GetMapping(value = "/signup/nickname")
+    @GetMapping(value = "/nickname/duplicate")
     public CommonResult isDuplicatedNickname(
             @NotBlank(message = "nickname에 빈 값을 넣을 수 없음") @ApiParam(value = "nickname", required = true) @RequestParam String nickname)
     {
@@ -71,7 +71,7 @@ public class SignupController {
             value = "회원 가입 시 포지션 카테고리 목록",
             notes = "회원 가입 시 포지션 카테고리 목록을 불러옵니다. => id / name / image"
     )
-    @GetMapping(value = "/signup/categories")
+    @GetMapping(value = "/positions")
     public ListResult<PositionCategoryResponseDto> getAllPositionCategory() {
         List<PositionCategoryResponseDto> resultList = positionService.findAllPositionCategory();
         logger.info(resultList.toString());
@@ -79,24 +79,24 @@ public class SignupController {
     }
 
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(
-                    name = "X-AUTH-TOKEN",
-                    value = "로그인 성공 후 JWT_TOKEN",
-                    required = true, dataType = "String", paramType = "header")
-    })
-    @ApiOperation(
-            value = "선택한 포지션 카테고리의 상세 포지션 목록",
-            notes = "선택한 포지션 카테고리의 상세 포지션 목록을 불러옵니다"
-    )
-    @GetMapping(value = "/signup/positions")
-    public ListResult<PositionResponseDto> getAllPosition(
-            @NotNull(message = "positionCategoryId에 빈 값을 넣을 수 없음") @ApiParam(value = "포지션 카테고리 id", required = true) @RequestParam Long positionCategoryId)
-    {
-        List<PositionResponseDto> resultList = positionService.findAllPosition(positionCategoryId);
-        logger.info(resultList.toString());
-        return responseService.mappingListResult(resultList, "선택한 포지션 카테고리의 상세 포지션 목록 불러오기 성공");
-    }
+//    @ApiImplicitParams({
+//            @ApiImplicitParam(
+//                    name = "X-AUTH-TOKEN",
+//                    value = "로그인 성공 후 JWT_TOKEN",
+//                    required = true, dataType = "String", paramType = "header")
+//    })
+//    @ApiOperation(
+//            value = "선택한 포지션 카테고리의 상세 포지션 목록",
+//            notes = "선택한 포지션 카테고리의 상세 포지션 목록을 불러옵니다"
+//    )
+//    @GetMapping(value = "/signup/positions")
+//    public ListResult<PositionResponseDto> getAllPosition(
+//            @NotNull(message = "positionCategoryId에 빈 값을 넣을 수 없음") @ApiParam(value = "포지션 카테고리 id", required = true) @RequestParam Long positionCategoryId)
+//    {
+//        List<PositionResponseDto> resultList = positionService.findAllPosition(positionCategoryId);
+//        logger.info(resultList.toString());
+//        return responseService.mappingListResult(resultList, "선택한 포지션 카테고리의 상세 포지션 목록 불러오기 성공");
+//    }
 
     @ApiImplicitParams({
             @ApiImplicitParam(
@@ -108,7 +108,7 @@ public class SignupController {
             value = "모든 관심 태그 목록",
             notes = "모든 관심 태그 목록을 불러옵니다."
     )
-    @GetMapping(value = "/signup/hashtags")
+    @GetMapping(value = "/hashtags")
     public ListResult<HashtagResponseDto> getAllHashtag() {
         List<HashtagResponseDto> resultList = hashTagService.getAllHashTag();
         logger.info(resultList.toString());
@@ -126,7 +126,7 @@ public class SignupController {
             value = "회원가입",
             notes = "nickname / positionId / hashtagIdList를 POST 의 Body로 부터 전달받아 회원가입합니다."
     )
-    @PostMapping(value = "/signup")
+    @PostMapping(value = "/users")
     public CommonResult signup(@RequestHeader(value = "X-AUTH-TOKEN") String token,
                                @Valid @ApiParam(required = true) @RequestBody SignupRequestDto signupRequestDto)
     {
@@ -154,7 +154,7 @@ public class SignupController {
             notes = "### 회원 탈퇴를 진행합니다.\n" +
                     "### 다시 앱을 연결 후, 진행하면 같은 아이디로 로그인을 할 수 있습니다."
     )
-    @DeleteMapping(value = "/user")
+    @DeleteMapping(value = "/users")
     public CommonResult updateUserStatusDeleted(@RequestHeader(value = "X-AUTH-TOKEN") String token)
     {
         Long userId = Long.parseLong(jwtTokenProvider.getUserPk(token));

@@ -20,7 +20,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-@Api(tags = {"6-3.마이페이지-프로필 수정-선택정보"})
+@Api(tags = {"8-3.마이페이지-프로필 수정-선택정보"})
 @RequiredArgsConstructor
 @RestController
 public class UserSchoolController {
@@ -42,7 +42,7 @@ public class UserSchoolController {
                     "- 학교를 검색할 때 적용됩니다.\n" +
                     "- 비회원인 경우 에러가 발생합니다."
     )
-    @GetMapping(value = "/mypage/edit/school-info")
+    @GetMapping(value = "/users/school-info")
     public ListResult<SchoolInfoResponseDto> searchSchoolInfo(
             @NotNull(message = "keyword에 빈 값을 넣을 수 없음") @ApiParam(value = "검색어", example = "서울대", required = true) @RequestParam String keyword) {
         // 권한 설정 : 유저만 접근
@@ -63,7 +63,7 @@ public class UserSchoolController {
                     "- 학과를 검색할 때 적용됩니다.\n" +
                     "- 비회원인 경우 에러가 발생합니다."
     )
-    @GetMapping(value = "/mypage/edit/major-info")
+    @GetMapping(value = "/users/major-info")
     public ListResult<MajorInfoResponseDto> searchMajorInfo(
             @NotNull(message = "keyword에 빈 값을 넣을 수 없음") @ApiParam(value = "검색어", example = "국어국문", required = true) @RequestParam String keyword) {
         // 권한 설정은 : 유저만 접근
@@ -84,7 +84,7 @@ public class UserSchoolController {
                     "- 등록하기를 누르지 않아도 적용됩니다.\n" +
                     "- 비회원인 경우 에러가 발생합니다."
     )
-    @PostMapping(value = "/mypage/edit/school")
+    @PostMapping(value = "/users/school")
     public ListResult<UserSchoolResponseDto> addUserSchool(
             @RequestHeader(value = "X-AUTH-TOKEN") String token,
             @Valid @RequestBody UserSchoolAddRequestDto userSchoolAddRequestDto) {
@@ -107,7 +107,7 @@ public class UserSchoolController {
             value = "마이페이지 - 내 정보 수정하기 - 학력 삭제",
             notes = "### 마이페이지 - 내 정보 수정하기 - 학력 내역을 삭제합니다.\n"
     )
-    @DeleteMapping(value = "/mypage/edit/school/{userSchoolId}")
+    @DeleteMapping(value = "/users/school/{userSchoolId}")
     public CommonResult deleteUserSchool(@RequestHeader(value = "X-AUTH-TOKEN") String token,
                                          @PathVariable Long userSchoolId)
     {

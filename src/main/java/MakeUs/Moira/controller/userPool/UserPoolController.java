@@ -19,7 +19,7 @@ import javax.validation.constraints.Size;
 import java.util.List;
 
 
-@Api(tags = {"4.인재 풀"})
+@Api(tags = {"6.인재 풀"})
 @RequiredArgsConstructor
 @RestController
 public class UserPoolController {
@@ -40,7 +40,7 @@ public class UserPoolController {
             notes = "### 팀원 찾기 - 인재풀을 ON/OFF 합니다.\n" +
                     "### 마이페이지에서 등록했던 프로필이 인재풀에 ON/OFF 됩니다."
     )
-    @PostMapping(value = "/pool")
+    @PostMapping(value = "/userpools")
     public SingleResult<UserPoolOnOffResponseDto> switchUserPoolVisibility(
             @RequestHeader(value = "X-AUTH-TOKEN") String token)
     {
@@ -64,7 +64,7 @@ public class UserPoolController {
                     "### 페이징 처리가 되며, 한 페이지에 10개씩 가져옵니다.\n" +
                     "### Ex) 1페이지 -> page=1"
     )
-    @GetMapping(value = "/pool")
+    @GetMapping(value = "/userpools")
     public ListResult<UserPoolResponseDto> getUserPoolList(
             @RequestHeader(value = "X-AUTH-TOKEN") String token,
             @ApiParam(value = "포지션 카테고리 필터", required = true, allowableValues = "개발자, 기획자, 디자이너") @RequestParam String positionCategory,
@@ -89,7 +89,7 @@ public class UserPoolController {
             value = "팀원 찾기 - 인재풀 - 검색",
             notes = "### 닉네임(3글자 이상)으로 인재풀 게시물을 검색합니다."
     )
-    @GetMapping(value = "/pool/search")
+    @GetMapping(value = "/userpools/search")
     public ListResult<UserPoolResponseDto> searchByNickname(
             @RequestHeader(value = "X-AUTH-TOKEN") String token,
             @NotBlank(message = "keyword에 빈 값을 넣을 수 없음") @Size(min = 3, message = "keyword는 최소 3글자 이상") @ApiParam(value = "검색 키워드", required = true) @RequestParam String keyword)
@@ -113,7 +113,7 @@ public class UserPoolController {
             notes = "### 팀원 찾기 - 인재풀의 게시글에 좋아요를 ON/OFF 합니다."
     )
 
-    @PostMapping(value = "/pool/like/{userPoolId}")
+    @PostMapping(value = "/userpools/{userPoolId}/like")
     public SingleResult<UserPoolLikeAddResponse> addUserPoolLike(
             @RequestHeader(value = "X-AUTH-TOKEN") String token,
             @NotNull(message = "userPoolId에 빈 값을 넣을 수 없음") @ApiParam(value = "인재풀 게시글 id", required = true) @PathVariable Long userPoolId)
@@ -137,7 +137,7 @@ public class UserPoolController {
             notes = "### 팀원 찾기 - 인재풀 - 게시글 상세(사용자정보)를 조회합니다.\n" +
                     "### API를 호출할 때 마다 해당 인재풀 게시글의 조회 수가 1이 증가합니다."
     )
-    @GetMapping(value = "/pool/profile/{userPoolId}")
+    @GetMapping(value = "/userpools/{userPoolId}/profile")
     public SingleResult<UserPoolDetailProfileResponseDto> getUserPoolDetailProfile(
             @RequestHeader(value = "X-AUTH-TOKEN") String token,
             @NotNull(message = "userPoolId에 빈 값을 넣을 수 없음") @ApiParam(value = "인재풀 게시글 id", required = true) @PathVariable Long userPoolId)
@@ -159,7 +159,7 @@ public class UserPoolController {
             value = "팀원 찾기 - 인재풀 - 게시글 상세(사용자평가)\n",
             notes = "### 팀원 찾기 - 인재풀 - 게시글 상세를 조회합니다.\n"
     )
-    @GetMapping(value = "/pool/review/{userPoolId}")
+    @GetMapping(value = "/userpools/{userPoolId}/review")
     public SingleResult<UserPoolDetailReviewResponseDto> getUserPoolDetailReview(
             @RequestHeader(value = "X-AUTH-TOKEN") String token,
             @NotNull(message = "userPoolId에 빈 값을 넣을 수 없음") @ApiParam(value = "인재풀 게시글 id", required = true) @PathVariable Long userPoolId)
@@ -181,7 +181,7 @@ public class UserPoolController {
             value = "팀원 찾기 - 인재풀 - 게시글 상세(사용자평가) - 모든 리뷰 조회\n",
             notes = "### 팀원 찾기 - 인재풀 - 게시글 상세를 조회합니다"
     )
-    @GetMapping(value = "/pool/review/detail/{userPoolId}")
+    @GetMapping(value = "/userpools/{userPoolId}/review/detail")
     public ListResult<UserPoolDetailReviewDetailResponseDto> getUserPoolDetailReviewDetail(
             @RequestHeader(value = "X-AUTH-TOKEN") String token,
             @NotNull(message = "userPoolId에 빈 값을 넣을 수 없음") @ApiParam(value = "인재풀 게시글 id", required = true) @PathVariable Long userPoolId,
